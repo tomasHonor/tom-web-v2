@@ -537,14 +537,18 @@
         .marquee-track {
             display: flex;
             width: max-content;
-            gap: 3.5rem;
             animation: marqueeSlide 34s linear infinite;
         }
 
+        /* Sin gap a nivel track: cada copia carga su propio espaciado final
+           (margin-right) para que las dos mitades midan EXACTO lo mismo y
+           translateX(-50%) empalme sin salto. Un gap a nivel track rompe esa
+           igualdad porque -50% reparte solo la mitad de ese gap por copia. */
         .marquee-item {
             display: inline-flex;
             align-items: center;
             gap: 3.5rem;
+            margin-right: 3.5rem;
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.78rem;
             font-weight: 500;
