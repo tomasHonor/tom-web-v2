@@ -1,0 +1,3088 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomás David Honor — Espacio Inmersivo</title>
+    <meta name="description" content="Espacio inmersivo de Tomás David Honor: creación audiovisual con IA, narrativa visual, mentalidad de entrenador y exploración del mundo interior.">
+    <meta name="theme-color" content="#06080F">
+
+    <!-- Tipografías de Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,300&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        :root {
+            --bg-void: #04060C;
+            --bg-base: #06080F;
+            --surface-glass: rgba(14, 18, 28, 0.65);
+            --surface-glass-hover: rgba(22, 28, 44, 0.85);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --text-primary: #F8FAFC;
+            --text-muted: #8296B0;
+            --glow-cyan: #38BDF8;
+            --glow-purple: #C084FC;
+            --glow-emerald: #34D399;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #06080F;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(56, 189, 248, 0.2);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(56, 189, 248, 0.45);
+        }
+
+        body.scroll-locked {
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .font-mono-custom {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .font-signature {
+            font-family: 'Caveat', cursive;
+        }
+
+        /* ============================================================
+           ATMÓSFERA GLOBAL (idéntica a la v1)
+           ============================================================ */
+        .ambient-glows {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .glow-sphere-1 {
+            position: absolute;
+            top: -10%;
+            left: 20%;
+            width: 650px;
+            height: 650px;
+            background: radial-gradient(circle, rgba(46, 127, 255, 0.16) 0%, transparent 70%);
+            filter: blur(80px);
+        }
+
+        .glow-sphere-2 {
+            position: absolute;
+            top: 45%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.13) 0%, transparent 70%);
+            filter: blur(95px);
+        }
+
+        .glow-sphere-3 {
+            position: absolute;
+            bottom: -10%;
+            left: -5%;
+            width: 650px;
+            height: 650px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.09) 0%, transparent 70%);
+            filter: blur(85px);
+        }
+
+        #fx-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #spotlight {
+            position: fixed;
+            width: 550px;
+            height: 550px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.08) 0%, rgba(6, 8, 15, 0) 70%);
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            display: none;
+            transition: opacity 0.3s ease;
+        }
+
+        @media (min-width: 992px) {
+            #spotlight { display: block; }
+        }
+
+        /* ============================================================
+           HERO — INTACTO respecto de la v1
+           ============================================================ */
+        .hero-stage {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 4rem 1.5rem 2.5rem 1.5rem;
+            z-index: 10;
+            background: radial-gradient(circle at 50% 32%, rgba(18, 26, 46, 0.6) 0%, var(--bg-base) 80%);
+            transition: background 1.6s ease;
+        }
+
+        .hero-stage.is-intro {
+            background: var(--bg-base);
+        }
+
+        .emblem-stage {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            padding: 0.5rem;
+            transition: transform 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+            outline: none;
+            user-select: none;
+        }
+
+        .emblem-stage:focus-visible {
+            border-radius: 50%;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.5);
+        }
+
+        .hero-stage.is-intro .emblem-stage {
+            transform: scale(2.05) translateY(4vh);
+        }
+
+        .intro-spark {
+            position: absolute;
+            width: 9px;
+            height: 9px;
+            background-color: #FFFFFF;
+            border-radius: 50%;
+            box-shadow: 0 0 20px 10px #00D4FF, 0 0 60px 30px #2E7FFF;
+            z-index: 20;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+        }
+
+        .hero-stage.is-intro .intro-spark {
+            opacity: 1;
+            animation: sparkPulse 2s infinite alternate ease-in-out;
+        }
+
+        @keyframes sparkPulse {
+            0% {
+                transform: scale(0.85);
+                opacity: 0.85;
+                box-shadow: 0 0 16px 6px #00D4FF, 0 0 45px 18px #2E7FFF;
+            }
+            100% {
+                transform: scale(1.25);
+                opacity: 1;
+                box-shadow: 0 0 28px 14px #00D4FF, 0 0 75px 38px #2E7FFF;
+            }
+        }
+
+        .hero-stage:not(.is-intro) .intro-spark {
+            transform: scale(16);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .emblem-volumetric-glow {
+            position: absolute;
+            width: 330px;
+            height: 390px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(46, 127, 255, 0.35) 0%, rgba(168, 85, 247, 0.15) 45%, transparent 70%);
+            filter: blur(45px);
+            animation: pulseGlow 4s infinite alternate ease-in-out;
+            pointer-events: none;
+            opacity: 1;
+            transition: opacity 2s ease;
+        }
+
+        .hero-stage.is-intro .emblem-volumetric-glow {
+            opacity: 0;
+            animation: none;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(0.92); opacity: 0.55; }
+            100% { transform: scale(1.18); opacity: 0.95; }
+        }
+
+        .th-dagger-logo {
+            width: 175px;
+            height: 250px;
+            filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 22px rgba(46, 127, 255, 0.28));
+            transition: filter 0.45s ease, transform 0.45s ease;
+            position: relative;
+            z-index: 3;
+        }
+
+        .hero-stage:not(.is-intro) .emblem-stage:hover .th-dagger-logo,
+        .hero-stage:not(.is-intro) .emblem-stage:focus-visible .th-dagger-logo {
+            filter: drop-shadow(0 25px 45px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 35px rgba(0, 212, 255, 0.65));
+        }
+
+        .hero-stage:not(.is-intro) .emblem-stage:hover,
+        .hero-stage:not(.is-intro) .emblem-stage:focus-visible {
+            transform: scale(1.05) translateY(-3px);
+        }
+
+        .logo-part {
+            transform-origin: 50% 50%;
+            transition: transform 1.6s cubic-bezier(0.16, 1, 0.3, 1),
+                        opacity 1.2s ease,
+                        filter 1.2s ease;
+        }
+
+        .hero-stage.is-intro .logo-part {
+            opacity: 0;
+            filter: blur(14px);
+        }
+
+        .hero-stage.is-intro .part-t { transform: translateY(-220px) scale(1.2); }
+        .hero-stage.is-intro .part-h-left { transform: translateX(-260px) translateY(100px) scale(0.8) rotate(-28deg); }
+        .hero-stage.is-intro .part-h-right { transform: translateX(260px) translateY(100px) scale(0.8) rotate(28deg); }
+        .hero-stage.is-intro .part-cross { transform: scale(0) translateZ(-100px); }
+
+        .hero-stage:not(.is-intro) .part-t { transition-delay: 0.1s; }
+        .hero-stage:not(.is-intro) .part-h-left { transition-delay: 0.25s; }
+        .hero-stage:not(.is-intro) .part-h-right { transition-delay: 0.4s; }
+        .hero-stage:not(.is-intro) .part-cross { transition-delay: 0.55s; }
+
+        .blue-charge-beam {
+            filter: drop-shadow(0 0 6px #00D4FF) drop-shadow(0 0 14px #2E7FFF);
+            animation: activeBeamPulse 2.8s ease-in-out infinite alternate;
+        }
+
+        .white-core-beam {
+            animation: whiteCoreFlicker 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes activeBeamPulse {
+            0% {
+                opacity: 0.85;
+                filter: drop-shadow(0 0 5px #00D4FF) drop-shadow(0 0 12px #0055FF);
+            }
+            50% {
+                opacity: 1;
+                filter: drop-shadow(0 0 9px #00F0FF) drop-shadow(0 0 22px #2E7FFF) drop-shadow(0 0 35px #00D4FF);
+            }
+            100% {
+                opacity: 0.9;
+                filter: drop-shadow(0 0 6px #00D4FF) drop-shadow(0 0 15px #0066FF);
+            }
+        }
+
+        @keyframes whiteCoreFlicker {
+            0%, 100% { opacity: 0.9; }
+            50% { opacity: 1; }
+            75% { opacity: 0.75; }
+        }
+
+        .hero-text-group {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            transition: opacity 1.5s cubic-bezier(0.25, 1, 0.5, 1) 1.2s,
+                        transform 1.5s cubic-bezier(0.25, 1, 0.5, 1) 1.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero-stage.is-intro .hero-text-group {
+            opacity: 0;
+            transform: translateY(45px) scale(0.96);
+            pointer-events: none;
+        }
+
+        .intro-scroll-hint {
+            position: absolute;
+            bottom: 6%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+        }
+
+        .hero-stage.is-intro .intro-scroll-hint {
+            opacity: 0.75;
+            animation: pulseHint 2.4s infinite ease-in-out 1.8s;
+            pointer-events: auto;
+            cursor: pointer;
+        }
+
+        @keyframes pulseHint {
+            0%, 100% { transform: translateY(0); opacity: 0.6; }
+            50% { transform: translateY(6px); opacity: 1; }
+        }
+
+        .name-handwritten {
+            font-size: clamp(3.2rem, 8vw, 5.8rem);
+            font-weight: 700;
+            line-height: 1.05;
+            color: #FFFFFF;
+            letter-spacing: -0.01em;
+            text-shadow: 0 4px 22px rgba(0, 0, 0, 0.65), 0 0 32px rgba(96, 165, 250, 0.28);
+            transform: rotate(-1.5deg);
+            display: inline-block;
+            margin-bottom: 0.8rem;
+            transition: transform 0.35s ease, text-shadow 0.35s ease;
+        }
+
+        .name-handwritten:hover {
+            transform: rotate(0deg) scale(1.02);
+            text-shadow: 0 6px 30px rgba(56, 189, 248, 0.45), 0 0 35px rgba(255, 255, 255, 0.35);
+        }
+
+        /* ============================================================
+           SISTEMA NUEVO — TIPOGRAFÍA DE IMPACTO
+           ============================================================ */
+        .display-xl {
+            font-size: clamp(2.6rem, 7vw, 6rem);
+            font-weight: 200;
+            line-height: 0.98;
+            letter-spacing: -0.035em;
+            text-wrap: balance;
+        }
+
+        .display-lg {
+            font-size: clamp(2.1rem, 5vw, 4rem);
+            font-weight: 200;
+            line-height: 1.02;
+            letter-spacing: -0.03em;
+            text-wrap: balance;
+        }
+
+        .eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            font-weight: 500;
+            letter-spacing: 0.32em;
+            text-transform: uppercase;
+        }
+
+        .lead {
+            font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+            font-weight: 300;
+            line-height: 1.75;
+            color: #C7D3E3;
+            max-width: 62ch;
+        }
+
+        .text-gradient-cyan {
+            background: linear-gradient(135deg, #FFFFFF 35%, #38BDF8 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-gradient-purple {
+            background: linear-gradient(135deg, #FFFFFF 35%, #C084FC 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-gradient-emerald {
+            background: linear-gradient(135deg, #FFFFFF 35%, #34D399 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Titulares cinéticos: cada palabra entra escalonada */
+        .kinetic > span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(0.55em);
+            filter: blur(10px);
+            transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.95s cubic-bezier(0.16, 1, 0.3, 1),
+                        filter 0.85s ease;
+            transition-delay: calc(var(--i) * 55ms);
+        }
+
+        .kinetic.is-in > span {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+
+        .rise {
+            opacity: 0;
+            transform: translateY(38px);
+            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .rise.is-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .rise-delay-1 { transition-delay: 0.12s; }
+        .rise-delay-2 { transition-delay: 0.24s; }
+        .rise-delay-3 { transition-delay: 0.36s; }
+
+        /* ============================================================
+           ESTRUCTURA: CAPÍTULOS A SANGRE + NUMERALES GIGANTES
+           ============================================================ */
+        .bleed {
+            width: 100vw;
+            margin-left: calc(50% - 50vw);
+        }
+
+        .chapter {
+            position: relative;
+            padding: clamp(6rem, 14vh, 11rem) 0;
+            z-index: 10;
+        }
+
+        .chapter-inner {
+            position: relative;
+            width: min(1180px, 90vw);
+            margin: 0 auto;
+            z-index: 2;
+        }
+
+        .chapter-index {
+            position: absolute;
+            top: clamp(1rem, 4vh, 3rem);
+            font-size: clamp(7rem, 21vw, 19rem);
+            font-weight: 800;
+            line-height: 0.78;
+            letter-spacing: -0.06em;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(130, 150, 176, 0.16);
+            pointer-events: none;
+            user-select: none;
+            z-index: 0;
+            will-change: transform;
+        }
+
+        .chapter-index-right { right: clamp(0rem, 2vw, 2rem); }
+        .chapter-index-left { left: clamp(0rem, 2vw, 2rem); }
+
+        .rule-glow {
+            height: 1px;
+            border: 0;
+            background: linear-gradient(to right, transparent, rgba(56, 189, 248, 0.4), rgba(192, 132, 252, 0.25), transparent);
+        }
+
+        .band-void {
+            background:
+                radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.07) 0%, transparent 60%),
+                var(--bg-void);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* ============================================================
+           CINTA CINÉTICA (marquee) — facetas reales, en bucle
+           ============================================================ */
+        .marquee {
+            position: relative;
+            z-index: 10;
+            overflow: hidden;
+            padding: 1.15rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(6, 8, 15, 0.72);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+            mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+        }
+
+        .marquee-track {
+            display: flex;
+            width: max-content;
+            gap: 3.5rem;
+            animation: marqueeSlide 34s linear infinite;
+        }
+
+        .marquee-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 3.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: #7C8EA6;
+            white-space: nowrap;
+        }
+
+        .marquee-item b {
+            color: #CBD9E8;
+            font-weight: 500;
+        }
+
+        .marquee-sep {
+            color: var(--glow-cyan);
+            opacity: 0.7;
+        }
+
+        @keyframes marqueeSlide {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        /* ============================================================
+           COLUMNA DE PROGRESO (spine) — navegación real por capítulos
+           ============================================================ */
+        .spine {
+            position: fixed;
+            top: 50%;
+            left: 2.2rem;
+            transform: translateY(-50%);
+            z-index: 40;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            pointer-events: none;
+        }
+
+        .spine.is-live {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        @media (min-width: 1180px) {
+            .spine { display: block; }
+        }
+
+        .spine-rail {
+            position: absolute;
+            left: 5px;
+            top: 6px;
+            bottom: 6px;
+            width: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .spine-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            background: linear-gradient(to bottom, var(--glow-cyan), var(--glow-purple));
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+        }
+
+        .spine-nodes {
+            position: relative;
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1.35rem;
+        }
+
+        .spine-node {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            text-decoration: none;
+            outline: none;
+        }
+
+        .spine-dot {
+            position: relative;
+            flex: 0 0 auto;
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            background: #080C16;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .spine-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.63rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: #64758C;
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateX(-6px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .spine-node:hover .spine-label,
+        .spine-node:focus-visible .spine-label,
+        .spine-node.is-active .spine-label {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .spine-node:focus-visible .spine-dot {
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.45);
+        }
+
+        .spine-node.is-active .spine-dot {
+            border-color: var(--glow-cyan);
+            background: var(--glow-cyan);
+            box-shadow: 0 0 14px 3px rgba(56, 189, 248, 0.55);
+            transform: scale(1.25);
+        }
+
+        .spine-node.is-active .spine-label {
+            color: var(--glow-cyan);
+        }
+
+        /* ============================================================
+           01 // LENTE QUE ENFOCA (scrollytelling)
+           ============================================================ */
+        .scrolly {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+        }
+
+        @media (min-width: 1024px) {
+            .scrolly {
+                grid-template-columns: 1fr 1fr;
+                gap: 5rem;
+                align-items: start;
+            }
+        }
+
+        .scrolly-visual {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 320px;
+        }
+
+        @media (min-width: 1024px) {
+            .scrolly-visual {
+                position: sticky;
+                top: 18vh;
+                height: 64vh;
+            }
+        }
+
+        .lens-stage {
+            position: relative;
+            width: min(420px, 78vw);
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lens-halo {
+            position: absolute;
+            inset: 8%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.22) 0%, rgba(192, 132, 252, 0.1) 45%, transparent 72%);
+            filter: blur(38px);
+            transition: opacity 1.2s ease, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .lens-svg {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .lens-ring {
+            transform-origin: 110px 110px;
+            transition: opacity 1s ease, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .lens-ring-a { animation: spinSlow 34s linear infinite; }
+        .lens-ring-b { animation: spinSlow 24s linear infinite reverse; }
+        .lens-ring-c { animation: spinSlow 46s linear infinite; }
+
+        .lens-mind {
+            transition: opacity 1s ease, filter 1s ease, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-origin: 110px 110px;
+        }
+
+        .lens-grid {
+            opacity: 0;
+            transition: opacity 1.1s ease, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-origin: 110px 110px;
+            transform: scale(0.86);
+        }
+
+        .lens-core {
+            transform-origin: 110px 110px;
+            animation: corePulse 3s ease-in-out infinite;
+        }
+
+        .lens-orbit {
+            transform-origin: 110px 110px;
+        }
+
+        .lens-orbit-a { animation: spinSlow 11s linear infinite; }
+        .lens-orbit-b { animation: spinSlow 17s linear infinite reverse; }
+        .lens-orbit-c { animation: spinSlow 25s linear infinite; }
+
+        /* Estado 0 — difuso */
+        .lens-stage[data-state="0"] .lens-mind { opacity: 0.5; filter: blur(3px); transform: scale(1.06); }
+        .lens-stage[data-state="0"] .lens-ring { opacity: 0.35; transform: scale(1.08); }
+        .lens-stage[data-state="0"] .lens-halo { opacity: 0.55; transform: scale(1.1); }
+
+        /* Estado 1 — enfocando */
+        .lens-stage[data-state="1"] .lens-mind { opacity: 1; filter: blur(0); transform: scale(1); }
+        .lens-stage[data-state="1"] .lens-ring { opacity: 0.75; transform: scale(1); }
+        .lens-stage[data-state="1"] .lens-halo { opacity: 1; transform: scale(1); }
+
+        /* Estado 2 — cristalizado en estructura */
+        .lens-stage[data-state="2"] .lens-mind { opacity: 0.55; filter: blur(0); transform: scale(0.94); }
+        .lens-stage[data-state="2"] .lens-ring { opacity: 0.5; transform: scale(0.92); }
+        .lens-stage[data-state="2"] .lens-grid { opacity: 1; transform: scale(1); }
+        .lens-stage[data-state="2"] .lens-halo { opacity: 0.85; transform: scale(0.95); }
+
+        .lens-readout {
+            position: absolute;
+            bottom: -0.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--glow-cyan);
+            white-space: nowrap;
+        }
+
+        .scrolly-steps {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(4rem, 22vh, 14rem);
+            padding: 4vh 0 18vh;
+        }
+
+        .scrolly-step {
+            opacity: 0.28;
+            transform: translateY(12px);
+            transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .scrolly-step.is-active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .scrolly-step-index {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            letter-spacing: 0.3em;
+            color: var(--glow-cyan);
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .scrolly-step p {
+            font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+            font-weight: 200;
+            line-height: 1.45;
+            letter-spacing: -0.015em;
+            color: #E6EDF6;
+        }
+
+        @keyframes spinSlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes corePulse {
+            0%, 100% { transform: scale(0.82); opacity: 0.75; }
+            50% { transform: scale(1.3); opacity: 1; }
+        }
+
+        /* ============================================================
+           MURO DE REELS — pin horizontal movido por scroll vertical
+           ============================================================ */
+        .reelwall {
+            position: relative;
+            z-index: 10;
+        }
+
+        .reelwall-pin {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .reelwall-eyebrow {
+            position: absolute;
+            top: clamp(1.4rem, 5vh, 3rem);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: #64758C;
+            pointer-events: none;
+        }
+
+        /* Tarjeta de apertura y de cierre, viajan dentro del riel */
+        .reel-intro,
+        .reel-outro {
+            position: relative;
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 1.25rem;
+            padding: clamp(1.75rem, 3vw, 2.75rem);
+            border-radius: 24px;
+            background: linear-gradient(160deg, rgba(14, 19, 31, 0.9), rgba(6, 8, 15, 0.92));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .reel-intro { width: min(86vw, 540px); }
+        .reel-outro { width: min(86vw, 400px); text-align: center; align-items: center; }
+
+        .reel-hint {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            letter-spacing: 0.26em;
+            text-transform: uppercase;
+            color: var(--glow-cyan);
+        }
+
+        .reel-hint-arrow {
+            display: inline-block;
+            animation: nudgeRight 1.8s ease-in-out infinite;
+        }
+
+        @keyframes nudgeRight {
+            0%, 100% { transform: translateX(0); opacity: 0.65; }
+            50% { transform: translateX(6px); opacity: 1; }
+        }
+
+        .reelwall-bigtype {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: clamp(3.4rem, 13vw, 12rem);
+            font-weight: 800;
+            line-height: 0.82;
+            letter-spacing: -0.055em;
+            text-align: center;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(56, 189, 248, 0.13);
+            white-space: nowrap;
+            pointer-events: none;
+            user-select: none;
+            z-index: 0;
+            will-change: transform;
+        }
+
+        .reelwall-track {
+            display: flex;
+            align-items: center;
+            gap: clamp(1rem, 2.2vw, 2.2rem);
+            will-change: transform;
+            position: relative;
+            z-index: 2;
+        }
+
+        .reel-panel {
+            position: relative;
+            flex: 0 0 auto;
+            width: min(74vw, 300px);
+            aspect-ratio: 9 / 16;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #090D18;
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            cursor: pointer;
+            outline: none;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                        border-color 0.5s ease,
+                        box-shadow 0.5s ease;
+            scroll-snap-align: center;
+        }
+
+        .reel-panel:hover,
+        .reel-panel:focus-visible {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(56, 189, 248, 0.5);
+            box-shadow: 0 34px 70px rgba(0, 0, 0, 0.8), 0 0 40px rgba(56, 189, 248, 0.28);
+        }
+
+        .reel-media {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.82) contrast(1.06);
+            transition: transform 0.8s ease, filter 0.8s ease;
+            background-color: #0d121f;
+        }
+
+        .reel-panel:hover .reel-media,
+        .reel-panel:focus-within .reel-media {
+            transform: scale(1.06);
+            filter: brightness(1.02) contrast(1.12);
+        }
+
+        .reel-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(4, 6, 12, 0.97) 0%, rgba(4, 6, 12, 0.45) 42%, transparent 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.4rem;
+            pointer-events: none;
+        }
+
+        .reel-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+        }
+
+        .card-sound-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(6, 9, 18, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 30;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-sound-btn:hover {
+            background: rgba(56, 189, 248, 0.35);
+            border-color: var(--glow-cyan);
+            color: var(--glow-cyan);
+            transform: scale(1.08);
+            box-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
+        }
+
+        .card-sound-btn.is-active {
+            background: var(--glow-cyan);
+            border-color: var(--glow-cyan);
+            color: #06080F;
+            box-shadow: 0 0 22px rgba(56, 189, 248, 0.7);
+        }
+
+        .sound-wave-bars {
+            display: none;
+            gap: 2px;
+            align-items: flex-end;
+            height: 13px;
+        }
+
+        .card-sound-btn.is-active .sound-wave-bars { display: flex; }
+        .card-sound-btn.is-active .sound-static-icon { display: none; }
+
+        .sound-bar {
+            width: 2px;
+            background: #06080F;
+            border-radius: 1px;
+            animation: bounceWave 0.8s infinite ease-in-out alternate;
+        }
+
+        .sound-bar:nth-child(2) { animation-delay: 0.2s; }
+        .sound-bar:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes bounceWave {
+            0% { height: 3px; }
+            100% { height: 13px; }
+        }
+
+        .expand-badge {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            padding: 0.25rem 0.6rem;
+            border-radius: 9999px;
+            background: rgba(6, 9, 18, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            font-size: 0.6rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: #94A3B8;
+            z-index: 25;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            opacity: 0;
+            transform: translateY(-4px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .reel-panel:hover .expand-badge,
+        .reel-panel:focus-visible .expand-badge {
+            opacity: 1;
+            transform: translateY(0);
+            color: var(--glow-cyan);
+            border-color: rgba(56, 189, 248, 0.4);
+        }
+
+        .reelwall-cue {
+            position: absolute;
+            bottom: clamp(1.2rem, 4vh, 2.5rem);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.26em;
+            text-transform: uppercase;
+            color: #64758C;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .reelwall-cue-bar {
+            width: 96px;
+            height: 2px;
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.12);
+            overflow: hidden;
+        }
+
+        .reelwall-cue-fill {
+            display: block;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, var(--glow-cyan), var(--glow-purple));
+        }
+
+        /* Pin sólo en pantallas anchas; en móvil, carrusel con snap */
+        @media (min-width: 1024px) {
+            .reelwall { height: 300vh; }
+            .reelwall-pin {
+                position: sticky;
+                top: 0;
+                height: 100vh;
+                display: flex;
+                align-items: center;
+            }
+            .reelwall-track { padding: 0 10vw; }
+            .reel-panel { width: min(24vw, 372px); }
+            .reel-intro,
+            .reel-outro { max-height: 74vh; }
+        }
+
+        @media (max-width: 1023px) {
+            .reelwall { padding: 4rem 0; }
+            .reelwall-pin {
+                min-height: 78vh;
+                display: flex;
+                align-items: center;
+                padding-top: 5rem;
+            }
+            .reelwall-track {
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                padding: 0 1.25rem 1.5rem;
+                -webkit-overflow-scrolling: touch;
+            }
+            .reel-intro,
+            .reel-outro { scroll-snap-align: center; }
+        }
+
+        /* ============================================================
+           02 // TRÍPTICO LUZ / SOMBRA / ENCUENTRO
+           ============================================================ */
+        .triptych {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 24px;
+            overflow: hidden;
+        }
+
+        @media (min-width: 900px) {
+            .triptych { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .panel {
+            position: relative;
+            background: linear-gradient(180deg, rgba(12, 16, 26, 0.9), rgba(6, 8, 15, 0.95));
+            padding: clamp(1.75rem, 3vw, 2.75rem);
+            display: flex;
+            flex-direction: column;
+            gap: 1.1rem;
+            min-height: 420px;
+            transition: background 0.6s ease;
+            overflow: hidden;
+        }
+
+        .panel::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            pointer-events: none;
+        }
+
+        .panel-cyan::after { background: radial-gradient(circle at 50% 18%, rgba(56, 189, 248, 0.14), transparent 62%); }
+        .panel-purple::after { background: radial-gradient(circle at 50% 18%, rgba(192, 132, 252, 0.14), transparent 62%); }
+        .panel-emerald::after { background: radial-gradient(circle at 50% 18%, rgba(52, 211, 153, 0.13), transparent 62%); }
+
+        .panel:hover::after { opacity: 1; }
+
+        .panel-figure {
+            position: relative;
+            height: 168px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.25rem;
+        }
+
+        .panel-figure svg {
+            width: 168px;
+            height: 168px;
+            overflow: visible;
+        }
+
+        .ray-group,
+        .ray-core {
+            transform-origin: 60px 60px;
+        }
+
+        .ray-group { animation: spinSlow 13s linear infinite; }
+        .ray-core { animation: corePulse 2.6s ease-in-out infinite; }
+
+        .eclipse-shadow { animation: eclipseCross 7s ease-in-out infinite; }
+
+        @keyframes eclipseCross {
+            0%, 100% { transform: translateX(-62px); }
+            50% { transform: translateX(34px); }
+        }
+
+        .venn-left { animation: vennConverge 5.5s ease-in-out infinite; }
+        .venn-right { animation: vennConverge 5.5s ease-in-out infinite reverse; }
+        .venn-core { animation: vennGlow 5.5s ease-in-out infinite; }
+
+        @keyframes vennConverge {
+            0%, 100% { transform: translateX(-16px); }
+            50% { transform: translateX(0); }
+        }
+
+        @keyframes vennGlow {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 0.5; }
+        }
+
+        .panel-foot {
+            margin-top: auto;
+            padding-top: 1.15rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #64758C;
+        }
+
+        /* ============================================================
+           03 // LÍNEA DE TIEMPO DE LA HUELLA
+           ============================================================ */
+        .capsule-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        @media (min-width: 1024px) {
+            .capsule-grid { grid-template-columns: 1.05fr 0.95fr; gap: 4.5rem; }
+        }
+
+        .capsule-stage {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 340px;
+        }
+
+        .capsule-svg {
+            width: min(360px, 74vw);
+            height: min(360px, 74vw);
+            overflow: visible;
+        }
+
+        .clock-hand-min,
+        .clock-hand-hour,
+        .time-ripple,
+        .capsule-core {
+            transform-origin: 110px 110px;
+        }
+
+        .clock-hand-min { animation: spinSlow 9s linear infinite; }
+        .clock-hand-hour { animation: spinSlow 54s linear infinite; }
+        .capsule-core { animation: corePulse 3.2s ease-in-out infinite; }
+
+        .time-ripple { animation: rippleOut 5s ease-out infinite; }
+        .ripple-2 { animation-delay: 1.66s; }
+        .ripple-3 { animation-delay: 3.33s; }
+
+        @keyframes rippleOut {
+            0% { transform: scale(0.22); opacity: 0.8; }
+            100% { transform: scale(1.12); opacity: 0; }
+        }
+
+        .era-line {
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+        }
+
+        .era-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 6%;
+            right: 6%;
+            height: 1px;
+            background: linear-gradient(to right, rgba(52, 211, 153, 0.5), rgba(56, 189, 248, 0.55), rgba(192, 132, 252, 0.5));
+        }
+
+        .era {
+            position: relative;
+            text-align: center;
+        }
+
+        .era::before {
+            content: '';
+            position: absolute;
+            top: -2.32rem;
+            left: 50%;
+            width: 9px;
+            height: 9px;
+            margin-left: -4.5px;
+            border-radius: 50%;
+            background: #080C16;
+            border: 1px solid currentColor;
+        }
+
+        .era-year {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            display: block;
+        }
+
+        .era-note {
+            display: block;
+            margin-top: 0.35rem;
+            font-size: 0.72rem;
+            font-weight: 300;
+            line-height: 1.5;
+            color: #8296B0;
+        }
+
+        /* ============================================================
+           04 // LA CANCHA
+           ============================================================ */
+        .court-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        @media (min-width: 1024px) {
+            .court-grid { grid-template-columns: 0.85fr 1.15fr; gap: 4.5rem; }
+        }
+
+        .court-svg {
+            width: min(300px, 66vw);
+            height: auto;
+            overflow: visible;
+        }
+
+        .rally-ball { animation: rallyPath 6s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
+
+        @keyframes rallyPath {
+            0%   { transform: translate(0, 0); }
+            25%  { transform: translate(28px, -52px); }
+            50%  { transform: translate(-14px, -104px); }
+            75%  { transform: translate(24px, -50px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        .rally-trail {
+            stroke-dasharray: 6 8;
+            animation: trailDrift 1.8s linear infinite;
+        }
+
+        @keyframes trailDrift {
+            to { stroke-dashoffset: -14; }
+        }
+
+        .court-net { animation: netShimmer 3.6s ease-in-out infinite; }
+
+        @keyframes netShimmer {
+            0%, 100% { opacity: 0.32; }
+            50% { opacity: 0.92; }
+        }
+
+        .stat-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #64758C;
+        }
+
+        .stat-row strong {
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
+            color: var(--glow-emerald);
+        }
+
+        /* ============================================================
+           05 // ANCLAJES
+           ============================================================ */
+        .anchor-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 900px) {
+            .anchor-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .anchor-card {
+            position: relative;
+            padding: clamp(1.6rem, 2.6vw, 2.25rem);
+            border-radius: 22px;
+            background: linear-gradient(180deg, rgba(13, 17, 28, 0.85), rgba(6, 8, 15, 0.92));
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+            overflow: hidden;
+            transition: border-color 0.5s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
+        }
+
+        .anchor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 26px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .anchor-cyan:hover { border-color: rgba(56, 189, 248, 0.4); }
+        .anchor-purple:hover { border-color: rgba(192, 132, 252, 0.4); }
+        .anchor-emerald:hover { border-color: rgba(52, 211, 153, 0.4); }
+
+        .anchor-visual {
+            height: 78px;
+            display: flex;
+            align-items: flex-end;
+            margin-top: 0.4rem;
+        }
+
+        .freq-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            height: 68px;
+            width: 100%;
+        }
+
+        .freq-bar {
+            width: 4px;
+            border-radius: 2px;
+            background: linear-gradient(to top, var(--glow-cyan), rgba(56, 189, 248, 0.18));
+            animation: freqPulse 1.15s ease-in-out infinite;
+        }
+
+        .freq-bar:nth-child(1)  { animation-delay: 0s;    animation-duration: 1.3s; }
+        .freq-bar:nth-child(2)  { animation-delay: 0.12s; animation-duration: 1.05s; }
+        .freq-bar:nth-child(3)  { animation-delay: 0.24s; animation-duration: 1.4s; }
+        .freq-bar:nth-child(4)  { animation-delay: 0.06s; animation-duration: 0.95s; }
+        .freq-bar:nth-child(5)  { animation-delay: 0.3s;  animation-duration: 1.2s; }
+        .freq-bar:nth-child(6)  { animation-delay: 0.18s; animation-duration: 1.1s; }
+        .freq-bar:nth-child(7)  { animation-delay: 0.36s; animation-duration: 1.3s; }
+        .freq-bar:nth-child(8)  { animation-delay: 0.08s; animation-duration: 1.15s; }
+        .freq-bar:nth-child(9)  { animation-delay: 0.26s; animation-duration: 1.35s; }
+        .freq-bar:nth-child(10) { animation-delay: 0.14s; animation-duration: 1s; }
+        .freq-bar:nth-child(11) { animation-delay: 0.32s; animation-duration: 1.25s; }
+        .freq-bar:nth-child(12) { animation-delay: 0.2s;  animation-duration: 1.45s; }
+
+        @keyframes freqPulse {
+            0%, 100% { height: 14%; opacity: 0.5; }
+            50% { height: 100%; opacity: 1; }
+        }
+
+        .paw-trail {
+            display: flex;
+            align-items: center;
+            gap: 1.1rem;
+            height: 68px;
+        }
+
+        .paw-icon {
+            width: 30px;
+            height: 30px;
+            fill: var(--glow-purple);
+            animation: pawStep 2.6s ease-in-out infinite;
+        }
+
+        .paw-icon:nth-child(1) { animation-delay: 0s; }
+        .paw-icon:nth-child(2) { animation-delay: 0.32s; }
+        .paw-icon:nth-child(3) { animation-delay: 0.64s; }
+        .paw-icon:nth-child(4) { animation-delay: 0.96s; }
+
+        @keyframes pawStep {
+            0%, 18% { opacity: 0; transform: translateY(6px) scale(0.75) rotate(-8deg); }
+            34%, 64% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+            84%, 100% { opacity: 0; transform: translateY(-4px) scale(0.9) rotate(6deg); }
+        }
+
+        .pulse-line {
+            width: 100%;
+            height: 68px;
+            overflow: visible;
+        }
+
+        .pulse-line path {
+            stroke-dasharray: 320;
+            stroke-dashoffset: 320;
+            animation: pulseSweep 3s ease-in-out infinite;
+        }
+
+        @keyframes pulseSweep {
+            0% { stroke-dashoffset: 320; opacity: 0.25; }
+            45% { stroke-dashoffset: 0; opacity: 1; }
+            55% { stroke-dashoffset: 0; opacity: 1; }
+            100% { stroke-dashoffset: -320; opacity: 0.25; }
+        }
+
+        /* ============================================================
+           06 // PORTAL DE CIERRE
+           ============================================================ */
+        .portal {
+            position: relative;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: clamp(4rem, 12vh, 8rem) clamp(1.25rem, 4vw, 3rem);
+            overflow: hidden;
+        }
+
+        .portal-rings {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 640px;
+            height: 640px;
+            max-width: 130vw;
+            max-height: 130vw;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .portal-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(56, 189, 248, 0.32);
+            animation: portalOut 7s ease-out infinite;
+        }
+
+        .portal-ring:nth-child(2) { animation-delay: 1.75s; border-color: rgba(192, 132, 252, 0.3); }
+        .portal-ring:nth-child(3) { animation-delay: 3.5s; border-color: rgba(52, 211, 153, 0.26); }
+        .portal-ring:nth-child(4) { animation-delay: 5.25s; border-color: rgba(56, 189, 248, 0.22); }
+
+        @keyframes portalOut {
+            0% { transform: scale(0.25); opacity: 0; }
+            16% { opacity: 0.7; }
+            100% { transform: scale(1.05); opacity: 0; }
+        }
+
+        .btn-portal {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.85rem;
+            padding: 1.15rem 2.4rem;
+            background: linear-gradient(135deg, #1E293B, #0F172A);
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            border-radius: 14px;
+            color: #FFFFFF;
+            font-size: 0.82rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            font-weight: 600;
+            text-decoration: none;
+            overflow: hidden;
+            transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.25s ease;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            outline: none;
+            will-change: transform;
+        }
+
+        .btn-portal:hover,
+        .btn-portal:focus-visible {
+            border-color: var(--glow-cyan);
+            box-shadow: 0 0 34px rgba(56, 189, 248, 0.35), inset 0 0 15px rgba(56, 189, 248, 0.15);
+        }
+
+        .btn-portal-secondary {
+            border-color: rgba(168, 85, 247, 0.4);
+            background: linear-gradient(135deg, rgba(30, 27, 75, 0.8), rgba(15, 23, 42, 0.9));
+        }
+
+        .btn-portal-secondary:hover,
+        .btn-portal-secondary:focus-visible {
+            border-color: var(--glow-purple);
+            box-shadow: 0 0 34px rgba(192, 132, 252, 0.35), inset 0 0 15px rgba(192, 132, 252, 0.15);
+        }
+
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            padding: 0.4rem 1.05rem;
+            border-radius: 9999px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .badge-pill > span:first-child {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            animation: dotPulse 2.6s ease-in-out infinite;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { opacity: 0.5; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* ============================================================
+           MODAL DE REPRODUCCIÓN
+           ============================================================ */
+        #video-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 60;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s ease;
+            background: rgba(4, 6, 12, 0.93);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+
+        #video-modal.is-active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #modal-content {
+            width: 100%;
+            max-width: 460px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            transform: scale(0.94);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #video-modal.is-active #modal-content { transform: scale(1); }
+
+        .modal-frame {
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            max-height: 74vh;
+            background: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 70px rgba(56, 189, 248, 0.22);
+            position: relative;
+        }
+
+        #video-player {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+        }
+
+        @media (min-width: 1024px) {
+            #modal-content { max-width: 520px; }
+        }
+
+        /* ============================================================
+           MOVIMIENTO REDUCIDO
+           ============================================================ */
+        @media (prefers-reduced-motion: reduce) {
+            .marquee-track,
+            .lens-ring-a, .lens-ring-b, .lens-ring-c,
+            .lens-orbit-a, .lens-orbit-b, .lens-orbit-c,
+            .lens-core, .capsule-core,
+            .clock-hand-min, .clock-hand-hour, .time-ripple,
+            .ray-group, .ray-core, .eclipse-shadow,
+            .venn-left, .venn-right, .venn-core,
+            .rally-ball, .rally-trail, .court-net,
+            .freq-bar, .paw-icon, .pulse-line path,
+            .portal-ring, .badge-pill > span:first-child,
+            .sound-bar {
+                animation: none !important;
+            }
+
+            .kinetic > span,
+            .rise {
+                opacity: 1 !important;
+                transform: none !important;
+                filter: none !important;
+                transition: none !important;
+            }
+
+            .scrolly-step { opacity: 1 !important; transform: none !important; }
+            .paw-icon { opacity: 0.85 !important; }
+            .venn-core { opacity: 0.4 !important; }
+            .time-ripple { opacity: 0.22 !important; }
+            .pulse-line path { stroke-dashoffset: 0 !important; }
+            html { scroll-behavior: auto; }
+        }
+    </style>
+</head>
+<body class="selection:bg-sky-500 selection:text-white scroll-locked">
+
+    <!-- Orbes luminosos ambientales -->
+    <div class="ambient-glows" aria-hidden="true">
+        <div class="glow-sphere-1"></div>
+        <div class="glow-sphere-2"></div>
+        <div class="glow-sphere-3"></div>
+    </div>
+
+    <!-- Spotlight cursor & Canvas de partículas / rayos -->
+    <div id="spotlight" aria-hidden="true"></div>
+    <canvas id="fx-canvas" aria-hidden="true"></canvas>
+
+    <!-- Columna de progreso por capítulos -->
+    <nav class="spine" id="spine" aria-label="Capítulos">
+        <div class="spine-rail" aria-hidden="true"><div class="spine-fill" id="spine-fill"></div></div>
+        <ul class="spine-nodes">
+            <li><a class="spine-node" href="#cap-01"><span class="spine-dot"></span><span class="spine-label">01 · Cosmos Mental</span></a></li>
+            <li><a class="spine-node" href="#cap-reels"><span class="spine-dot"></span><span class="spine-label">✦ · Muro de Reels</span></a></li>
+            <li><a class="spine-node" href="#cap-02"><span class="spine-dot"></span><span class="spine-label">02 · Luz & Sombra</span></a></li>
+            <li><a class="spine-node" href="#cap-03"><span class="spine-dot"></span><span class="spine-label">03 · Memoria Viva</span></a></li>
+            <li><a class="spine-node" href="#cap-04"><span class="spine-dot"></span><span class="spine-label">04 · El Cimiento</span></a></li>
+            <li><a class="spine-node" href="#cap-05"><span class="spine-dot"></span><span class="spine-label">05 · El Anclaje</span></a></li>
+            <li><a class="spine-node" href="#cap-06"><span class="spine-dot"></span><span class="spine-label">06 · Diálogo</span></a></li>
+        </ul>
+    </nav>
+
+    <!-- ============================================================
+         HERO — IDÉNTICO A LA V1
+         ============================================================ -->
+    <header class="hero-stage is-intro" id="hero-header">
+
+        <div class="emblem-stage" id="emblem-trigger" role="button" tabindex="0" aria-label="Ingresar al espacio de Tomás David Honor" title="Haz clic o desliza para ingresar">
+            <div class="intro-spark"></div>
+            <div class="emblem-volumetric-glow"></div>
+
+            <svg class="th-dagger-logo" viewBox="0 0 420 580" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <defs>
+                    <linearGradient id="blueLaserEnergy" x1="268" y1="415" x2="268" y2="274" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#0038E2" />
+                        <stop offset="35%" stop-color="#0099FF" />
+                        <stop offset="70%" stop-color="#00F0FF" />
+                        <stop offset="100%" stop-color="#FFFFFF" />
+                    </linearGradient>
+
+                    <filter id="neonBeamGlow" x="-150%" y="-50%" width="400%" height="200%">
+                        <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur1" />
+                        <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur2" />
+                        <feMerge>
+                            <feMergeNode in="blur2" />
+                            <feMergeNode in="blur1" />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                    </filter>
+
+                    <linearGradient id="crossbarShade" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#94A3B8" />
+                        <stop offset="100%" stop-color="#475569" />
+                    </linearGradient>
+                </defs>
+
+                <g id="TH_Monogram_Faceted_Geometric">
+                    <!-- Travesaño de la H -->
+                    <g class="logo-part part-cross">
+                        <polygon points="232,274 266,274 266,298 232,298" fill="url(#crossbarShade)" />
+                        <line x1="232" y1="274" x2="266" y2="274" stroke="#CBD5E1" stroke-width="1.5" />
+                    </g>
+
+                    <!-- Columna Izquierda -->
+                    <g class="logo-part part-h-left">
+                        <polygon points="112,142 132,142 132,434 112,408" fill="#F8FAFC" />
+                        <polygon points="132,142 152,142 152,408 132,434" fill="#64748B" />
+                        <polygon points="106,142 112,142 112,154 106,142" fill="#E2E8F0" />
+                        <polygon points="158,142 152,142 152,154 158,142" fill="#475569" />
+                    </g>
+
+                    <!-- Columna Derecha con Láser Integrado -->
+                    <g class="logo-part part-h-right">
+                        <polygon points="266,142 286,142 286,434 266,408" fill="#94A3B8" />
+                        <polygon points="286,142 306,142 306,408 286,434" fill="#475569" />
+                        <polygon points="260,142 266,142 266,154 260,142" fill="#94A3B8" />
+                        <polygon points="312,142 306,142 306,154 312,142" fill="#334155" />
+
+                        <line x1="268" y1="274" x2="268" y2="415" stroke="#0066FF" stroke-width="14" stroke-linecap="round" opacity="0.4" filter="url(#neonBeamGlow)" />
+                        <line x1="268" y1="274" x2="268" y2="415" stroke="url(#blueLaserEnergy)" stroke-width="5" stroke-linecap="round" class="blue-charge-beam" />
+                        <line x1="268" y1="274" x2="268" y2="415" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" class="white-core-beam" />
+                    </g>
+
+                    <!-- La T / Daga Central -->
+                    <g class="logo-part part-t">
+                        <polygon points="76,64 210,64 210,102 96,102 96,118 76,128" fill="#FFFFFF" />
+                        <polygon points="210,64 344,64 344,128 324,118 324,102 210,102" fill="#94A3B8" />
+
+                        <polygon points="188,102 210,102 210,544 196,494 178,484 178,470 188,460" fill="#F1F5F9" />
+                        <polygon points="210,102 232,102 232,460 242,470 242,484 224,494 210,544" fill="#64748B" />
+
+                        <line x1="210" y1="64" x2="210" y2="544" stroke="#FFFFFF" stroke-width="1.2" opacity="0.9" />
+                    </g>
+                </g>
+            </svg>
+        </div>
+
+        <!-- Indicador interactivo de scroll inicial -->
+        <div class="intro-scroll-hint" id="intro-hint" role="button" tabindex="0">
+            <div class="w-[1px] h-12 bg-gradient-to-b from-sky-400 to-transparent"></div>
+            <span class="text-[10px] uppercase tracking-[0.3em] text-sky-400 font-mono-custom font-semibold">Toca o desliza</span>
+        </div>
+
+        <!-- Contenido principal del Hero -->
+        <div class="hero-text-group">
+            <div class="relative z-10">
+                <h1 class="name-handwritten font-signature">
+                    Tomás David Honor
+                </h1>
+            </div>
+
+            <p class="text-slate-300 text-sm sm:text-base max-w-xl font-light leading-relaxed px-4">
+                No vengo del código ni del deporte por separado — vengo de aprender a leer lo que pasa por dentro cuando todo aprieta. Hoy traduzco eso en proyectos, videos y páginas como esta.
+            </p>
+
+            <div class="mt-8 flex flex-wrap justify-center items-center gap-4 sm:gap-6 text-xs font-mono-custom tracking-wider text-slate-400">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8]"></span>
+                    <span>Creación &amp; IA</span>
+                </div>
+                <div class="w-1 h-1 bg-slate-700 rounded-full"></div>
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-purple-400 shadow-[0_0_8px_#c084fc]"></span>
+                    <span>Espacios de Expresión</span>
+                </div>
+                <div class="w-1 h-1 bg-slate-700 rounded-full"></div>
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]"></span>
+                    <span>Entrenador // 2018</span>
+                </div>
+            </div>
+
+            <div class="mt-10 flex items-center gap-4">
+                <a href="#cap-01" class="text-xs font-mono-custom tracking-wider text-sky-400 hover:text-sky-300 flex items-center gap-1.5 transition-colors">
+                    <span>Entrar a mi universo</span>
+                    <span>↓</span>
+                </a>
+                <span class="text-slate-700">|</span>
+                <a href="portfolio.html" class="text-xs font-mono-custom tracking-wider text-slate-400 hover:text-purple-300 flex items-center gap-1.5 transition-colors group">
+                    <span>Ir al Portfolio</span>
+                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30 font-mono-custom">Próximamente</span>
+                    <span class="transform group-hover:translate-x-0.5 transition-transform">→</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================================
+         CINTA CINÉTICA DE FACETAS
+         ============================================================ -->
+    <div class="marquee bleed" aria-hidden="true">
+        <div class="marquee-track" id="marquee-track">
+            <div class="marquee-item">
+                <span><b>Creación</b> &amp; IA</span><span class="marquee-sep">✦</span>
+                <span><b>Narrativa</b> Visual</span><span class="marquee-sep">✦</span>
+                <span><b>Entrenador</b> Nacional 2018</span><span class="marquee-sep">✦</span>
+                <span><b>Mundo</b> Interior</span><span class="marquee-sep">✦</span>
+                <span><b>Cápsula</b> Temporal</span><span class="marquee-sep">✦</span>
+                <span><b>Ser</b> Complementario</span><span class="marquee-sep">✦</span>
+            </div>
+            <div class="marquee-item">
+                <span><b>Creación</b> &amp; IA</span><span class="marquee-sep">✦</span>
+                <span><b>Narrativa</b> Visual</span><span class="marquee-sep">✦</span>
+                <span><b>Entrenador</b> Nacional 2018</span><span class="marquee-sep">✦</span>
+                <span><b>Mundo</b> Interior</span><span class="marquee-sep">✦</span>
+                <span><b>Cápsula</b> Temporal</span><span class="marquee-sep">✦</span>
+                <span><b>Ser</b> Complementario</span><span class="marquee-sep">✦</span>
+            </div>
+        </div>
+    </div>
+
+    <main>
+
+        <!-- ============================================================
+             01 // EL COSMOS MENTAL — el lente que enfoca
+             ============================================================ -->
+        <section class="chapter" id="cap-01">
+            <span class="chapter-index chapter-index-right" data-parallax="0.08" aria-hidden="true">01</span>
+            <div class="chapter-inner">
+                <div class="rise">
+                    <div class="badge-pill bg-sky-500/10 border border-sky-500/30 text-sky-300 mb-6">
+                        <span class="bg-sky-400"></span>
+                        <span>01 / El Cosmos Mental</span>
+                    </div>
+                    <h2 class="display-xl text-gradient-cyan kinetic mb-6">Hacer visible lo que antes solo vivía en la imaginación.</h2>
+                </div>
+
+                <div class="scrolly">
+                    <div class="scrolly-visual">
+                        <div class="lens-stage" id="lens-stage" data-state="0" aria-hidden="true">
+                            <div class="lens-halo"></div>
+                            <svg class="lens-svg" viewBox="0 0 220 220" fill="none" stroke-width="1.2">
+                                <!-- Anillos orbitales -->
+                                <circle class="lens-ring lens-ring-a" cx="110" cy="110" r="102" stroke="#38BDF8" stroke-dasharray="2 9" opacity="0.4" />
+                                <circle class="lens-ring lens-ring-b" cx="110" cy="110" r="86" stroke="#8296B0" stroke-dasharray="4 6" opacity="0.35" />
+                                <circle class="lens-ring lens-ring-c" cx="110" cy="110" r="68" stroke="#C084FC" stroke-dasharray="1 12" opacity="0.4" />
+
+                                <!-- Estructura cristalizada (estado 2) -->
+                                <g class="lens-grid" stroke="#38BDF8" opacity="0">
+                                    <path d="M110 26 L176 68 L176 152 L110 194 L44 152 L44 68 Z" opacity="0.75" />
+                                    <path d="M110 26 L110 194" opacity="0.35" />
+                                    <path d="M44 68 L176 152" opacity="0.35" />
+                                    <path d="M176 68 L44 152" opacity="0.35" />
+                                    <path d="M44 68 L176 68" opacity="0.25" />
+                                    <path d="M44 152 L176 152" opacity="0.25" />
+                                    <circle cx="110" cy="26" r="2.6" fill="#38BDF8" stroke="none" />
+                                    <circle cx="176" cy="68" r="2.6" fill="#38BDF8" stroke="none" />
+                                    <circle cx="176" cy="152" r="2.6" fill="#38BDF8" stroke="none" />
+                                    <circle cx="110" cy="194" r="2.6" fill="#38BDF8" stroke="none" />
+                                    <circle cx="44" cy="152" r="2.6" fill="#38BDF8" stroke="none" />
+                                    <circle cx="44" cy="68" r="2.6" fill="#38BDF8" stroke="none" />
+                                </g>
+
+                                <!-- Silueta de la mente -->
+                                <g class="lens-mind" stroke="#CBE3F7" opacity="0.5">
+                                    <path d="M110 48 C 74 48 64 84 64 110 C 64 138 82 172 110 172 C 138 172 156 138 156 110 C 156 84 146 48 110 48 Z" stroke-width="1.4" />
+                                    <path d="M110 40 L110 180" opacity="0.3" />
+                                    <path d="M40 110 L180 110" opacity="0.3" />
+                                </g>
+
+                                <!-- Partículas en órbita -->
+                                <g class="lens-orbit lens-orbit-a"><circle cx="110" cy="8" r="3.4" fill="#38BDF8" /></g>
+                                <g class="lens-orbit lens-orbit-b"><circle cx="110" cy="24" r="2.6" fill="#C084FC" /></g>
+                                <g class="lens-orbit lens-orbit-c"><circle cx="110" cy="212" r="2.4" fill="#34D399" /></g>
+
+                                <circle class="lens-core" cx="110" cy="110" r="6" fill="#38BDF8" />
+                            </svg>
+                            <span class="lens-readout" id="lens-readout">Difuso · sin enfocar</span>
+                        </div>
+                    </div>
+
+                    <div class="scrolly-steps" id="scrolly-steps">
+                        <div class="scrolly-step" data-state="0" data-readout="Difuso · sin enfocar">
+                            <span class="scrolly-step-index">Beat 01</span>
+                            <p>Siempre sentí que la mente alberga conceptos, atmósferas y narrativas que desbordan las palabras cotidianas.</p>
+                        </div>
+                        <div class="scrolly-step" data-state="1" data-readout="Enfocando · el lente entra">
+                            <span class="scrolly-step-index">Beat 02</span>
+                            <p>La inteligencia artificial no sustituye el sentir humano; funciona como el lente que por fin enfoca el destello interno.</p>
+                        </div>
+                        <div class="scrolly-step" data-state="2" data-readout="Cristalizado · hecho tangible">
+                            <span class="scrolly-step-index">Beat 03</span>
+                            <p>Cada pieza, video o línea de código es un intento genuino de traducir ese mundo interior a algo tangible.</p>
+                        </div>
+
+                        <div class="rise flex flex-wrap items-center gap-x-8 gap-y-3 pt-8 border-t border-white/5 text-xs text-slate-400 font-mono-custom">
+                            <div><span class="text-sky-400 font-semibold text-sm">Exploración</span> Continua</div>
+                            <div><span class="text-sky-400 font-semibold text-sm">IA</span> Como Extensión</div>
+                            <div><span class="text-sky-400 font-semibold text-sm">Proceso</span> Intuición + Algoritmo</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             MURO DE REELS — pin horizontal
+             ============================================================ -->
+        <section class="reelwall bleed band-void" id="cap-reels">
+            <div class="reelwall-pin" id="reelwall-pin">
+                <h2 class="reelwall-bigtype" id="reelwall-bigtype" data-parallax="-0.14" aria-hidden="true">IDEAS EN<br>MOVIMIENTO</h2>
+
+                <div class="reelwall-eyebrow" aria-hidden="true">
+                    <span>✦</span>
+                    <span>Muro de Reels</span>
+                </div>
+
+                <div class="reelwall-track" id="reelwall-track">
+
+                    <!-- Apertura del muro -->
+                    <div class="reel-intro">
+                        <div class="badge-pill bg-sky-500/10 border border-sky-500/30 text-sky-300 self-start">
+                            <span class="bg-sky-400"></span>
+                            <span>Conexión de Ideas</span>
+                        </div>
+                        <h3 class="display-lg text-gradient-cyan">Donde las Ideas se Encuentran</h3>
+                        <p class="lead text-sm">
+                            Fragmentos de atmósferas y conceptos en constante movimiento. Activá el sonido de cada pieza o abrila en el reproductor a pantalla completa.
+                        </p>
+                        <span class="reel-hint">
+                            <span>Seguí bajando</span>
+                            <span class="reel-hint-arrow">→</span>
+                        </span>
+                    </div>
+
+                    <!-- Reel 1 -->
+                    <div class="reel-panel group" data-video-src="videos/video-1.mp4" data-video-title="El Reflejo Virtual" data-video-tag="01 // Atmósfera" tabindex="0" role="button" aria-label="Abrir video: El Reflejo Virtual">
+                        <video class="reel-media inline-reel-video" src="videos/video-1.mp4" autoplay loop muted playsinline preload="metadata"></video>
+
+                        <button class="card-sound-btn" type="button" aria-label="Activar o silenciar audio" title="Audio">
+                            <span class="sound-static-icon">
+                                <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                    <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                                    <line x1="23" y1="9" x2="17" y2="15"></line>
+                                    <line x1="17" y1="9" x2="23" y2="15"></line>
+                                </svg>
+                            </span>
+                            <div class="sound-wave-bars" aria-hidden="true">
+                                <span class="sound-bar"></span>
+                                <span class="sound-bar"></span>
+                                <span class="sound-bar"></span>
+                            </div>
+                        </button>
+
+                        <div class="expand-badge">
+                            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                            <span>Expandir</span>
+                        </div>
+
+                        <div class="reel-overlay">
+                            <span class="reel-num text-sky-400">01 // Atmósfera</span>
+                            <h4 class="text-lg font-semibold text-white leading-tight">El Reflejo Virtual</h4>
+                            <p class="text-xs text-slate-300 font-light mt-1.5 opacity-85">Exploración de avatar cinematográfico e introspección.</p>
+                        </div>
+                    </div>
+
+                    <!-- Reel 2 -->
+                    <div class="reel-panel group" data-video-src="videos/video-2.mp4" data-video-title="Ruptura del Ruido" data-video-tag="02 // Mini Intro" tabindex="0" role="button" aria-label="Abrir video: Ruptura del Ruido">
+                        <video class="reel-media inline-reel-video" src="videos/video-2.mp4" autoplay loop muted playsinline preload="metadata"></video>
+
+                        <button class="card-sound-btn" type="button" aria-label="Activar o silenciar audio" title="Audio">
+                            <span class="sound-static-icon">
+                                <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                    <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                                    <line x1="23" y1="9" x2="17" y2="15"></line>
+                                    <line x1="17" y1="9" x2="23" y2="15"></line>
+                                </svg>
+                            </span>
+                            <div class="sound-wave-bars" aria-hidden="true">
+                                <span class="sound-bar"></span>
+                                <span class="sound-bar"></span>
+                                <span class="sound-bar"></span>
+                            </div>
+                        </button>
+
+                        <div class="expand-badge">
+                            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                            <span>Expandir</span>
+                        </div>
+
+                        <div class="reel-overlay">
+                            <span class="reel-num text-purple-400">02 // Mini Intro</span>
+                            <h4 class="text-lg font-semibold text-white leading-tight">Ruptura del Ruido</h4>
+                            <p class="text-xs text-slate-300 font-light mt-1.5 opacity-85">Secuencia de apertura generada para piezas audiovisuales.</p>
+                        </div>
+                    </div>
+
+                    <!-- Reel 3 -->
+                    <div class="reel-panel group" data-video-src="videos/video-3.mp4" data-video-title="Geometría Mental" data-video-tag="03 // Concepto" tabindex="0" role="button" aria-label="Abrir video: Geometría Mental">
+                        <video class="reel-media inline-reel-video" src="videos/video-3.mp4" autoplay loop muted playsinline preload="metadata"></video>
+
+                        <button class="card-sound-btn" type="button" aria-label="Activar o silenciar audio" title="Audio">
+                            <span class="sound-static-icon">
+                                <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                    <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                                    <line x1="23" y1="9" x2="17" y2="15"></line>
+                                    <line x1="17" y1="9" x2="23" y2="15"></line>
+                                </svg>
+                            </span>
+                            <div class="sound-wave-bars" aria-hidden="true">
+                                <span class="sound-bar"></span>
+                                <span class="sound-bar"></span>
+                                <span class="sound-bar"></span>
+                            </div>
+                        </button>
+
+                        <div class="expand-badge">
+                            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                            <span>Expandir</span>
+                        </div>
+
+                        <div class="reel-overlay">
+                            <span class="reel-num text-emerald-400">03 // Concepto</span>
+                            <h4 class="text-lg font-semibold text-white leading-tight">Geometría Mental</h4>
+                            <p class="text-xs text-slate-300 font-light mt-1.5 opacity-85">Estructuras visuales que representan ideas complejas.</p>
+                        </div>
+                    </div>
+
+                    <!-- Reel 4 -->
+                    <div class="reel-panel group" data-video-src="videos/video-4.mp4" data-video-title="Destello Creativo" data-video-tag="04 // Síntesis" tabindex="0" role="button" aria-label="Abrir video: Destello Creativo">
+                        <video class="reel-media inline-reel-video" src="videos/video-4.mp4" autoplay loop muted playsinline preload="metadata"></video>
+
+                        <button class="card-sound-btn" type="button" aria-label="Activar o silenciar audio" title="Audio">
+                            <span class="sound-static-icon">
+                                <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                    <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                                    <line x1="23" y1="9" x2="17" y2="15"></line>
+                                    <line x1="17" y1="9" x2="23" y2="15"></line>
+                                </svg>
+                            </span>
+                            <div class="sound-wave-bars" aria-hidden="true">
+                                <span class="sound-bar"></span>
+                                <span class="sound-bar"></span>
+                                <span class="sound-bar"></span>
+                            </div>
+                        </button>
+
+                        <div class="expand-badge">
+                            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                            <span>Expandir</span>
+                        </div>
+
+                        <div class="reel-overlay">
+                            <span class="reel-num text-amber-400">04 // Síntesis</span>
+                            <h4 class="text-lg font-semibold text-white leading-tight">Destello Creativo</h4>
+                            <p class="text-xs text-slate-300 font-light mt-1.5 opacity-85">Experimentación estética con contrastes de luz y sombra.</p>
+                        </div>
+                    </div>
+
+                    <!-- Cierre del muro -->
+                    <div class="reel-outro">
+                        <span class="eyebrow text-sky-400">Fin del muro</span>
+                        <h4 class="display-lg text-white" style="font-size: clamp(1.6rem, 2.6vw, 2.4rem);">Cuatro piezas, más en camino.</h4>
+                        <p class="text-sm text-slate-400 font-light leading-relaxed">
+                            Cada reel es un fragmento del mismo intento: traducir lo que pasa por dentro a algo que se pueda ver.
+                        </p>
+                        <a href="#cap-06" class="reel-hint" style="text-decoration: none;">
+                            <span>Conversemos</span>
+                            <span class="reel-hint-arrow">↓</span>
+                        </a>
+                    </div>
+
+                </div>
+
+                <div class="reelwall-cue" aria-hidden="true">
+                    <span>4 piezas</span>
+                    <span class="reelwall-cue-bar"><span class="reelwall-cue-fill" id="reelwall-cue-fill"></span></span>
+                    <span id="reelwall-cue-label">Seguí bajando</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             02 // LUZ, SOMBRA & COMPLEMENTARIEDAD — tríptico
+             ============================================================ -->
+        <section class="chapter" id="cap-02">
+            <span class="chapter-index chapter-index-left" data-parallax="0.06" aria-hidden="true">02</span>
+            <div class="chapter-inner">
+                <div class="rise mb-12 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+                    <div>
+                        <div class="badge-pill bg-purple-500/10 border border-purple-500/30 text-purple-300 mb-6">
+                            <span class="bg-purple-400"></span>
+                            <span>02 / Vulnerabilidad &amp; Conexión</span>
+                        </div>
+                        <h2 class="display-xl text-gradient-purple kinetic max-w-3xl">No soy una persona completa, sino complementaria.</h2>
+                    </div>
+                    <p class="lead max-w-md">
+                        Aceptar mis contradicciones me quitó el peso de fingir autosuficiencia. Las mejores cosas ocurren cuando mis fortalezas se cruzan con la mirada de otro.
+                    </p>
+                </div>
+
+                <div class="triptych rise rise-delay-1">
+
+                    <!-- La Luz -->
+                    <article class="panel panel-cyan">
+                        <span class="eyebrow text-sky-400">La Luz</span>
+                        <div class="panel-figure" aria-hidden="true">
+                            <svg viewBox="0 0 120 120" fill="none">
+                                <g class="ray-group" stroke="#38BDF8" stroke-width="1.6" stroke-linecap="round" opacity="0.75">
+                                    <line x1="60" y1="8" x2="60" y2="26" />
+                                    <line x1="60" y1="94" x2="60" y2="112" />
+                                    <line x1="8" y1="60" x2="26" y2="60" />
+                                    <line x1="94" y1="60" x2="112" y2="60" />
+                                    <line x1="23" y1="23" x2="36" y2="36" />
+                                    <line x1="84" y1="84" x2="97" y2="97" />
+                                    <line x1="97" y1="23" x2="84" y2="36" />
+                                    <line x1="36" y1="84" x2="23" y2="97" />
+                                </g>
+                                <circle cx="60" cy="60" r="26" fill="#38BDF8" opacity="0.08" />
+                                <circle class="ray-core" cx="60" cy="60" r="13" fill="#38BDF8" opacity="0.9" />
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-medium text-white">Chispa Creativa</h3>
+                        <p class="text-sm text-slate-400 font-light leading-relaxed">
+                            La intuición rápida, la pasión por ver conexiones donde otros ven puntos aislados, y el impulso imparable de materializar proyectos.
+                        </p>
+                        <span class="panel-foot">Intuición // Impulso</span>
+                    </article>
+
+                    <!-- La Sombra -->
+                    <article class="panel panel-purple">
+                        <span class="eyebrow text-purple-400">La Sombra</span>
+                        <div class="panel-figure" aria-hidden="true">
+                            <svg viewBox="0 0 120 120" fill="none">
+                                <defs>
+                                    <clipPath id="eclipseClip"><circle cx="60" cy="60" r="34" /></clipPath>
+                                </defs>
+                                <circle cx="60" cy="60" r="34" fill="#C084FC" opacity="0.16" />
+                                <circle cx="60" cy="60" r="34" fill="none" stroke="#C084FC" stroke-width="1.6" opacity="0.7" />
+                                <g clip-path="url(#eclipseClip)">
+                                    <circle class="eclipse-shadow" cx="60" cy="60" r="34" fill="#04060C" opacity="0.94" />
+                                </g>
+                                <circle cx="60" cy="60" r="46" fill="none" stroke="#C084FC" stroke-width="1" stroke-dasharray="2 8" opacity="0.35" />
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-medium text-white">El Silencio Incierto</h3>
+                        <p class="text-sm text-slate-400 font-light leading-relaxed">
+                            Los momentos de duda, el cansancio mental de sobrepensar y la necesidad de pausar para no quemarme en mi propio fuego.
+                        </p>
+                        <span class="panel-foot">Duda // Pausa</span>
+                    </article>
+
+                    <!-- El Encuentro -->
+                    <article class="panel panel-emerald">
+                        <span class="eyebrow text-emerald-400">El Encuentro</span>
+                        <div class="panel-figure" aria-hidden="true">
+                            <svg viewBox="0 0 120 120" fill="none">
+                                <ellipse class="venn-core" cx="60" cy="60" rx="11" ry="24" fill="#34D399" opacity="0" />
+                                <circle class="venn-left" cx="52" cy="60" r="27" fill="none" stroke="#34D399" stroke-width="1.6" opacity="0.75" />
+                                <circle class="venn-right" cx="68" cy="60" r="27" fill="none" stroke="#38BDF8" stroke-width="1.6" opacity="0.75" />
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-medium text-white">Ser Complementario</h3>
+                        <p class="text-sm text-slate-400 font-light leading-relaxed">
+                            El alivio de no tener que saberlo todo. Buscar personas que aporten lo que a mí me falta y brindar con generosidad lo que yo traigo a la mesa.
+                        </p>
+                        <span class="panel-foot">Cruce // Generosidad</span>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             03 // LA MEMORIA VIVA
+             ============================================================ -->
+        <section class="chapter bleed band-void" id="cap-03">
+            <span class="chapter-index chapter-index-right" data-parallax="0.07" aria-hidden="true">03</span>
+            <div class="chapter-inner">
+                <div class="capsule-grid">
+                    <div>
+                        <div class="rise">
+                            <div class="badge-pill bg-purple-500/10 border border-purple-500/30 text-purple-300 mb-6">
+                                <span class="bg-purple-400"></span>
+                                <span>03 / La Memoria Viva</span>
+                            </div>
+                            <h2 class="display-lg text-gradient-purple kinetic mb-6">La huella incrustada en el tiempo.</h2>
+                        </div>
+                        <p class="lead rise rise-delay-1 mb-5">
+                            Más que acumular vistas o perseguir algoritmos, entiendo cada video y cada línea de este sitio como una botella lanzada al mar digital. Aprovechar las herramientas de nuestra época es también una forma de trascender el instante: dejar una marca viva que resista el paso de los años.
+                        </p>
+                        <p class="lead rise rise-delay-2">
+                            Me conmueve pensar en volver a estos registros dentro de diez años y encontrarme con las preguntas que me desvelaban, las batallas que libraba y los mensajes que necesitaba gritarle al mundo. No busco registrar la perfección, sino el testimonio honesto de quién me estaba convirtiendo mientras construía mi camino.
+                        </p>
+
+                        <div class="era-line rise rise-delay-3">
+                            <div class="era text-emerald-400">
+                                <span class="era-year">2018</span>
+                                <span class="era-note">La cancha y la certificación: el temple como cimiento.</span>
+                            </div>
+                            <div class="era text-sky-400">
+                                <span class="era-year">Hoy</span>
+                                <span class="era-note">Traducir el mundo interior en piezas, código y atmósferas.</span>
+                            </div>
+                            <div class="era text-purple-400">
+                                <span class="era-year">+10</span>
+                                <span class="era-note">Volver a estos registros y reencontrarme con quién fui.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="capsule-stage rise rise-delay-2">
+                        <svg class="capsule-svg" viewBox="0 0 220 220" fill="none" stroke-width="1.3" aria-hidden="true">
+                            <circle class="time-ripple ripple-1" cx="110" cy="110" r="96" stroke="#C084FC" stroke-width="1" />
+                            <circle class="time-ripple ripple-2" cx="110" cy="110" r="96" stroke="#C084FC" stroke-width="1" />
+                            <circle class="time-ripple ripple-3" cx="110" cy="110" r="96" stroke="#C084FC" stroke-width="1" />
+
+                            <circle cx="110" cy="110" r="96" stroke="#C084FC" stroke-dasharray="3 7" opacity="0.3" />
+                            <circle cx="110" cy="110" r="72" stroke="#8296B0" opacity="0.28" />
+                            <rect x="46" y="68" width="128" height="84" rx="20" stroke="#C084FC" stroke-dasharray="5 4" opacity="0.4" />
+
+                            <line class="clock-hand-min" x1="110" y1="56" x2="110" y2="110" stroke="#E9D5FF" stroke-linecap="round" stroke-width="1.8" />
+                            <line class="clock-hand-hour" x1="110" y1="110" x2="146" y2="128" stroke="#C084FC" stroke-linecap="round" stroke-width="2" />
+
+                            <circle class="capsule-core" cx="110" cy="110" r="5.5" fill="#C084FC" />
+                        </svg>
+                        <span class="lens-readout text-purple-300">Cápsula temporal · testimonio vivo</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             04 // EL CIMIENTO — la cancha
+             ============================================================ -->
+        <section class="chapter" id="cap-04">
+            <span class="chapter-index chapter-index-left" data-parallax="0.06" aria-hidden="true">04</span>
+            <div class="chapter-inner">
+                <div class="court-grid">
+                    <div class="capsule-stage rise" aria-hidden="true">
+                        <svg class="court-svg" viewBox="0 0 120 160" fill="none" stroke="#34D399" stroke-width="1.4">
+                            <rect x="10" y="10" width="100" height="140" rx="3" opacity="0.85" />
+                            <line class="court-net" x1="10" y1="80" x2="110" y2="80" stroke-dasharray="3 3" />
+                            <line x1="25" y1="10" x2="25" y2="150" opacity="0.6" />
+                            <line x1="95" y1="10" x2="95" y2="150" opacity="0.6" />
+                            <line x1="25" y1="45" x2="95" y2="45" opacity="0.6" />
+                            <line x1="25" y1="115" x2="95" y2="115" opacity="0.6" />
+                            <line x1="60" y1="45" x2="60" y2="115" opacity="0.6" />
+                            <path class="rally-trail" d="M 42,138 C 80,112 30,74 28,34" stroke="#34D399" stroke-width="1" opacity="0.45" />
+                            <circle class="rally-ball" cx="42" cy="138" r="3.4" fill="#34D399" stroke="none" />
+                        </svg>
+                    </div>
+
+                    <div>
+                        <div class="rise">
+                            <div class="badge-pill bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 mb-6">
+                                <span class="bg-emerald-400"></span>
+                                <span>04 / El Cimiento</span>
+                            </div>
+                            <h2 class="display-lg text-gradient-emerald kinetic mb-6">La cancha me enseñó a leer el alma bajo presión.</h2>
+                        </div>
+                        <p class="lead rise rise-delay-1 mb-8">
+                            El tenis nunca fue solo técnica o potencia física: es una radiografía del carácter humano. En un punto de quiebre nadie puede fingir quién es. Mi certificación en 2018 y los años en cancha me dejaron la templanza, la lectura gestual y la convicción de que la serenidad interna siempre le gana al caos exterior.
+                        </p>
+
+                        <div class="rise rise-delay-2">
+                            <div class="stat-row"><span>Certificación</span><strong>Entrenador Nacional · 2018</strong></div>
+                            <div class="stat-row"><span>Presencia</span><strong>En el presente</strong></div>
+                            <div class="stat-row"><span>Temple</span><strong>Estratégico</strong></div>
+                            <div class="stat-row"><span>Enfoque</span><strong>Punto a punto</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             05 // EL ANCLAJE — detrás del ruido
+             ============================================================ -->
+        <section class="chapter bleed band-void" id="cap-05">
+            <span class="chapter-index chapter-index-right" data-parallax="0.07" aria-hidden="true">05</span>
+            <div class="chapter-inner">
+                <div class="rise mb-12 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+                    <div>
+                        <div class="badge-pill bg-sky-500/10 border border-sky-500/30 text-sky-300 mb-6">
+                            <span class="bg-sky-400"></span>
+                            <span>05 / El Anclaje</span>
+                        </div>
+                        <h2 class="display-xl text-white kinetic">Detrás del Ruido.</h2>
+                    </div>
+                    <p class="lead max-w-md">
+                        Lo que queda cuando se apagan las pantallas y el murmullo de la ciudad. El espacio íntimo donde recupero mi centro.
+                    </p>
+                </div>
+
+                <div class="anchor-grid rise rise-delay-1">
+
+                    <!-- La Frecuencia -->
+                    <article class="anchor-card anchor-cyan">
+                        <div class="w-11 h-11 rounded-full bg-sky-500/10 flex items-center justify-center text-sky-400" aria-hidden="true">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+                        </div>
+                        <h3 class="text-2xl font-medium text-white">La Frecuencia</h3>
+                        <p class="text-sm text-slate-300 font-light leading-relaxed">
+                            Donde las voces del autoengaño se callan y el alma íntegra habla. Con los auriculares puestos, el caos se ordena, bajan las ideas más puras y me encuentro conmigo sin poses.
+                        </p>
+                        <div class="anchor-visual" aria-hidden="true">
+                            <div class="freq-bars">
+                                <span class="freq-bar"></span><span class="freq-bar"></span><span class="freq-bar"></span>
+                                <span class="freq-bar"></span><span class="freq-bar"></span><span class="freq-bar"></span>
+                                <span class="freq-bar"></span><span class="freq-bar"></span><span class="freq-bar"></span>
+                                <span class="freq-bar"></span><span class="freq-bar"></span><span class="freq-bar"></span>
+                            </div>
+                        </div>
+                        <span class="panel-foot">Esencial // Mundo Interior</span>
+                    </article>
+
+                    <!-- Compañeros de Calma -->
+                    <article class="anchor-card anchor-purple">
+                        <div class="w-11 h-11 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-400" aria-hidden="true">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-medium text-white">Compañeros de Calma</h3>
+                        <p class="text-sm text-slate-300 font-light leading-relaxed">
+                            En un mundo acelerado, mis compañeros de cuatro patas son mi cable a tierra. No saben de algoritmos ni pantallas: su afecto es simple, transparente y un recordatorio de volver a lo esencial.
+                        </p>
+                        <div class="anchor-visual" aria-hidden="true">
+                            <div class="paw-trail">
+                                <svg class="paw-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="16.5" rx="5.5" ry="4.5"/><circle cx="5.8" cy="9.2" r="2.1"/><circle cx="10.6" cy="5.8" r="2.3"/><circle cx="15.4" cy="6" r="2.3"/><circle cx="18.6" cy="9.6" r="2.1"/></svg>
+                                <svg class="paw-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="16.5" rx="5.5" ry="4.5"/><circle cx="5.8" cy="9.2" r="2.1"/><circle cx="10.6" cy="5.8" r="2.3"/><circle cx="15.4" cy="6" r="2.3"/><circle cx="18.6" cy="9.6" r="2.1"/></svg>
+                                <svg class="paw-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="16.5" rx="5.5" ry="4.5"/><circle cx="5.8" cy="9.2" r="2.1"/><circle cx="10.6" cy="5.8" r="2.3"/><circle cx="15.4" cy="6" r="2.3"/><circle cx="18.6" cy="9.6" r="2.1"/></svg>
+                                <svg class="paw-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="16.5" rx="5.5" ry="4.5"/><circle cx="5.8" cy="9.2" r="2.1"/><circle cx="10.6" cy="5.8" r="2.3"/><circle cx="15.4" cy="6" r="2.3"/><circle cx="18.6" cy="9.6" r="2.1"/></svg>
+                            </div>
+                        </div>
+                        <span class="panel-foot">Lealtad // Hogar &amp; Presencia</span>
+                    </article>
+
+                    <!-- Cuerpo & Juego -->
+                    <article class="anchor-card anchor-emerald">
+                        <div class="w-11 h-11 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400" aria-hidden="true">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
+                        </div>
+                        <h3 class="text-2xl font-medium text-white">Cuerpo &amp; Juego</h3>
+                        <p class="text-sm text-slate-300 font-light leading-relaxed">
+                            Mover el cuerpo para vaciar tensiones mentales y sumergirme en una buena historia o videojuego para desconectar. Jugar sin la obligación de producir, solo por el placer de explorar.
+                        </p>
+                        <div class="anchor-visual" aria-hidden="true">
+                            <svg class="pulse-line" viewBox="0 0 320 68" preserveAspectRatio="none">
+                                <path d="M0,34 L104,34 L118,8 L136,60 L152,16 L168,34 L320,34" fill="none" stroke="#34D399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span class="panel-foot">Desconexión // Volver al Origen</span>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             06 // DIÁLOGO — portal de cierre
+             ============================================================ -->
+        <section class="chapter" id="cap-06">
+            <div class="chapter-inner">
+                <div class="portal">
+                    <div class="portal-rings" aria-hidden="true">
+                        <div class="portal-ring"></div>
+                        <div class="portal-ring"></div>
+                        <div class="portal-ring"></div>
+                        <div class="portal-ring"></div>
+                    </div>
+
+                    <div class="badge-pill bg-sky-500/10 border border-sky-500/30 text-sky-300 mb-8 relative z-10 rise">
+                        <span class="bg-sky-400"></span>
+                        <span>Diálogo &amp; Sinergia</span>
+                    </div>
+
+                    <h2 class="display-xl text-white max-w-4xl mb-7 relative z-10 kinetic">Si algo de esto resuena contigo, conversemos.</h2>
+
+                    <p class="lead max-w-2xl mb-12 relative z-10 rise rise-delay-1 text-center">
+                        Creo en las coincidencias de miradas, en conspirar proyectos creativos y en construir cosas donde cada uno aporte lo mejor de su mundo.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-lg relative z-10 rise rise-delay-2">
+                        <a href="mailto:tomasdavidhonor@gmail.com" class="btn-portal magnetic group w-full sm:w-auto">
+                            <span class="relative z-10">Escribime un Mensaje</span>
+                            <svg class="w-4 h-4 stroke-current fill-none relative z-10 transform group-hover:translate-x-1.5 transition-transform" viewBox="0 0 24 24" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </a>
+
+                        <a href="portfolio.html" class="btn-portal btn-portal-secondary magnetic group w-full sm:w-auto">
+                            <span class="relative z-10">Explorar Portfolio</span>
+                            <svg class="w-4 h-4 stroke-current fill-none relative z-10 transform group-hover:translate-x-1.5 transition-transform" viewBox="0 0 24 24" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <hr class="rule-glow w-full max-w-2xl mt-16 mb-6 relative z-10">
+                    <p class="eyebrow text-slate-500 relative z-10">Tomás David Honor · Espacio Inmersivo</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ============================================================
+         MODAL DE REPRODUCCIÓN
+         ============================================================ -->
+    <div id="video-modal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div id="modal-content">
+            <div class="flex items-center justify-between px-1 text-white">
+                <div class="flex items-center gap-3 min-w-0">
+                    <span id="modal-video-tag" class="text-[11px] font-mono-custom uppercase tracking-widest text-sky-400 shrink-0">01 // Atmósfera</span>
+                    <span class="text-slate-600 font-mono-custom shrink-0">•</span>
+                    <h3 id="modal-video-title" class="text-sm sm:text-base font-medium text-slate-200 truncate">El Reflejo Virtual</h3>
+                </div>
+                <button id="close-modal-btn" class="w-9 h-9 shrink-0 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-sky-400 hover:bg-white/10 transition-all focus:outline-none focus:ring-2 focus:ring-sky-400 cursor-pointer" aria-label="Cerrar reproductor">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <div class="modal-frame">
+                <video id="video-player" controls controlsList="nodownload" playsinline preload="metadata">
+                    Tu navegador no soporta la reproducción de video.
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const body = document.body;
+        const heroHeader = document.getElementById('hero-header');
+        const spine = document.getElementById('spine');
+        let introCompleted = false;
+
+        /* ============================================================
+           DESBLOQUEO CINEMATOGRÁFICO (igual que la v1)
+           ============================================================ */
+        function unlockExperience() {
+            if (introCompleted) return;
+            introCompleted = true;
+
+            const cx = window.innerWidth / 2;
+            const cy = window.innerHeight / 2;
+            triggerElectricBurst(cx, cy, 14);
+
+            heroHeader.classList.remove('is-intro');
+
+            setTimeout(() => {
+                body.classList.remove('scroll-locked');
+                if (spine) spine.classList.add('is-live');
+                revealInView();
+            }, 1600);
+        }
+
+        window.addEventListener('wheel', unlockExperience, { once: true, passive: true });
+        window.addEventListener('touchmove', unlockExperience, { once: true, passive: true });
+
+        const emblemTrigger = document.getElementById('emblem-trigger');
+        if (emblemTrigger) {
+            emblemTrigger.addEventListener('click', unlockExperience);
+            emblemTrigger.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    unlockExperience();
+                }
+            });
+        }
+
+        const introHint = document.getElementById('intro-hint');
+        if (introHint) {
+            introHint.addEventListener('click', unlockExperience);
+        }
+
+        /* ============================================================
+           CANVAS: CAMPO DE PARTÍCULAS + RAYOS ELÉCTRICOS
+           ============================================================ */
+        const canvas = document.getElementById('fx-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        let dpr = window.devicePixelRatio || 1;
+        let stars = [];
+
+        function seedStars() {
+            const target = prefersReduced ? 0 : Math.min(190, Math.round((width * height) / 9000));
+            stars = [];
+            for (let i = 0; i < target; i++) {
+                stars.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    z: 0.25 + Math.random() * 0.75,
+                    r: 0.4 + Math.random() * 1.3,
+                    drift: 0.02 + Math.random() * 0.09,
+                    hue: Math.random()
+                });
+            }
+        }
+
+        function resizeCanvas() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            dpr = window.devicePixelRatio || 1;
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            ctx.resetTransform();
+            ctx.scale(dpr, dpr);
+            seedStars();
+        }
+        resizeCanvas();
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            measureReelwall();
+        });
+
+        class LightningBolt {
+            constructor(x1, y1, x2, y2) {
+                this.x1 = x1;
+                this.y1 = y1;
+                this.x2 = x2;
+                this.y2 = y2;
+                this.alpha = 1;
+                this.segments = [];
+                this.build();
+            }
+
+            build() {
+                const diffX = this.x2 - this.x1;
+                const diffY = this.y2 - this.y1;
+                const dist = Math.hypot(diffX, diffY);
+                const steps = Math.max(4, Math.floor(dist / 14));
+
+                let curX = this.x1;
+                let curY = this.y1;
+                this.segments.push({ x: curX, y: curY });
+
+                for (let i = 1; i < steps; i++) {
+                    const progress = i / steps;
+                    const targetX = this.x1 + diffX * progress;
+                    const targetY = this.y1 + diffY * progress;
+                    const jitter = (Math.random() - 0.5) * 36;
+                    curX = targetX + jitter;
+                    curY = targetY + jitter;
+                    this.segments.push({ x: curX, y: curY });
+                }
+                this.segments.push({ x: this.x2, y: this.y2 });
+            }
+
+            draw() {
+                if (this.segments.length < 2) return;
+                ctx.save();
+
+                ctx.strokeStyle = `rgba(56, 189, 248, ${this.alpha * 0.9})`;
+                ctx.lineWidth = 3.2;
+                ctx.shadowColor = '#00D4FF';
+                ctx.shadowBlur = 18;
+
+                ctx.beginPath();
+                ctx.moveTo(this.segments[0].x, this.segments[0].y);
+                for (let i = 1; i < this.segments.length; i++) {
+                    ctx.lineTo(this.segments[i].x, this.segments[i].y);
+                }
+                ctx.stroke();
+
+                ctx.shadowBlur = 0;
+                ctx.strokeStyle = `rgba(255, 255, 255, ${this.alpha})`;
+                ctx.lineWidth = 1.2;
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            update() {
+                this.alpha -= 0.045;
+            }
+        }
+
+        let bolts = [];
+
+        function triggerElectricBurst(originX, originY, amount = 5) {
+            if (prefersReduced) return;
+            for (let i = 0; i < amount; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const length = 90 + Math.random() * 160;
+                const destX = originX + Math.cos(angle) * length;
+                const destY = originY + Math.sin(angle) * length;
+                bolts.push(new LightningBolt(originX, originY, destX, destY));
+            }
+        }
+
+        setInterval(() => {
+            if (!emblemTrigger || !introCompleted || document.hidden) return;
+            const rect = emblemTrigger.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            if (cy > -100 && cy < window.innerHeight + 100) {
+                triggerElectricBurst(cx, cy, 3);
+            }
+        }, 3800);
+
+        let scrollY = window.scrollY;
+        let lastScrollY = scrollY;
+        let scrollVel = 0;
+        let pointerX = width / 2;
+        let pointerY = height / 2;
+
+        function drawStars() {
+            for (const s of stars) {
+                const px = s.x + (pointerX - width / 2) * 0.02 * s.z;
+                const py = ((s.y - scrollY * s.drift) % height + height) % height;
+                const streak = Math.min(28, Math.abs(scrollVel) * s.z * 0.35);
+
+                ctx.beginPath();
+                if (streak > 1.5) {
+                    ctx.strokeStyle = s.hue > 0.72
+                        ? `rgba(192, 132, 252, ${0.16 + s.z * 0.3})`
+                        : `rgba(180, 220, 255, ${0.14 + s.z * 0.32})`;
+                    ctx.lineWidth = s.r;
+                    ctx.moveTo(px, py);
+                    ctx.lineTo(px, py + (scrollVel > 0 ? -streak : streak));
+                    ctx.stroke();
+                } else {
+                    ctx.fillStyle = s.hue > 0.72
+                        ? `rgba(192, 132, 252, ${0.2 + s.z * 0.4})`
+                        : `rgba(196, 226, 255, ${0.18 + s.z * 0.45})`;
+                    ctx.arc(px, py, s.r, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+        }
+
+        function animateFX() {
+            ctx.clearRect(0, 0, width, height);
+            if (!prefersReduced) drawStars();
+            for (let i = bolts.length - 1; i >= 0; i--) {
+                bolts[i].update();
+                bolts[i].draw();
+                if (bolts[i].alpha <= 0) bolts.splice(i, 1);
+            }
+            requestAnimationFrame(animateFX);
+        }
+        animateFX();
+
+        /* ============================================================
+           SPOTLIGHT + BOTONES MAGNÉTICOS
+           ============================================================ */
+        const spotlight = document.getElementById('spotlight');
+        const magnets = document.querySelectorAll('.magnetic');
+
+        if (window.innerWidth >= 992) {
+            window.addEventListener('mousemove', (e) => {
+                pointerX = e.clientX;
+                pointerY = e.clientY;
+                if (spotlight) {
+                    spotlight.style.left = `${e.clientX}px`;
+                    spotlight.style.top = `${e.clientY}px`;
+                }
+                if (!prefersReduced) {
+                    magnets.forEach((el) => {
+                        const r = el.getBoundingClientRect();
+                        const dx = e.clientX - (r.left + r.width / 2);
+                        const dy = e.clientY - (r.top + r.height / 2);
+                        const dist = Math.hypot(dx, dy);
+                        if (dist < 220) {
+                            el.style.transform = `translate(${dx * 0.09}px, ${dy * 0.12}px)`;
+                        } else {
+                            el.style.transform = '';
+                        }
+                    });
+                }
+            }, { passive: true });
+        }
+
+        /* ============================================================
+           REVELADOS AL ENTRAR EN PANTALLA
+           ============================================================ */
+        document.querySelectorAll('.kinetic').forEach((el) => {
+            const words = el.textContent.trim().split(/\s+/);
+            el.textContent = '';
+            words.forEach((word, i) => {
+                const span = document.createElement('span');
+                span.textContent = word;
+                span.style.setProperty('--i', i);
+                el.appendChild(span);
+                if (i < words.length - 1) el.appendChild(document.createTextNode(' '));
+            });
+        });
+
+        const revealTargets = document.querySelectorAll('.rise, .kinetic');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-in');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+        revealTargets.forEach((el) => revealObserver.observe(el));
+
+        function revealInView() {
+            revealTargets.forEach((el) => {
+                const r = el.getBoundingClientRect();
+                if (r.top < window.innerHeight * 0.92 && r.bottom > 0) {
+                    el.classList.add('is-in');
+                }
+            });
+        }
+
+        /* ============================================================
+           SCROLLYTELLING DEL LENTE
+           ============================================================ */
+        const lensStage = document.getElementById('lens-stage');
+        const lensReadout = document.getElementById('lens-readout');
+        const scrollySteps = document.querySelectorAll('.scrolly-step');
+
+        const stepObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+                scrollySteps.forEach((s) => s.classList.remove('is-active'));
+                entry.target.classList.add('is-active');
+                if (lensStage) lensStage.dataset.state = entry.target.dataset.state;
+                if (lensReadout) lensReadout.textContent = entry.target.dataset.readout;
+            });
+        }, { threshold: 0.55, rootMargin: '-20% 0px -20% 0px' });
+
+        scrollySteps.forEach((s) => stepObserver.observe(s));
+        if (scrollySteps.length) scrollySteps[0].classList.add('is-active');
+
+        /* ============================================================
+           MURO DE REELS: PIN HORIZONTAL MOVIDO POR SCROLL VERTICAL
+           ============================================================ */
+        const reelwall = document.getElementById('cap-reels');
+        const reelTrack = document.getElementById('reelwall-track');
+        const reelBigType = document.getElementById('reelwall-bigtype');
+        const reelCueFill = document.getElementById('reelwall-cue-fill');
+        const reelCueLabel = document.getElementById('reelwall-cue-label');
+        let reelOverflow = 0;
+        let pinEnabled = false;
+
+        function measureReelwall() {
+            pinEnabled = window.innerWidth >= 1024 && !prefersReduced;
+            if (!reelTrack) return;
+            if (!pinEnabled) {
+                reelTrack.style.transform = '';
+                reelOverflow = 0;
+                return;
+            }
+            reelOverflow = Math.max(0, reelTrack.scrollWidth - window.innerWidth);
+        }
+
+        /* ============================================================
+           MOTOR DE SCROLL: spine, parallax, muro de reels
+           ============================================================ */
+        const spineNodes = [...document.querySelectorAll('.spine-node')];
+        const spineFill = document.getElementById('spine-fill');
+        const chapters = spineNodes.map((n) => document.querySelector(n.getAttribute('href')));
+        const parallaxNodes = [...document.querySelectorAll('[data-parallax]')];
+        let scrollQueued = false;
+
+        function onScrollFrame() {
+            scrollQueued = false;
+            scrollY = window.scrollY;
+            scrollVel = scrollY - lastScrollY;
+            lastScrollY = scrollY;
+
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? Math.min(1, Math.max(0, scrollY / docHeight)) : 0;
+            if (spineFill) spineFill.style.height = `${progress * 100}%`;
+
+            // Capítulo activo: el más cercano al centro del viewport
+            const mid = window.innerHeight * 0.45;
+            let activeIndex = -1;
+            let bestDist = Infinity;
+            chapters.forEach((sec, i) => {
+                if (!sec) return;
+                const r = sec.getBoundingClientRect();
+                if (r.bottom < 0 || r.top > window.innerHeight) return;
+                const dist = Math.abs(r.top - mid);
+                if (dist < bestDist) {
+                    bestDist = dist;
+                    activeIndex = i;
+                }
+            });
+            spineNodes.forEach((n, i) => n.classList.toggle('is-active', i === activeIndex));
+
+            // Parallax de numerales y tipografía gigante
+            if (!prefersReduced) {
+                parallaxNodes.forEach((el) => {
+                    const factor = parseFloat(el.dataset.parallax) || 0;
+                    const r = el.getBoundingClientRect();
+                    if (r.bottom < -200 || r.top > window.innerHeight + 200) return;
+                    const offset = (r.top - window.innerHeight / 2) * factor;
+                    el.style.transform = el === reelBigType
+                        ? `translate(-50%, -50%) translateX(${offset}px)`
+                        : `translateY(${offset}px)`;
+                });
+            }
+
+            // Muro de reels
+            if (pinEnabled && reelwall && reelTrack && reelOverflow > 0) {
+                const r = reelwall.getBoundingClientRect();
+                const total = reelwall.offsetHeight - window.innerHeight;
+                const passed = Math.min(Math.max(-r.top, 0), total);
+                const p = total > 0 ? passed / total : 0;
+                reelTrack.style.transform = `translateX(${-p * reelOverflow}px)`;
+                if (reelCueFill) reelCueFill.style.width = `${p * 100}%`;
+                if (reelCueLabel) {
+                    reelCueLabel.textContent = p > 0.97 ? 'Fin del muro' : `${Math.max(1, Math.ceil(p * 4))} / 4`;
+                }
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            if (!scrollQueued) {
+                scrollQueued = true;
+                requestAnimationFrame(onScrollFrame);
+            }
+        }, { passive: true });
+
+        /* ============================================================
+           NAVEGACIÓN INTERNA: siempre al inicio del capítulo
+           (por defecto el navegador alinea al borde más cercano, lo que
+           puede dejarte a mitad de una sección más alta que la pantalla)
+           ============================================================ */
+        document.querySelectorAll('a[href^="#"]').forEach((link) => {
+            link.addEventListener('click', (e) => {
+                const id = link.getAttribute('href');
+                if (!id || id === '#') return;
+                const target = document.querySelector(id);
+                if (!target) return;
+                e.preventDefault();
+                const top = target.getBoundingClientRect().top + window.scrollY;
+                window.scrollTo({ top, behavior: prefersReduced ? 'auto' : 'smooth' });
+            });
+        });
+
+        /* ============================================================
+           SONIDO POR REEL
+           ============================================================ */
+        const inlineVideos = document.querySelectorAll('.inline-reel-video');
+        const soundButtons = document.querySelectorAll('.card-sound-btn');
+
+        function updateSoundButtonVisual(btn, isMuted) {
+            btn.classList.toggle('is-active', !isMuted);
+        }
+
+        soundButtons.forEach((btn) => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const card = btn.closest('.reel-panel');
+                const video = card ? card.querySelector('video') : null;
+                if (!video) return;
+
+                const willMute = !video.muted;
+                if (!willMute) {
+                    inlineVideos.forEach((otherVideo) => {
+                        if (otherVideo !== video) {
+                            otherVideo.muted = true;
+                            const otherBtn = otherVideo.closest('.reel-panel');
+                            if (otherBtn) {
+                                const b = otherBtn.querySelector('.card-sound-btn');
+                                if (b) updateSoundButtonVisual(b, true);
+                            }
+                        }
+                    });
+                    video.muted = false;
+                    video.play().catch(() => {});
+                    updateSoundButtonVisual(btn, false);
+                } else {
+                    video.muted = true;
+                    updateSoundButtonVisual(btn, true);
+                }
+            });
+        });
+
+        // Ahorro de recursos: pausar los reels fuera de pantalla
+        const videoVisibilityObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                const video = entry.target;
+                if (entry.isIntersecting) {
+                    video.play().catch(() => {});
+                } else {
+                    video.pause();
+                }
+            });
+        }, { threshold: 0.2 });
+
+        inlineVideos.forEach((v) => videoVisibilityObserver.observe(v));
+
+        /* ============================================================
+           MODAL DE REPRODUCCIÓN
+           ============================================================ */
+        const videoModal = document.getElementById('video-modal');
+        const videoPlayer = document.getElementById('video-player');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const modalTitle = document.getElementById('modal-video-title');
+        const modalTag = document.getElementById('modal-video-tag');
+        let activeCardVideo = null;
+
+        function openVideoModal(card) {
+            if (!card || !videoPlayer || !videoModal) return;
+            const cardVideo = card.querySelector('video');
+            const src = card.getAttribute('data-video-src') || (cardVideo ? cardVideo.src : '');
+            const title = card.getAttribute('data-video-title');
+            const tag = card.getAttribute('data-video-tag');
+
+            activeCardVideo = cardVideo;
+            if (cardVideo) cardVideo.pause();
+
+            videoPlayer.src = src;
+            if (cardVideo && !isNaN(cardVideo.currentTime)) {
+                videoPlayer.currentTime = cardVideo.currentTime;
+            }
+            if (modalTitle) modalTitle.textContent = title || 'Video';
+            if (modalTag) modalTag.textContent = tag || '';
+
+            videoModal.classList.add('is-active');
+            videoModal.setAttribute('aria-hidden', 'false');
+            videoPlayer.play().catch(() => {});
+        }
+
+        function closeVideoModal() {
+            if (!videoModal) return;
+            videoModal.classList.remove('is-active');
+            videoModal.setAttribute('aria-hidden', 'true');
+            if (videoPlayer) {
+                if (activeCardVideo) {
+                    if (!isNaN(videoPlayer.currentTime)) {
+                        activeCardVideo.currentTime = videoPlayer.currentTime;
+                    }
+                    activeCardVideo.play().catch(() => {});
+                }
+                videoPlayer.pause();
+                videoPlayer.removeAttribute('src');
+                videoPlayer.load();
+            }
+            activeCardVideo = null;
+        }
+
+        document.querySelectorAll('.reel-panel').forEach((card) => {
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('.card-sound-btn')) return;
+                openVideoModal(card);
+            });
+
+            card.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    if (e.target.closest('.card-sound-btn')) return;
+                    e.preventDefault();
+                    openVideoModal(card);
+                }
+            });
+        });
+
+        if (closeModalBtn) closeModalBtn.addEventListener('click', closeVideoModal);
+
+        if (videoModal) {
+            videoModal.addEventListener('click', (e) => {
+                if (e.target === videoModal) closeVideoModal();
+            });
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && videoModal && videoModal.classList.contains('is-active')) {
+                closeVideoModal();
+            }
+        });
+
+        /* ============================================================
+           ARRANQUE
+           ============================================================ */
+        measureReelwall();
+        onScrollFrame();
+        if (prefersReduced) {
+            body.classList.remove('scroll-locked');
+            if (spine) spine.classList.add('is-live');
+            revealInView();
+        }
+    </script>
+</body>
+</html>
