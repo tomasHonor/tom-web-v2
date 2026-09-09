@@ -431,7 +431,16 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Titulares cinéticos: cada palabra entra escalonada */
+        /* Titulares cinéticos: cada palabra entra escalonada.
+           text-wrap:balance (heredado de .display-xl/.display-lg) recalcula
+           el ancho del bloque probando varias columnas internamente, y con
+           hijos inline-block que además llevan transform/filter propio ese
+           recálculo puede apilarlos en vez de dejarlos fluir en línea. Se
+           desactiva balance específicamente donde corre el split por palabra. */
+        .kinetic {
+            text-wrap: wrap;
+        }
+
         .kinetic > span {
             display: inline-block;
             opacity: 0;
