@@ -446,6 +446,11 @@
             opacity: 0;
             transform: translateY(0.55em);
             filter: blur(10px);
+            /* Reserva su propia capa de composición ANTES de que arranque la
+               transición (en vez de promoverla recién a mitad de camino),
+               así el navegador no tiene que recortar/repintar el texto
+               vecino mientras cada palabra difumina por separado. */
+            will-change: opacity, transform, filter;
             transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
                         transform 0.95s cubic-bezier(0.16, 1, 0.3, 1),
                         filter 0.85s ease;
@@ -2767,18 +2772,29 @@
         const magnets = document.querySelectorAll('.magnetic');
 
         if (window.innerWidth >= 992) {
-            window.addEventListener('mousemove', (e) => {
-                pointerX = e.clientX;
-                pointerY = e.clientY;
+            // El mousemove crudo puede disparar cientos de eventos/seg (p.ej.
+            // moviendo el mouse en círculos). Escribir estilos y, peor, leer
+            // getBoundingClientRect() (fuerza layout) en cada uno de esos
+            // eventos satura al hilo principal justo cuando además hay spans
+            // con filter:blur animando en el titular recién revelado, y eso
+            // puede producir un pintado corrupto/superpuesto del texto. Se
+            // agrupa todo el trabajo en un único requestAnimationFrame por
+            // cuadro, y el spotlight se mueve con transform (compositor) en
+            // vez de left/top (layout).
+            let mouseX = width / 2;
+            let mouseY = height / 2;
+            let mouseQueued = false;
+
+            function flushMouseFrame() {
+                mouseQueued = false;
                 if (spotlight) {
-                    spotlight.style.left = `${e.clientX}px`;
-                    spotlight.style.top = `${e.clientY}px`;
+                    spotlight.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
                 }
                 if (!prefersReduced) {
                     magnets.forEach((el) => {
                         const r = el.getBoundingClientRect();
-                        const dx = e.clientX - (r.left + r.width / 2);
-                        const dy = e.clientY - (r.top + r.height / 2);
+                        const dx = mouseX - (r.left + r.width / 2);
+                        const dy = mouseY - (r.top + r.height / 2);
                         const dist = Math.hypot(dx, dy);
                         if (dist < 220) {
                             el.style.transform = `translate(${dx * 0.09}px, ${dy * 0.12}px)`;
@@ -2786,6 +2802,17 @@
                             el.style.transform = '';
                         }
                     });
+                }
+            }
+
+            window.addEventListener('mousemove', (e) => {
+                pointerX = e.clientX;
+                pointerY = e.clientY;
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                if (!mouseQueued) {
+                    mouseQueued = true;
+                    requestAnimationFrame(flushMouseFrame);
                 }
             }, { passive: true });
         }
