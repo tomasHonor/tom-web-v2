@@ -487,17 +487,29 @@
 
         .chapter-inner {
             position: relative;
-            /* 90vw por sí solo no reserva margen fijo: entre ~1180 y 1730px
-               de viewport el margen lateral que deja (5vw de cada lado)
-               puede ser menor que el ancho de la columna de navegación fija
-               (.spine, a la izquierda: punto + etiqueta de texto, hasta
-               ~230px) y el título -que ya usa casi todo el ancho de la
-               columna- termina chocando contra esa etiqueta. Se resta un
-               margen fijo de 250px de cada lado (500px total), verificado
-               con al menos 20px de despeje real en todo ese rango. */
-            width: min(1180px, calc(100vw - 500px));
+            width: min(1180px, 90vw);
             margin: 0 auto;
             z-index: 2;
+        }
+
+        /* .spine solo se muestra a partir de 1180px (ver su propio media
+           query), así que el margen extra para no chocar con ella también
+           debe limitarse a ese rango. Por debajo de 1180px no hay barra
+           lateral con la que chocar, y restar un valor fijo ahí (como se
+           hacía antes) daba ancho NEGATIVO en celular -toda la columna de
+           contenido colapsaba a 0px-. */
+        @media (min-width: 1180px) {
+            .chapter-inner {
+                /* 90vw por sí solo no reserva margen fijo: entre 1180 y
+                   ~1730px de viewport el margen lateral que deja (5vw de
+                   cada lado) puede ser menor que el ancho de la columna de
+                   navegación fija (punto + etiqueta de texto, hasta ~230px)
+                   y el título termina chocando contra esa etiqueta. Se
+                   resta un margen fijo de 250px de cada lado (500px total),
+                   verificado con al menos 20px de despeje real en todo ese
+                   rango. */
+                width: min(1180px, calc(100vw - 500px));
+            }
         }
 
         .chapter-index {
