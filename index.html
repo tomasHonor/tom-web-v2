@@ -378,19 +378,24 @@
         /* ============================================================
            SISTEMA NUEVO — TIPOGRAFÍA DE IMPACTO
            ============================================================ */
+        /* Bajado de clamp(...,6rem) a clamp(...,3.75rem) y de peso 200 a 300:
+           a 6rem/200 se veía "gigante de hero" para una sola palabra corta,
+           pero estos títulos son oraciones completas y a ese tamaño costaba
+           leerlos. También se abrió el line-height (0.98→1.15) para que las
+           oraciones de dos líneas no se sientan apretadas. */
         .display-xl {
-            font-size: clamp(2.6rem, 7vw, 6rem);
-            font-weight: 200;
-            line-height: 0.98;
-            letter-spacing: -0.035em;
+            font-size: clamp(2.2rem, 4.4vw, 3.75rem);
+            font-weight: 300;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
             text-wrap: balance;
         }
 
         .display-lg {
-            font-size: clamp(2.1rem, 5vw, 4rem);
-            font-weight: 200;
-            line-height: 1.02;
-            letter-spacing: -0.03em;
+            font-size: clamp(1.75rem, 3.2vw, 2.75rem);
+            font-weight: 300;
+            line-height: 1.18;
+            letter-spacing: -0.015em;
             text-wrap: balance;
         }
 
