@@ -431,35 +431,22 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Titulares cinéticos: cada palabra entra escalonada.
-           text-wrap:balance (heredado de .display-xl/.display-lg) recalcula
-           el ancho del bloque probando varias columnas internamente, y con
-           hijos inline-block que además llevan transform/filter propio ese
-           recálculo puede apilarlos en vez de dejarlos fluir en línea. Se
-           desactiva balance específicamente donde corre el split por palabra. */
+        /* Titulares: se abandonó el split palabra-por-palabra (spans
+           inline-block animando por separado) porque, aun probando varias
+           causas distintas -text-wrap:balance, filter:blur-, seguía
+           apareciendo pintado corrupto/superpuesto en navegadores reales.
+           En vez de seguir cazando esa causa puntual, el titular entra
+           como UN solo bloque (mismo mecanismo que .rise, ya usado en el
+           resto de la página sin este problema). Menos vistoso en el
+           detalle, pero elimina de raíz la clase entera de bug. */
         .kinetic {
-            text-wrap: wrap;
-        }
-
-        .kinetic > span {
-            display: inline-block;
             opacity: 0;
-            transform: translateY(0.55em);
-            /* SIN filter:blur aquí a propósito. Animar blur() en varios
-               inline-block vecinos a la vez es un patrón frágil: el área
-               pintada de cada palabra se expande más allá de su propia caja
-               por el radio del blur, y en varios navegadores esa región
-               extra no siempre se invalida/limpia bien cuadro a cuadro,
-               dejando "restos" de cuadros anteriores superpuestos (se ve
-               como letras garabateadas). opacity+transform alcanzan para el
-               efecto de entrada y son mucho más robustos. */
-            will-change: opacity, transform;
-            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-            transition-delay: calc(var(--i) * 55ms);
+            transform: translateY(28px);
+            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .kinetic.is-in > span {
+        .kinetic.is-in {
             opacity: 1;
             transform: translateY(0);
         }
@@ -1748,7 +1735,7 @@
                 animation: none !important;
             }
 
-            .kinetic > span,
+            .kinetic,
             .rise {
                 opacity: 1 !important;
                 transform: none !important;
@@ -2821,18 +2808,6 @@
         /* ============================================================
            REVELADOS AL ENTRAR EN PANTALLA
            ============================================================ */
-        document.querySelectorAll('.kinetic').forEach((el) => {
-            const words = el.textContent.trim().split(/\s+/);
-            el.textContent = '';
-            words.forEach((word, i) => {
-                const span = document.createElement('span');
-                span.textContent = word;
-                span.style.setProperty('--i', i);
-                el.appendChild(span);
-                if (i < words.length - 1) el.appendChild(document.createTextNode(' '));
-            });
-        });
-
         const revealTargets = document.querySelectorAll('.rise, .kinetic');
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
