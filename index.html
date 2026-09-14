@@ -482,7 +482,15 @@
 
         .chapter-inner {
             position: relative;
-            width: min(1180px, 90vw);
+            /* 90vw por sí solo no reserva margen fijo: entre ~1180 y 1730px
+               de viewport el margen lateral que deja (5vw de cada lado)
+               puede ser menor que el ancho de la columna de navegación fija
+               (.spine, a la izquierda: punto + etiqueta de texto, hasta
+               ~230px) y el título -que ya usa casi todo el ancho de la
+               columna- termina chocando contra esa etiqueta. Se resta un
+               margen fijo de 250px de cada lado (500px total), verificado
+               con al menos 20px de despeje real en todo ese rango. */
+            width: min(1180px, calc(100vw - 500px));
             margin: 0 auto;
             z-index: 2;
         }
@@ -1138,7 +1146,10 @@
                 display: flex;
                 align-items: center;
             }
-            .reelwall-track { padding: 0 10vw; }
+            /* max(10vw, 250px): mismo despeje mínimo fijo que .chapter-inner
+               para no chocar con la columna de navegación (.spine) a la
+               izquierda en anchos de pantalla medios. */
+            .reelwall-track { padding: 0 max(10vw, 250px); }
             .reel-panel { width: min(24vw, 372px); }
             .reel-intro,
             .reel-outro { max-height: 74vh; }
