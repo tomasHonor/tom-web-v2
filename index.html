@@ -1798,7 +1798,7 @@
         <div class="spine-rail" aria-hidden="true"><div class="spine-fill" id="spine-fill"></div></div>
         <ul class="spine-nodes">
             <li><a class="spine-node" href="#cap-01"><span class="spine-dot"></span><span class="spine-label">01 · Cosmos Mental</span></a></li>
-            <li><a class="spine-node" href="#cap-reels"><span class="spine-dot"></span><span class="spine-label">✦ · Muro de Reels</span></a></li>
+            <li><a class="spine-node" href="#cap-reels"><span class="spine-dot"></span><span class="spine-label">✦ · Exploración</span></a></li>
             <li><a class="spine-node" href="#cap-02"><span class="spine-dot"></span><span class="spine-label">02 · Luz & Sombra</span></a></li>
             <li><a class="spine-node" href="#cap-03"><span class="spine-dot"></span><span class="spine-label">03 · Memoria Viva</span></a></li>
             <li><a class="spine-node" href="#cap-04"><span class="spine-dot"></span><span class="spine-label">04 · El Cimiento</span></a></li>
@@ -2045,29 +2045,16 @@
              ============================================================ -->
         <section class="reelwall bleed band-void" id="cap-reels">
             <div class="reelwall-pin" id="reelwall-pin">
-                <h2 class="reelwall-bigtype" id="reelwall-bigtype" data-parallax="-0.14" aria-hidden="true">VIDEOS<br>CON IA</h2>
-
-                <div class="reelwall-eyebrow" aria-hidden="true">
-                    <span>✦</span>
-                    <span>Muro de Reels</span>
-                </div>
+                <h2 class="reelwall-bigtype" id="reelwall-bigtype" data-parallax="-0.14" aria-hidden="true">EXPLORACIÓN</h2>
 
                 <div class="reelwall-track" id="reelwall-track">
 
                     <!-- Apertura del muro -->
                     <div class="reel-intro">
-                        <div class="badge-pill bg-sky-500/10 border border-sky-500/30 text-sky-300 self-start">
-                            <span class="bg-sky-400"></span>
-                            <span>Muestra</span>
-                        </div>
-                        <h3 class="display-lg text-gradient-cyan">Videos con IA.</h3>
+                        <h3 class="display-lg text-gradient-cyan">Mural de exploración.</h3>
                         <p class="lead text-sm">
-                            Una muestra de lo que hago con inteligencia artificial: clips sueltos, sin orden ni un fin específico. Activá el sonido de cada uno o abrilo en grande.
+                            Videos que hago con inteligencia artificial. Sueltos, sin orden y sin un fin específico.
                         </p>
-                        <span class="reel-hint">
-                            <span>Seguí bajando</span>
-                            <span class="reel-hint-arrow">→</span>
-                        </span>
                     </div>
 
                     <!-- Para sumar un video: copiar el archivo a /videos y duplicar un bloque
@@ -2104,8 +2091,7 @@
 
                     <!-- Cierre del muro -->
                     <div class="reel-outro">
-                        <span class="eyebrow text-sky-400">Muestra</span>
-                        <h4 class="display-lg text-white" style="font-size: clamp(1.6rem, 2.6vw, 2.4rem);">Y se van sumando más.</h4>
+                        <h4 class="display-lg text-white" style="font-size: clamp(1.6rem, 2.6vw, 2.4rem);">Se sigue sumando.</h4>
                         <a href="#cap-06" class="reel-hint" style="text-decoration: none;">
                             <span>Conversemos</span>
                             <span class="reel-hint-arrow">↓</span>
@@ -2115,9 +2101,7 @@
                 </div>
 
                 <div class="reelwall-cue" aria-hidden="true">
-                    <span>Muestra</span>
                     <span class="reelwall-cue-bar"><span class="reelwall-cue-fill" id="reelwall-cue-fill"></span></span>
-                    <span id="reelwall-cue-label">Seguí bajando</span>
                 </div>
             </div>
         </section>
@@ -2455,7 +2439,7 @@
         <div id="modal-content">
             <div class="flex items-center justify-between px-1 text-white">
                 <div class="flex items-center gap-3 min-w-0">
-                    <span id="modal-video-tag" class="text-[11px] font-mono-custom uppercase tracking-widest text-sky-400 shrink-0">Muestra</span>
+                    <span id="modal-video-tag" class="text-[11px] font-mono-custom uppercase tracking-widest text-sky-400 shrink-0">Exploración</span>
                     <span class="text-slate-600 font-mono-custom shrink-0">•</span>
                     <h3 id="modal-video-title" class="text-sm sm:text-base font-medium text-slate-200 truncate">El Reflejo Virtual</h3>
                 </div>
@@ -2789,7 +2773,6 @@
         const reelTrack = document.getElementById('reelwall-track');
         const reelBigType = document.getElementById('reelwall-bigtype');
         const reelCueFill = document.getElementById('reelwall-cue-fill');
-        const reelCueLabel = document.getElementById('reelwall-cue-label');
         let reelOverflow = 0;
         let pinEnabled = false;
 
@@ -2864,9 +2847,6 @@
                 const p = total > 0 ? passed / total : 0;
                 reelTrack.style.transform = `translateX(${-p * reelOverflow}px)`;
                 if (reelCueFill) reelCueFill.style.width = `${p * 100}%`;
-                if (reelCueLabel) {
-                    reelCueLabel.textContent = p > 0.97 ? 'Y más en camino' : 'Seguí bajando';
-                }
             }
         }
 
@@ -2995,7 +2975,7 @@
                 videoPlayer.currentTime = cardVideo.currentTime;
             }
             if (modalTitle) modalTitle.textContent = title || 'Video';
-            if (modalTag) modalTag.textContent = tag || 'Muestra';
+            if (modalTag) modalTag.textContent = tag || 'Exploración';
 
             videoModal.classList.add('is-active');
             videoModal.setAttribute('aria-hidden', 'false');
