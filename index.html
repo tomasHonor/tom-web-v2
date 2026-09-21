@@ -2045,7 +2045,7 @@
              ============================================================ -->
         <section class="reelwall bleed band-void" id="cap-reels">
             <div class="reelwall-pin" id="reelwall-pin">
-                <h2 class="reelwall-bigtype" id="reelwall-bigtype" data-parallax="-0.14" aria-hidden="true">IDEAS EN<br>MOVIMIENTO</h2>
+                <h2 class="reelwall-bigtype" id="reelwall-bigtype" data-parallax="-0.14" aria-hidden="true">VIDEOS<br>CON IA</h2>
 
                 <div class="reelwall-eyebrow" aria-hidden="true">
                     <span>✦</span>
@@ -2058,11 +2058,11 @@
                     <div class="reel-intro">
                         <div class="badge-pill bg-sky-500/10 border border-sky-500/30 text-sky-300 self-start">
                             <span class="bg-sky-400"></span>
-                            <span>Conexión de Ideas</span>
+                            <span>Muestra</span>
                         </div>
-                        <h3 class="display-lg text-gradient-cyan">Donde las Ideas se Encuentran</h3>
+                        <h3 class="display-lg text-gradient-cyan">Videos con IA.</h3>
                         <p class="lead text-sm">
-                            Fragmentos de atmósferas y conceptos en constante movimiento. Activá el sonido de cada pieza o abrila en el reproductor a pantalla completa.
+                            Una muestra de lo que hago con inteligencia artificial: clips sueltos, sin orden ni un fin específico. Activá el sonido de cada uno o abrilo en grande.
                         </p>
                         <span class="reel-hint">
                             <span>Seguí bajando</span>
@@ -2070,137 +2070,42 @@
                         </span>
                     </div>
 
-                    <!-- Reel 1 -->
-                    <div class="reel-panel group" data-video-src="videos/video-1.mp4" data-video-title="El Reflejo Virtual" data-video-tag="01 // Atmósfera" tabindex="0" role="button" aria-label="Abrir video: El Reflejo Virtual">
+                    <!-- Para sumar un video: copiar el archivo a /videos y duplicar un bloque
+                         .reel-panel de abajo (cambiando las dos rutas y el título). El botón de
+                         sonido y el indicador "Expandir" se agregan solos por JS, y el largo del
+                         scroll del muro se recalcula solo según cuántos clips haya. -->
+                    <div class="reel-panel group" data-video-src="videos/video-1.mp4" data-video-title="El Reflejo Virtual" tabindex="0" role="button" aria-label="Abrir video: El Reflejo Virtual">
                         <video class="reel-media inline-reel-video" src="videos/video-1.mp4" autoplay loop muted playsinline preload="metadata"></video>
-
-                        <button class="card-sound-btn" type="button" aria-label="Activar o silenciar audio" title="Audio">
-                            <span class="sound-static-icon">
-                                <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                    <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
-                                    <line x1="23" y1="9" x2="17" y2="15"></line>
-                                    <line x1="17" y1="9" x2="23" y2="15"></line>
-                                </svg>
-                            </span>
-                            <div class="sound-wave-bars" aria-hidden="true">
-                                <span class="sound-bar"></span>
-                                <span class="sound-bar"></span>
-                                <span class="sound-bar"></span>
-                            </div>
-                        </button>
-
-                        <div class="expand-badge">
-                            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-                            <span>Expandir</span>
-                        </div>
-
                         <div class="reel-overlay">
-                            <span class="reel-num text-sky-400">01 // Atmósfera</span>
                             <h4 class="text-lg font-semibold text-white leading-tight">El Reflejo Virtual</h4>
-                            <p class="text-xs text-slate-300 font-light mt-1.5 opacity-85">Exploración de avatar cinematográfico e introspección.</p>
                         </div>
                     </div>
 
-                    <!-- Reel 2 -->
-                    <div class="reel-panel group" data-video-src="videos/video-2.mp4" data-video-title="Ruptura del Ruido" data-video-tag="02 // Mini Intro" tabindex="0" role="button" aria-label="Abrir video: Ruptura del Ruido">
+                    <div class="reel-panel group" data-video-src="videos/video-2.mp4" data-video-title="Ruptura del Ruido" tabindex="0" role="button" aria-label="Abrir video: Ruptura del Ruido">
                         <video class="reel-media inline-reel-video" src="videos/video-2.mp4" autoplay loop muted playsinline preload="metadata"></video>
-
-                        <button class="card-sound-btn" type="button" aria-label="Activar o silenciar audio" title="Audio">
-                            <span class="sound-static-icon">
-                                <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                    <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
-                                    <line x1="23" y1="9" x2="17" y2="15"></line>
-                                    <line x1="17" y1="9" x2="23" y2="15"></line>
-                                </svg>
-                            </span>
-                            <div class="sound-wave-bars" aria-hidden="true">
-                                <span class="sound-bar"></span>
-                                <span class="sound-bar"></span>
-                                <span class="sound-bar"></span>
-                            </div>
-                        </button>
-
-                        <div class="expand-badge">
-                            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-                            <span>Expandir</span>
-                        </div>
-
                         <div class="reel-overlay">
-                            <span class="reel-num text-purple-400">02 // Mini Intro</span>
                             <h4 class="text-lg font-semibold text-white leading-tight">Ruptura del Ruido</h4>
-                            <p class="text-xs text-slate-300 font-light mt-1.5 opacity-85">Secuencia de apertura generada para piezas audiovisuales.</p>
                         </div>
                     </div>
 
-                    <!-- Reel 3 -->
-                    <div class="reel-panel group" data-video-src="videos/video-3.mp4" data-video-title="Geometría Mental" data-video-tag="03 // Concepto" tabindex="0" role="button" aria-label="Abrir video: Geometría Mental">
+                    <div class="reel-panel group" data-video-src="videos/video-3.mp4" data-video-title="Geometría Mental" tabindex="0" role="button" aria-label="Abrir video: Geometría Mental">
                         <video class="reel-media inline-reel-video" src="videos/video-3.mp4" autoplay loop muted playsinline preload="metadata"></video>
-
-                        <button class="card-sound-btn" type="button" aria-label="Activar o silenciar audio" title="Audio">
-                            <span class="sound-static-icon">
-                                <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                    <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
-                                    <line x1="23" y1="9" x2="17" y2="15"></line>
-                                    <line x1="17" y1="9" x2="23" y2="15"></line>
-                                </svg>
-                            </span>
-                            <div class="sound-wave-bars" aria-hidden="true">
-                                <span class="sound-bar"></span>
-                                <span class="sound-bar"></span>
-                                <span class="sound-bar"></span>
-                            </div>
-                        </button>
-
-                        <div class="expand-badge">
-                            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-                            <span>Expandir</span>
-                        </div>
-
                         <div class="reel-overlay">
-                            <span class="reel-num text-emerald-400">03 // Concepto</span>
                             <h4 class="text-lg font-semibold text-white leading-tight">Geometría Mental</h4>
-                            <p class="text-xs text-slate-300 font-light mt-1.5 opacity-85">Estructuras visuales que representan ideas complejas.</p>
                         </div>
                     </div>
 
-                    <!-- Reel 4 -->
-                    <div class="reel-panel group" data-video-src="videos/video-4.mp4" data-video-title="Destello Creativo" data-video-tag="04 // Síntesis" tabindex="0" role="button" aria-label="Abrir video: Destello Creativo">
+                    <div class="reel-panel group" data-video-src="videos/video-4.mp4" data-video-title="Destello Creativo" tabindex="0" role="button" aria-label="Abrir video: Destello Creativo">
                         <video class="reel-media inline-reel-video" src="videos/video-4.mp4" autoplay loop muted playsinline preload="metadata"></video>
-
-                        <button class="card-sound-btn" type="button" aria-label="Activar o silenciar audio" title="Audio">
-                            <span class="sound-static-icon">
-                                <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                    <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
-                                    <line x1="23" y1="9" x2="17" y2="15"></line>
-                                    <line x1="17" y1="9" x2="23" y2="15"></line>
-                                </svg>
-                            </span>
-                            <div class="sound-wave-bars" aria-hidden="true">
-                                <span class="sound-bar"></span>
-                                <span class="sound-bar"></span>
-                                <span class="sound-bar"></span>
-                            </div>
-                        </button>
-
-                        <div class="expand-badge">
-                            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-                            <span>Expandir</span>
-                        </div>
-
                         <div class="reel-overlay">
-                            <span class="reel-num text-amber-400">04 // Síntesis</span>
                             <h4 class="text-lg font-semibold text-white leading-tight">Destello Creativo</h4>
-                            <p class="text-xs text-slate-300 font-light mt-1.5 opacity-85">Experimentación estética con contrastes de luz y sombra.</p>
                         </div>
                     </div>
 
                     <!-- Cierre del muro -->
                     <div class="reel-outro">
-                        <span class="eyebrow text-sky-400">Fin del muro</span>
-                        <h4 class="display-lg text-white" style="font-size: clamp(1.6rem, 2.6vw, 2.4rem);">Cuatro piezas, más en camino.</h4>
-                        <p class="text-sm text-slate-400 font-light leading-relaxed">
-                            Cada reel es un fragmento del mismo intento: traducir lo que pasa por dentro a algo que se pueda ver.
-                        </p>
+                        <span class="eyebrow text-sky-400">Muestra</span>
+                        <h4 class="display-lg text-white" style="font-size: clamp(1.6rem, 2.6vw, 2.4rem);">Y se van sumando más.</h4>
                         <a href="#cap-06" class="reel-hint" style="text-decoration: none;">
                             <span>Conversemos</span>
                             <span class="reel-hint-arrow">↓</span>
@@ -2210,7 +2115,7 @@
                 </div>
 
                 <div class="reelwall-cue" aria-hidden="true">
-                    <span>4 piezas</span>
+                    <span>Muestra</span>
                     <span class="reelwall-cue-bar"><span class="reelwall-cue-fill" id="reelwall-cue-fill"></span></span>
                     <span id="reelwall-cue-label">Seguí bajando</span>
                 </div>
@@ -2550,7 +2455,7 @@
         <div id="modal-content">
             <div class="flex items-center justify-between px-1 text-white">
                 <div class="flex items-center gap-3 min-w-0">
-                    <span id="modal-video-tag" class="text-[11px] font-mono-custom uppercase tracking-widest text-sky-400 shrink-0">01 // Atmósfera</span>
+                    <span id="modal-video-tag" class="text-[11px] font-mono-custom uppercase tracking-widest text-sky-400 shrink-0">Muestra</span>
                     <span class="text-slate-600 font-mono-custom shrink-0">•</span>
                     <h3 id="modal-video-title" class="text-sm sm:text-base font-medium text-slate-200 truncate">El Reflejo Virtual</h3>
                 </div>
@@ -2894,9 +2799,13 @@
             if (!pinEnabled) {
                 reelTrack.style.transform = '';
                 reelOverflow = 0;
+                if (reelwall) reelwall.style.height = '';
                 return;
             }
             reelOverflow = Math.max(0, reelTrack.scrollWidth - window.innerWidth);
+            // 1.3px de scroll vertical por cada px de recorrido horizontal:
+            // con más clips el muro se alarga solo y el ritmo se mantiene.
+            if (reelwall) reelwall.style.height = `${Math.round(window.innerHeight + reelOverflow * 1.3)}px`;
         }
 
         /* ============================================================
@@ -2956,7 +2865,7 @@
                 reelTrack.style.transform = `translateX(${-p * reelOverflow}px)`;
                 if (reelCueFill) reelCueFill.style.width = `${p * 100}%`;
                 if (reelCueLabel) {
-                    reelCueLabel.textContent = p > 0.97 ? 'Fin del muro' : `${Math.max(1, Math.ceil(p * 4))} / 4`;
+                    reelCueLabel.textContent = p > 0.97 ? 'Y más en camino' : 'Seguí bajando';
                 }
             }
         }
@@ -2988,6 +2897,29 @@
         /* ============================================================
            SONIDO POR REEL
            ============================================================ */
+        document.querySelectorAll('.reel-panel').forEach((card) => {
+            if (card.querySelector('.card-sound-btn')) return;
+            card.insertAdjacentHTML('beforeend', `
+                <button class="card-sound-btn" type="button" aria-label="Activar o silenciar audio" title="Audio">
+                    <span class="sound-static-icon">
+                        <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                            <line x1="23" y1="9" x2="17" y2="15"></line>
+                            <line x1="17" y1="9" x2="23" y2="15"></line>
+                        </svg>
+                    </span>
+                    <div class="sound-wave-bars" aria-hidden="true">
+                        <span class="sound-bar"></span>
+                        <span class="sound-bar"></span>
+                        <span class="sound-bar"></span>
+                    </div>
+                </button>
+                <div class="expand-badge">
+                    <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                    <span>Expandir</span>
+                </div>`);
+        });
+
         const inlineVideos = document.querySelectorAll('.inline-reel-video');
         const soundButtons = document.querySelectorAll('.card-sound-btn');
 
@@ -3063,7 +2995,7 @@
                 videoPlayer.currentTime = cardVideo.currentTime;
             }
             if (modalTitle) modalTitle.textContent = title || 'Video';
-            if (modalTag) modalTag.textContent = tag || '';
+            if (modalTag) modalTag.textContent = tag || 'Muestra';
 
             videoModal.classList.add('is-active');
             videoModal.setAttribute('aria-hidden', 'false');
