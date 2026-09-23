@@ -999,15 +999,27 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: brightness(0.82) contrast(1.06);
-            transition: transform 0.8s ease, filter 0.8s ease;
+            opacity: 0.45;
+            filter: brightness(0.7) contrast(1.06);
+            transition: transform 0.8s ease, filter 0.8s ease, opacity 0.5s ease;
             background-color: #0d121f;
         }
 
         .reel-panel:hover .reel-media,
         .reel-panel:focus-within .reel-media {
             transform: scale(1.06);
+            opacity: 1;
             filter: brightness(1.02) contrast(1.12);
+        }
+
+        /* Sin mouse (touch): la card más centrada en pantalla se muestra normal,
+           actualizado por IntersectionObserver (ver JS). */
+        @media (hover: none) {
+            .reel-panel.is-active .reel-media {
+                transform: scale(1.06);
+                opacity: 1;
+                filter: brightness(1.02) contrast(1.12);
+            }
         }
 
         .reel-overlay {
@@ -3037,6 +3049,19 @@
         }, { threshold: 0.2 });
 
         inlineVideos.forEach((v) => videoVisibilityObserver.observe(v));
+
+        // En touch (sin hover): resalta la card más centrada en pantalla,
+        // simulando el efecto hover del mouse.
+        if (window.matchMedia('(hover: none)').matches) {
+            const reelPanels = document.querySelectorAll('.reel-panel');
+            const activePanelObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    entry.target.classList.toggle('is-active', entry.isIntersecting);
+                });
+            }, { threshold: 0.6 });
+
+            reelPanels.forEach((panel) => activePanelObserver.observe(panel));
+        }
 
         /* ============================================================
            MODAL DE REPRODUCCIÓN
