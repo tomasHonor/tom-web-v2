@@ -284,31 +284,33 @@
             transform: scale(1.05) translateY(-3px);
         }
 
-        /* Video de reveal: clip real de rayos formando el logo, se
-           superpone al ensamblado en SVG al desbloquear el hero y
-           luego se desvanece dejando el SVG (ya formado) debajo. */
-        .th-reveal-video {
+        /* Flash del estallido: destello circular en CSS puro (sin video)
+           que acompaña a los rayos del canvas en el instante del
+           desbloqueo, imitando el pico de luz blanca del clip de referencia. */
+        .reveal-flash {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 340px;
-            max-width: none;
-            aspect-ratio: 1 / 1;
-            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0.4);
+            background: radial-gradient(circle, #FFFFFF 0%, #9FE0FF 30%, rgba(46, 127, 255, 0.6) 55%, transparent 72%);
             opacity: 0;
             pointer-events: none;
             z-index: 5;
-            transition: opacity 0.6s ease;
+            filter: blur(1px);
         }
 
-        .emblem-stage.is-playing-reveal .th-reveal-video {
-            opacity: 1;
+        .reveal-flash.is-flashing {
+            animation: revealFlashPulse 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        .emblem-stage.is-playing-reveal .intro-spark,
-        .emblem-stage.is-playing-reveal .th-dagger-logo,
-        .emblem-stage.is-playing-reveal .emblem-volumetric-glow {
-            opacity: 0 !important;
+        @keyframes revealFlashPulse {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+            18% { opacity: 1; transform: translate(-50%, -50%) scale(1.4); }
+            45% { opacity: 0.9; transform: translate(-50%, -50%) scale(2.4); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(4.2); }
         }
 
         .logo-part {
@@ -1873,11 +1875,7 @@
         <div class="emblem-stage" id="emblem-trigger" role="button" tabindex="0" aria-label="Ingresar al espacio de Tomás David Honor" title="Haz clic o desliza para ingresar">
             <div class="intro-spark"></div>
             <div class="emblem-volumetric-glow"></div>
-
-            <video class="th-reveal-video" id="th-reveal-video" muted playsinline preload="auto" aria-hidden="true">
-                <source src="videos/hero-reveal.webm" type="video/webm">
-                <source src="videos/hero-reveal.mp4" type="video/mp4">
-            </video>
+            <div class="reveal-flash" id="reveal-flash"></div>
 
             <svg class="th-dagger-logo" viewBox="0 0 420 580" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <defs>
@@ -2538,10 +2536,10 @@
 
             const cx = window.innerWidth / 2;
             const cy = window.innerHeight / 2;
-            triggerElectricBurst(cx, cy, 14);
+            triggerElectricBurst(cx, cy, 22);
+            playRevealFlash();
 
             heroHeader.classList.remove('is-intro');
-            playHeroRevealVideo();
 
             setTimeout(() => {
                 body.classList.remove('scroll-locked');
@@ -2551,19 +2549,15 @@
         }
 
         /* ============================================================
-           VIDEO DE REVEAL DEL EMBLEMA
+           FLASH DEL ESTALLIDO (CSS puro, sin video)
            ============================================================ */
-        function playHeroRevealVideo() {
-            const reveal = document.getElementById('th-reveal-video');
-            if (!reveal || !emblemTrigger || prefersReduced) return;
+        function playRevealFlash() {
+            const flash = document.getElementById('reveal-flash');
+            if (!flash || prefersReduced) return;
 
-            emblemTrigger.classList.add('is-playing-reveal');
-            reveal.currentTime = 0;
-            reveal.play().catch(() => {});
-
-            reveal.addEventListener('ended', () => {
-                emblemTrigger.classList.remove('is-playing-reveal');
-            }, { once: true });
+            flash.classList.remove('is-flashing');
+            void flash.offsetWidth; // reinicia la animación
+            flash.classList.add('is-flashing');
         }
 
         window.addEventListener('wheel', unlockExperience, { once: true, passive: true });
