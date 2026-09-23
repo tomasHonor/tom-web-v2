@@ -1987,9 +1987,6 @@
                         </feMerge>
                     </filter>
 
-                    <clipPath id="hRightBeamClip">
-                        <rect x="195" y="112" width="47" height="280" />
-                    </clipPath>
                 </defs>
 
                 <!-- Silueta calcada directamente del video de referencia (potrace) -->
@@ -2018,11 +2015,11 @@
                         65 48 78 l21 22 -188 0 c-103 1 -223 2 -266 3 -56 1 -77 -1 -77 -10z" />
                     </g>
 
-                    <!-- Rayo azul sobre la columna derecha de la H, recortado a su silueta real -->
-                    <g clip-path="url(#hRightBeamClip)">
-                        <rect x="190" y="102" width="52" height="298" fill="#2E7FFF" opacity="0.4" filter="url(#neonBeamGlow)" />
-                        <rect x="195" y="112" width="16" height="280" fill="url(#blueLaserEnergy)" class="blue-charge-beam" />
-                        <line x1="202" y1="122" x2="202" y2="380" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round" class="white-core-beam" opacity="0.8" />
+                    <!-- Hojita azul: extensión fina junto a la pata derecha de la H (la H en sí queda blanca) -->
+                    <g>
+                        <polygon points="201,114 209,140 209,372 201,398 193,372 193,140" fill="#2E7FFF" opacity="0.4" filter="url(#neonBeamGlow)" />
+                        <polygon points="201,118 205,140 205,372 201,392 197,372 197,140" fill="url(#blueLaserEnergy)" class="blue-charge-beam" />
+                        <line x1="201" y1="128" x2="201" y2="378" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" class="white-core-beam" opacity="0.75" />
                     </g>
                 </g>
             </svg>
