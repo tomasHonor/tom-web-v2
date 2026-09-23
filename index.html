@@ -247,8 +247,8 @@
         }
 
         .th-dagger-logo {
-            width: 175px;
-            height: 250px;
+            width: 220px;
+            height: 312px;
             filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 22px rgba(46, 127, 255, 0.28));
             transition: filter 0.45s ease, transform 0.45s ease;
             position: relative;
@@ -263,6 +263,33 @@
         .hero-stage:not(.is-intro) .emblem-stage:hover,
         .hero-stage:not(.is-intro) .emblem-stage:focus-visible {
             transform: scale(1.05) translateY(-3px);
+        }
+
+        /* Video de reveal: clip real de rayos formando el logo, se
+           superpone al ensamblado en SVG al desbloquear el hero y
+           luego se desvanece dejando el SVG (ya formado) debajo. */
+        .th-reveal-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 340px;
+            max-width: none;
+            aspect-ratio: 1 / 1;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 5;
+            transition: opacity 0.6s ease;
+        }
+
+        .emblem-stage.is-playing-reveal .th-reveal-video {
+            opacity: 1;
+        }
+
+        .emblem-stage.is-playing-reveal .intro-spark,
+        .emblem-stage.is-playing-reveal .th-dagger-logo,
+        .emblem-stage.is-playing-reveal .emblem-volumetric-glow {
+            opacity: 0 !important;
         }
 
         .logo-part {
@@ -1828,6 +1855,11 @@
             <div class="intro-spark"></div>
             <div class="emblem-volumetric-glow"></div>
 
+            <video class="th-reveal-video" id="th-reveal-video" muted playsinline preload="auto" aria-hidden="true">
+                <source src="videos/hero-reveal.webm" type="video/webm">
+                <source src="videos/hero-reveal.mp4" type="video/mp4">
+            </video>
+
             <svg class="th-dagger-logo" viewBox="0 0 420 580" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <defs>
                     <linearGradient id="blueLaserEnergy" x1="268" y1="415" x2="268" y2="274" gradientUnits="userSpaceOnUse">
@@ -2598,12 +2630,29 @@
             triggerElectricBurst(cx, cy, 14);
 
             heroHeader.classList.remove('is-intro');
+            playHeroRevealVideo();
 
             setTimeout(() => {
                 body.classList.remove('scroll-locked');
                 if (spine) spine.classList.add('is-live');
                 revealInView();
             }, 1600);
+        }
+
+        /* ============================================================
+           VIDEO DE REVEAL DEL EMBLEMA
+           ============================================================ */
+        function playHeroRevealVideo() {
+            const reveal = document.getElementById('th-reveal-video');
+            if (!reveal || !emblemTrigger || prefersReduced) return;
+
+            emblemTrigger.classList.add('is-playing-reveal');
+            reveal.currentTime = 0;
+            reveal.play().catch(() => {});
+
+            reveal.addEventListener('ended', () => {
+                emblemTrigger.classList.remove('is-playing-reveal');
+            }, { once: true });
         }
 
         window.addEventListener('wheel', unlockExperience, { once: true, passive: true });
