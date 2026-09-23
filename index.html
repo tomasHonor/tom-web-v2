@@ -1038,27 +1038,15 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.45;
-            filter: brightness(0.7) contrast(1.06);
-            transition: transform 0.8s ease, filter 0.8s ease, opacity 0.5s ease;
+            filter: brightness(0.82) contrast(1.06);
+            transition: transform 0.8s ease, filter 0.8s ease;
             background-color: #0d121f;
         }
 
         .reel-panel:hover .reel-media,
         .reel-panel:focus-within .reel-media {
             transform: scale(1.06);
-            opacity: 1;
             filter: brightness(1.02) contrast(1.12);
-        }
-
-        /* Sin mouse (touch): la card más centrada en pantalla se muestra normal,
-           actualizado por IntersectionObserver (ver JS). */
-        @media (hover: none) {
-            .reel-panel.is-active .reel-media {
-                transform: scale(1.06);
-                opacity: 1;
-                filter: brightness(1.02) contrast(1.12);
-            }
         }
 
         .reel-overlay {
@@ -1510,6 +1498,117 @@
         }
 
         /* ============================================================
+           NOTAS — MINI REFLEXIONES
+           ============================================================ */
+        .notes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .note-card {
+            position: relative;
+            padding: clamp(1.5rem, 2.4vw, 2.1rem);
+            border-radius: 18px;
+            background: linear-gradient(180deg, rgba(13, 17, 28, 0.85), rgba(6, 8, 15, 0.92));
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-left: 3px solid transparent;
+            transition: border-color 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+        }
+
+        .note-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .note-cyan { border-left-color: rgba(56, 189, 248, 0.55); }
+        .note-purple { border-left-color: rgba(192, 132, 252, 0.55); }
+        .note-emerald { border-left-color: rgba(52, 211, 153, 0.55); }
+
+        .note-cyan:hover { border-color: rgba(255, 255, 255, 0.07); border-left-color: #38BDF8; }
+        .note-purple:hover { border-color: rgba(255, 255, 255, 0.07); border-left-color: #C084FC; }
+        .note-emerald:hover { border-color: rgba(255, 255, 255, 0.07); border-left-color: #34D399; }
+
+        .note-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 0.85rem;
+            flex-wrap: wrap;
+        }
+
+        .note-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .note-time {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #64748B;
+        }
+
+        .note-title {
+            font-size: clamp(1.1rem, 1.8vw, 1.45rem);
+            font-weight: 600;
+            color: #F1F5F9;
+            margin-bottom: 0.6rem;
+        }
+
+        .note-excerpt, .note-full {
+            font-size: 0.92rem;
+            line-height: 1.75;
+            color: #C7D3E3;
+            font-weight: 300;
+        }
+
+        .note-full { display: none; }
+        .note-card.is-open .note-excerpt { display: none; }
+        .note-card.is-open .note-full { display: block; }
+
+        .note-foot {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 1.1rem;
+            flex-wrap: wrap;
+        }
+
+        .note-byline {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            color: #64748B;
+        }
+
+        .note-toggle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            display: inline-flex;
+            align-items: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .note-toggle-open { display: none; }
+        .note-card.is-open .note-toggle-closed { display: none; }
+        .note-card.is-open .note-toggle-open { display: inline; }
+
+        .note-cyan .note-tag, .note-cyan .note-toggle { color: #38BDF8; }
+        .note-purple .note-tag, .note-purple .note-toggle { color: #C084FC; }
+        .note-emerald .note-tag, .note-emerald .note-toggle { color: #34D399; }
+
+        /* ============================================================
            05 // ANCLAJES
            ============================================================ */
         .anchor-grid {
@@ -1854,6 +1953,7 @@
             <li><a class="spine-node" href="#cap-03"><span class="spine-dot"></span><span class="spine-label">03 · Memoria Viva</span></a></li>
             <li><a class="spine-node" href="#cap-04"><span class="spine-dot"></span><span class="spine-label">04 · El Cimiento</span></a></li>
             <li><a class="spine-node" href="#cap-05"><span class="spine-dot"></span><span class="spine-label">05 · El Anclaje</span></a></li>
+            <li><a class="spine-node" href="#cap-notas"><span class="spine-dot"></span><span class="spine-label">✦ · Notas</span></a></li>
             <li><a class="spine-node" href="#cap-06"><span class="spine-dot"></span><span class="spine-label">06 · Diálogo</span></a></li>
         </ul>
     </nav>
@@ -2432,6 +2532,114 @@
         </section>
 
         <!-- ============================================================
+             NOTAS — mini reflexiones sueltas
+             ============================================================ -->
+        <section class="chapter" id="cap-notas">
+            <div class="chapter-inner">
+                <div class="rise mb-12 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+                    <div>
+                        <div class="badge-pill bg-sky-500/10 border border-sky-500/30 text-sky-300 mb-6">
+                            <span class="bg-sky-400"></span>
+                            <span>Notas &amp; Reflexiones</span>
+                        </div>
+                        <h2 class="display-xl text-white kinetic">Apuntes sueltos en el camino.</h2>
+                    </div>
+                    <p class="lead max-w-md">
+                        Ideas cortas que voy anotando entre proyectos — sobre crear con IA, contar historias y sostener la cabeza cuando todo aprieta.
+                    </p>
+                </div>
+
+                <div class="notes-list rise rise-delay-1">
+
+                    <!-- Nota 01 -->
+                    <article class="note-card note-cyan">
+                        <div class="note-head">
+                            <span class="note-tag">01 // Creación &amp; IA</span>
+                            <span class="note-time">Lectura estimada: 3 min</span>
+                        </div>
+                        <h3 class="note-title">Crear con IA no es apretar un botón.</h3>
+                        <p class="note-excerpt">
+                            "La parte difícil nunca fue generar el clip: fue decidir qué merece quedarse. La IA propone cien caminos por segundo; el criterio para elegir uno solo sigue siendo enteramente humano."
+                        </p>
+                        <div class="note-full">
+                            <p>
+                                La parte difícil nunca fue generar el clip: fue decidir qué merece quedarse. La IA propone cien caminos por segundo; el criterio para elegir uno solo sigue siendo enteramente humano.
+                            </p>
+                            <p style="margin-top: 0.9rem;">
+                                Cuando empecé a meter herramientas generativas en mis videos, pensé que el trabajo se iba a achicar. Pasó lo contrario: se corrió el esfuerzo. Antes editaba tomas; ahora curo posibilidades, descarto lo que se ve bonito pero no dice nada, y persigo el detalle raro que ninguna instrucción pidió.
+                            </p>
+                            <p style="margin-top: 0.9rem;">
+                                Ese es el trabajo real: no domar la herramienta, sino saber reconocer cuándo se equivocó en la dirección correcta.
+                            </p>
+                        </div>
+                        <div class="note-foot">
+                            <span class="note-byline">Publicado por Tomás David Honor</span>
+                            <button type="button" class="note-toggle" aria-expanded="false">
+                                <span class="note-toggle-closed">Leer reflexión completa →</span>
+                                <span class="note-toggle-open">Cerrar ×</span>
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Nota 02 -->
+                    <article class="note-card note-purple">
+                        <div class="note-head">
+                            <span class="note-tag">02 // Espacios de Expresión</span>
+                            <span class="note-time">Lectura estimada: 2 min</span>
+                        </div>
+                        <h3 class="note-title">Una página también es un espejo.</h3>
+                        <p class="note-excerpt">
+                            "No armo estos proyectos para que se vean prolijos. Los armo para poder mirarlos después y reconocer en qué estaba pensando cuando los hice."
+                        </p>
+                        <div class="note-full">
+                            <p>
+                                No armo estos proyectos para que se vean prolijos. Los armo para poder mirarlos después y reconocer en qué estaba pensando cuando los hice.
+                            </p>
+                            <p style="margin-top: 0.9rem;">
+                                Cada video, cada línea de esta web, termina siendo una fotografía de un momento interno más que de una técnica. Por eso me cuesta llamar "portfolio" a lo que hago: portfolio suena a vitrina, y esto se siente más a diario.
+                            </p>
+                        </div>
+                        <div class="note-foot">
+                            <span class="note-byline">Publicado por Tomás David Honor</span>
+                            <button type="button" class="note-toggle" aria-expanded="false">
+                                <span class="note-toggle-closed">Leer reflexión completa →</span>
+                                <span class="note-toggle-open">Cerrar ×</span>
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Nota 03 -->
+                    <article class="note-card note-emerald">
+                        <div class="note-head">
+                            <span class="note-tag">03 // Mentalidad de Entrenador</span>
+                            <span class="note-time">Lectura estimada: 3 min</span>
+                        </div>
+                        <h3 class="note-title">Lo que la cancha me enseñó sobre iterar.</h3>
+                        <p class="note-excerpt">
+                            "Un equipo no mejora por analizar el partido perfecto; mejora por revisar el que salió mal sin ponerse a la defensiva. Crear funciona exactamente igual."
+                        </p>
+                        <div class="note-full">
+                            <p>
+                                Un equipo no mejora por analizar el partido perfecto; mejora por revisar el que salió mal sin ponerse a la defensiva. Crear funciona exactamente igual.
+                            </p>
+                            <p style="margin-top: 0.9rem;">
+                                Entrenando aprendí a separar la persona del resultado: un video que no funciona no dice nada de mi valor, dice algo sobre una decisión puntual que puedo corregir la próxima vez. Esa distancia es la que me permite seguir intentando sin quemarme.
+                            </p>
+                        </div>
+                        <div class="note-foot">
+                            <span class="note-byline">Publicado por Tomás David Honor</span>
+                            <button type="button" class="note-toggle" aria-expanded="false">
+                                <span class="note-toggle-closed">Leer reflexión completa →</span>
+                                <span class="note-toggle-open">Cerrar ×</span>
+                            </button>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
              06 // DIÁLOGO — portal de cierre
              ============================================================ -->
         <section class="chapter" id="cap-06">
@@ -2937,6 +3145,18 @@
         });
 
         /* ============================================================
+           NOTAS — expandir/colapsar reflexión completa
+           ============================================================ */
+        document.querySelectorAll('.note-toggle').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const card = btn.closest('.note-card');
+                if (!card) return;
+                const isOpen = card.classList.toggle('is-open');
+                btn.setAttribute('aria-expanded', String(isOpen));
+            });
+        });
+
+        /* ============================================================
            SONIDO POR REEL
            ============================================================ */
         document.querySelectorAll('.reel-panel').forEach((card) => {
@@ -3011,19 +3231,6 @@
         }, { threshold: 0.2 });
 
         inlineVideos.forEach((v) => videoVisibilityObserver.observe(v));
-
-        // En touch (sin hover): resalta la card más centrada en pantalla,
-        // simulando el efecto hover del mouse.
-        if (window.matchMedia('(hover: none)').matches) {
-            const reelPanels = document.querySelectorAll('.reel-panel');
-            const activePanelObserver = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    entry.target.classList.toggle('is-active', entry.isIntersecting);
-                });
-            }, { threshold: 0.6 });
-
-            reelPanels.forEach((panel) => activePanelObserver.observe(panel));
-        }
 
         /* ============================================================
            MODAL DE REPRODUCCIÓN
