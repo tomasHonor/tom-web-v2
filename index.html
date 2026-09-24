@@ -458,9 +458,9 @@
         .lead {
             font-size: clamp(0.95rem, 1.4vw, 1.1rem);
             font-weight: 300;
-            line-height: 1.75;
-            color: #C7D3E3;
-            max-width: 62ch;
+            line-height: 1.8;
+            color: #D0DAE7;
+            max-width: 60ch;
         }
 
         .text-gradient-cyan {
@@ -590,6 +590,91 @@
                 var(--bg-void);
             border-top: 1px solid rgba(255, 255, 255, 0.05);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* ============================================================
+           QUIÉN SOY: presentación + mapa del recorrido
+           ============================================================ */
+        .intro-grid {
+            display: grid;
+            gap: clamp(2.5rem, 5vw, 4.5rem);
+            align-items: center;
+        }
+
+        @media (min-width: 1024px) {
+            .intro-grid { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+        }
+
+        .intro-quote {
+            padding-left: 1rem;
+            border-left: 2px solid rgba(56, 189, 248, 0.4);
+            font-size: 0.95rem;
+            font-style: italic;
+            font-weight: 300;
+            color: #94A3B8;
+        }
+
+        .intro-map {
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            border-radius: 1.25rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .intro-stop {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 0.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: inherit;
+            text-decoration: none;
+            border-radius: 0.6rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .intro-stop:hover,
+        .intro-stop:focus-visible {
+            background: rgba(255, 255, 255, 0.035);
+        }
+
+        .intro-stop-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            width: 1.6rem;
+            flex-shrink: 0;
+        }
+
+        .intro-stop-text {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .intro-stop-text strong {
+            font-weight: 500;
+            color: #F1F5F9;
+            font-size: 0.98rem;
+        }
+
+        .intro-stop-text small {
+            font-size: 0.8rem;
+            font-weight: 300;
+            color: #8296B0;
+        }
+
+        .intro-stop-arrow {
+            color: #475569;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .intro-stop:hover .intro-stop-arrow {
+            color: #38BDF8;
+            transform: translateY(2px);
         }
 
         /* ============================================================
@@ -1956,14 +2041,15 @@
     <nav class="spine" id="spine" aria-label="Capítulos">
         <div class="spine-rail" aria-hidden="true"><div class="spine-fill" id="spine-fill"></div></div>
         <ul class="spine-nodes">
-            <li><a class="spine-node" href="#cap-01"><span class="spine-dot"></span><span class="spine-label">01 · Cosmos Mental</span></a></li>
-            <li><a class="spine-node" href="#cap-reels"><span class="spine-dot"></span><span class="spine-label">✦ · Exploración</span></a></li>
-            <li><a class="spine-node" href="#cap-02"><span class="spine-dot"></span><span class="spine-label">02 · Luz & Sombra</span></a></li>
-            <li><a class="spine-node" href="#cap-03"><span class="spine-dot"></span><span class="spine-label">03 · Memoria Viva</span></a></li>
-            <li><a class="spine-node" href="#cap-04"><span class="spine-dot"></span><span class="spine-label">04 · El Cimiento</span></a></li>
-            <li><a class="spine-node" href="#cap-05"><span class="spine-dot"></span><span class="spine-label">05 · El Anclaje</span></a></li>
+            <li><a class="spine-node" href="#cap-quien"><span class="spine-dot"></span><span class="spine-label">✦ · Quién soy</span></a></li>
+            <li><a class="spine-node" href="#cap-cancha"><span class="spine-dot"></span><span class="spine-label">01 · De dónde vengo</span></a></li>
+            <li><a class="spine-node" href="#cap-luz"><span class="spine-dot"></span><span class="spine-label">02 · Cómo soy</span></a></li>
+            <li><a class="spine-node" href="#cap-mente"><span class="spine-dot"></span><span class="spine-label">03 · Cómo creo</span></a></li>
+            <li><a class="spine-node" href="#cap-reels"><span class="spine-dot"></span><span class="spine-label">✦ · Lo que hago</span></a></li>
+            <li><a class="spine-node" href="#cap-memoria"><span class="spine-dot"></span><span class="spine-label">04 · Mi canal</span></a></li>
+            <li><a class="spine-node" href="#cap-anclaje"><span class="spine-dot"></span><span class="spine-label">05 · Lo que me sostiene</span></a></li>
             <li><a class="spine-node" href="#cap-notas"><span class="spine-dot"></span><span class="spine-label">✦ · Notas</span></a></li>
-            <li><a class="spine-node" href="#cap-06"><span class="spine-dot"></span><span class="spine-label">06 · Diálogo</span></a></li>
+            <li><a class="spine-node" href="#cap-dialogo"><span class="spine-dot"></span><span class="spine-label">06 · Conversemos</span></a></li>
         </ul>
     </nav>
 
@@ -2079,7 +2165,7 @@
             </div>
 
             <div class="mt-10 flex items-center gap-4">
-                <a href="#cap-01" class="text-xs font-mono-custom tracking-wider text-sky-400 hover:text-sky-300 flex items-center gap-1.5 transition-colors">
+                <a href="#cap-quien" class="text-xs font-mono-custom tracking-wider text-sky-400 hover:text-sky-300 flex items-center gap-1.5 transition-colors">
                     <span>Entrar a mi universo</span>
                     <span>↓</span>
                 </a>
@@ -2120,17 +2206,214 @@
     <main>
 
         <!-- ============================================================
-             01 // EL COSMOS MENTAL — el lente que enfoca
+             QUIÉN SOY — presentación directa antes del recorrido
              ============================================================ -->
-        <section class="chapter" id="cap-01">
-            <span class="chapter-index chapter-index-right" data-parallax="0.08" aria-hidden="true">01</span>
+        <section class="chapter bleed band-void" id="cap-quien">
+            <div class="chapter-inner">
+                <div class="intro-grid">
+                    <div>
+                        <div class="rise">
+                            <div class="badge-pill bg-sky-500/10 border border-sky-500/30 text-sky-300 mb-4">
+                                <span class="bg-sky-400"></span>
+                                <span>Quién soy</span>
+                            </div>
+                            <h2 class="display-xl text-gradient-cyan kinetic mb-8">Hola, soy Tomás.</h2>
+                        </div>
+                        <p class="lead rise rise-delay-1 mb-5">
+                            Me formé como <strong class="text-white font-medium">Entrenador Nacional de tenis en 2018</strong> y hoy <strong class="text-white font-medium">creo videos, piezas y páginas con inteligencia artificial</strong>. Esta página es el recorrido entre esas dos cosas: de dónde vengo, cómo pienso, cómo creo y lo que me sostiene.
+                        </p>
+                        <p class="lead rise rise-delay-2 mb-7">
+                            Mi trabajo audiovisual investiga la fricción fértil entre la sensibilidad analógica y los modelos de difusión generativa. En un entorno saturado de imágenes hiperrealistas sin propósito, busco restituirle al fotograma su misterio. La inteligencia artificial no es para mí un atajo de producción: es un nuevo lenguaje de la luz que requiere una mirada quirúrgica, respeto por el silencio y un pulso implacable en el montaje.
+                        </p>
+                        <p class="intro-quote rise rise-delay-3">"No se trata de sustituir el alma, sino de amplificar la pregunta."</p>
+                    </div>
+
+                    <nav class="intro-map rise rise-delay-2" aria-label="El recorrido">
+                        <span class="eyebrow text-slate-500 block mb-3">El recorrido</span>
+                        <a class="intro-stop" href="#cap-cancha">
+                            <span class="intro-stop-num text-emerald-400">01</span>
+                            <span class="intro-stop-text"><strong>De dónde vengo</strong><small>La cancha y lo que me enseñó</small></span>
+                            <span class="intro-stop-arrow" aria-hidden="true">↓</span>
+                        </a>
+                        <a class="intro-stop" href="#cap-luz">
+                            <span class="intro-stop-num text-purple-400">02</span>
+                            <span class="intro-stop-text"><strong>Cómo soy</strong><small>Luz, sombra y complementariedad</small></span>
+                            <span class="intro-stop-arrow" aria-hidden="true">↓</span>
+                        </a>
+                        <a class="intro-stop" href="#cap-mente">
+                            <span class="intro-stop-num text-sky-400">03</span>
+                            <span class="intro-stop-text"><strong>Cómo creo</strong><small>La IA como lente de la imaginación</small></span>
+                            <span class="intro-stop-arrow" aria-hidden="true">↓</span>
+                        </a>
+                        <a class="intro-stop" href="#cap-reels">
+                            <span class="intro-stop-num text-sky-400">✦</span>
+                            <span class="intro-stop-text"><strong>Lo que hago</strong><small>Videos hechos con IA</small></span>
+                            <span class="intro-stop-arrow" aria-hidden="true">↓</span>
+                        </a>
+                        <a class="intro-stop" href="#cap-memoria">
+                            <span class="intro-stop-num text-purple-400">04</span>
+                            <span class="intro-stop-text"><strong>Mi canal</strong><small>YouTube como cápsula del tiempo</small></span>
+                            <span class="intro-stop-arrow" aria-hidden="true">↓</span>
+                        </a>
+                        <a class="intro-stop" href="#cap-anclaje">
+                            <span class="intro-stop-num text-emerald-400">05</span>
+                            <span class="intro-stop-text"><strong>Lo que me sostiene</strong><small>Mi cable a tierra</small></span>
+                            <span class="intro-stop-arrow" aria-hidden="true">↓</span>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             01 // DE DÓNDE VENGO — El Cimiento, la cancha
+             ============================================================ -->
+        <section class="chapter" id="cap-cancha">
+            <span class="chapter-index chapter-index-left" data-parallax="0.06" aria-hidden="true">01</span>
+            <div class="chapter-inner">
+                <div class="court-grid">
+                    <div class="capsule-stage rise" aria-hidden="true">
+                        <svg class="court-svg" viewBox="0 0 120 160" fill="none" stroke="#34D399" stroke-width="1.4">
+                            <rect x="10" y="10" width="100" height="140" rx="3" opacity="0.85" />
+                            <line class="court-net" x1="10" y1="80" x2="110" y2="80" stroke-dasharray="3 3" />
+                            <line x1="25" y1="10" x2="25" y2="150" opacity="0.6" />
+                            <line x1="95" y1="10" x2="95" y2="150" opacity="0.6" />
+                            <line x1="25" y1="45" x2="95" y2="45" opacity="0.6" />
+                            <line x1="25" y1="115" x2="95" y2="115" opacity="0.6" />
+                            <line x1="60" y1="45" x2="60" y2="115" opacity="0.6" />
+                            <path class="rally-trail" d="M 42,138 C 80,112 30,74 28,34" stroke="#34D399" stroke-width="1" opacity="0.45" />
+                            <circle class="rally-ball" cx="42" cy="138" r="3.4" fill="#34D399" stroke="none" />
+                        </svg>
+                    </div>
+
+                    <div>
+                        <div class="rise">
+                            <div class="badge-pill bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 mb-4">
+                                <span class="bg-emerald-400"></span>
+                                <span>01 / De dónde vengo</span>
+                            </div>
+                            <span class="eyebrow text-emerald-400/70 block mb-2">El Cimiento · Entrenador Nacional de tenis // 2018</span>
+                            <h2 class="display-lg text-gradient-emerald kinetic mb-6">La cancha me enseñó a leer el alma bajo presión.</h2>
+                        </div>
+                        <p class="lead rise rise-delay-1 mb-8">
+                            El tenis nunca fue solo técnica o potencia física: es una radiografía del carácter humano. En un punto de quiebre nadie puede fingir quién es. Mi certificación en 2018 y los años en cancha me dejaron la templanza, la lectura gestual y la convicción de que la serenidad interna siempre le gana al caos exterior.
+                        </p>
+
+                        <div class="rise rise-delay-2">
+                            <div class="stat-row"><span>Certificación</span><strong>Entrenador Nacional · 2018</strong></div>
+                            <div class="stat-row"><span>Presencia</span><strong>En el presente</strong></div>
+                            <div class="stat-row"><span>Temple</span><strong>Estratégico</strong></div>
+                            <div class="stat-row"><span>Enfoque</span><strong>Punto a punto</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             02 // CÓMO SOY — Luz, sombra & complementariedad
+             ============================================================ -->
+        <section class="chapter bleed band-void" id="cap-luz">
+            <span class="chapter-index chapter-index-right" data-parallax="0.06" aria-hidden="true">02</span>
+            <div class="chapter-inner">
+                <div class="rise mb-12 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+                    <div>
+                        <div class="badge-pill bg-purple-500/10 border border-purple-500/30 text-purple-300 mb-4">
+                            <span class="bg-purple-400"></span>
+                            <span>02 / Cómo soy</span>
+                        </div>
+                        <span class="eyebrow text-purple-400/70 block mb-2">Luz, sombra &amp; complementariedad</span>
+                        <h2 class="display-xl text-gradient-purple kinetic max-w-3xl">No soy una persona completa, sino complementaria.</h2>
+                    </div>
+                    <p class="lead max-w-md">
+                        Aceptar mis contradicciones me quitó el peso de fingir autosuficiencia. Las mejores cosas ocurren cuando mis fortalezas se cruzan con la mirada de otro.
+                    </p>
+                </div>
+
+                <div class="triptych rise rise-delay-1">
+
+                    <!-- La Luz -->
+                    <article class="panel panel-cyan">
+                        <span class="eyebrow text-sky-400">La Luz</span>
+                        <div class="panel-figure" aria-hidden="true">
+                            <svg viewBox="0 0 120 120" fill="none">
+                                <g class="ray-group" stroke="#38BDF8" stroke-width="1.6" stroke-linecap="round" opacity="0.75">
+                                    <line x1="60" y1="8" x2="60" y2="26" />
+                                    <line x1="60" y1="94" x2="60" y2="112" />
+                                    <line x1="8" y1="60" x2="26" y2="60" />
+                                    <line x1="94" y1="60" x2="112" y2="60" />
+                                    <line x1="23" y1="23" x2="36" y2="36" />
+                                    <line x1="84" y1="84" x2="97" y2="97" />
+                                    <line x1="97" y1="23" x2="84" y2="36" />
+                                    <line x1="36" y1="84" x2="23" y2="97" />
+                                </g>
+                                <circle cx="60" cy="60" r="26" fill="#38BDF8" opacity="0.08" />
+                                <circle class="ray-core" cx="60" cy="60" r="13" fill="#38BDF8" opacity="0.9" />
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-medium text-white">Chispa Creativa</h3>
+                        <p class="text-sm text-slate-400 font-light leading-relaxed">
+                            La intuición rápida, la pasión por ver conexiones donde otros ven puntos aislados, y el impulso imparable de materializar proyectos.
+                        </p>
+                        <span class="panel-foot">Intuición // Impulso</span>
+                    </article>
+
+                    <!-- La Sombra -->
+                    <article class="panel panel-purple">
+                        <span class="eyebrow text-purple-400">La Sombra</span>
+                        <div class="panel-figure" aria-hidden="true">
+                            <svg viewBox="0 0 120 120" fill="none">
+                                <defs>
+                                    <clipPath id="eclipseClip"><circle cx="60" cy="60" r="34" /></clipPath>
+                                </defs>
+                                <circle cx="60" cy="60" r="34" fill="#C084FC" opacity="0.16" />
+                                <circle cx="60" cy="60" r="34" fill="none" stroke="#C084FC" stroke-width="1.6" opacity="0.7" />
+                                <g clip-path="url(#eclipseClip)">
+                                    <circle class="eclipse-shadow" cx="60" cy="60" r="34" fill="#04060C" opacity="0.94" />
+                                </g>
+                                <circle cx="60" cy="60" r="46" fill="none" stroke="#C084FC" stroke-width="1" stroke-dasharray="2 8" opacity="0.35" />
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-medium text-white">El Silencio Incierto</h3>
+                        <p class="text-sm text-slate-400 font-light leading-relaxed">
+                            Los momentos de duda, el cansancio mental de sobrepensar y la necesidad de pausar para no quemarme en mi propio fuego.
+                        </p>
+                        <span class="panel-foot">Duda // Pausa</span>
+                    </article>
+
+                    <!-- El Encuentro -->
+                    <article class="panel panel-emerald">
+                        <span class="eyebrow text-emerald-400">El Encuentro</span>
+                        <div class="panel-figure" aria-hidden="true">
+                            <svg viewBox="0 0 120 120" fill="none">
+                                <ellipse class="venn-core" cx="60" cy="60" rx="11" ry="24" fill="#34D399" opacity="0" />
+                                <circle class="venn-left" cx="52" cy="60" r="27" fill="none" stroke="#34D399" stroke-width="1.6" opacity="0.75" />
+                                <circle class="venn-right" cx="68" cy="60" r="27" fill="none" stroke="#38BDF8" stroke-width="1.6" opacity="0.75" />
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-medium text-white">Ser Complementario</h3>
+                        <p class="text-sm text-slate-400 font-light leading-relaxed">
+                            El alivio de no tener que saberlo todo. Buscar personas que aporten lo que a mí me falta y brindar con generosidad lo que yo traigo a la mesa.
+                        </p>
+                        <span class="panel-foot">Cruce // Generosidad</span>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             03 // CÓMO CREO — El Cosmos Mental (única sección con la red neuronal de fondo)
+             ============================================================ -->
+        <section class="chapter" id="cap-mente">
+            <span class="chapter-index chapter-index-left" data-parallax="0.08" aria-hidden="true">03</span>
             <div class="chapter-inner">
                 <div class="rise">
                     <div class="badge-pill bg-sky-500/10 border border-sky-500/30 text-sky-300 mb-4">
                         <span class="bg-sky-400"></span>
-                        <span>01 / El Cosmos Mental</span>
+                        <span>03 / Cómo creo</span>
                     </div>
-                    <span class="eyebrow text-sky-400/70 block mb-2">Traducción Digital</span>
+                    <span class="eyebrow text-sky-400/70 block mb-2">El Cosmos Mental · La IA como lente</span>
                     <h2 class="display-xl text-gradient-cyan kinetic mb-6">Hacer visible lo que antes solo vivía en la imaginación.</h2>
                 </div>
 
@@ -2213,6 +2496,7 @@
 
                     <!-- Apertura del muro -->
                     <div class="reel-intro">
+                        <span class="eyebrow text-sky-400/70 block mb-3">Lo que hago</span>
                         <h3 class="display-lg text-gradient-cyan">Mural de exploración.</h3>
                         <p class="lead text-sm">
                             Videos que hago con inteligencia artificial. Sueltos, sin orden y sin un fin específico.
@@ -2254,7 +2538,7 @@
                     <!-- Cierre del muro -->
                     <div class="reel-outro">
                         <h4 class="display-lg text-white" style="font-size: clamp(1.6rem, 2.6vw, 2.4rem);">Se sigue sumando.</h4>
-                        <a href="#cap-06" class="reel-hint" style="text-decoration: none;">
+                        <a href="#cap-dialogo" class="reel-hint" style="text-decoration: none;">
                             <span>Conversemos</span>
                             <span class="reel-hint-arrow">↓</span>
                         </a>
@@ -2269,110 +2553,19 @@
         </section>
 
         <!-- ============================================================
-             02 // LUZ, SOMBRA & COMPLEMENTARIEDAD — tríptico
+             04 // MI CANAL — La Memoria Viva
              ============================================================ -->
-        <section class="chapter" id="cap-02">
-            <span class="chapter-index chapter-index-left" data-parallax="0.06" aria-hidden="true">02</span>
-            <div class="chapter-inner">
-                <div class="rise mb-12 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-                    <div>
-                        <div class="badge-pill bg-purple-500/10 border border-purple-500/30 text-purple-300 mb-6">
-                            <span class="bg-purple-400"></span>
-                            <span>02 / Vulnerabilidad &amp; Conexión</span>
-                        </div>
-                        <h2 class="display-xl text-gradient-purple kinetic max-w-3xl">No soy una persona completa, sino complementaria.</h2>
-                    </div>
-                    <p class="lead max-w-md">
-                        Aceptar mis contradicciones me quitó el peso de fingir autosuficiencia. Las mejores cosas ocurren cuando mis fortalezas se cruzan con la mirada de otro.
-                    </p>
-                </div>
-
-                <div class="triptych rise rise-delay-1">
-
-                    <!-- La Luz -->
-                    <article class="panel panel-cyan">
-                        <span class="eyebrow text-sky-400">La Luz</span>
-                        <div class="panel-figure" aria-hidden="true">
-                            <svg viewBox="0 0 120 120" fill="none">
-                                <g class="ray-group" stroke="#38BDF8" stroke-width="1.6" stroke-linecap="round" opacity="0.75">
-                                    <line x1="60" y1="8" x2="60" y2="26" />
-                                    <line x1="60" y1="94" x2="60" y2="112" />
-                                    <line x1="8" y1="60" x2="26" y2="60" />
-                                    <line x1="94" y1="60" x2="112" y2="60" />
-                                    <line x1="23" y1="23" x2="36" y2="36" />
-                                    <line x1="84" y1="84" x2="97" y2="97" />
-                                    <line x1="97" y1="23" x2="84" y2="36" />
-                                    <line x1="36" y1="84" x2="23" y2="97" />
-                                </g>
-                                <circle cx="60" cy="60" r="26" fill="#38BDF8" opacity="0.08" />
-                                <circle class="ray-core" cx="60" cy="60" r="13" fill="#38BDF8" opacity="0.9" />
-                            </svg>
-                        </div>
-                        <h3 class="text-2xl font-medium text-white">Chispa Creativa</h3>
-                        <p class="text-sm text-slate-400 font-light leading-relaxed">
-                            La intuición rápida, la pasión por ver conexiones donde otros ven puntos aislados, y el impulso imparable de materializar proyectos.
-                        </p>
-                        <span class="panel-foot">Intuición // Impulso</span>
-                    </article>
-
-                    <!-- La Sombra -->
-                    <article class="panel panel-purple">
-                        <span class="eyebrow text-purple-400">La Sombra</span>
-                        <div class="panel-figure" aria-hidden="true">
-                            <svg viewBox="0 0 120 120" fill="none">
-                                <defs>
-                                    <clipPath id="eclipseClip"><circle cx="60" cy="60" r="34" /></clipPath>
-                                </defs>
-                                <circle cx="60" cy="60" r="34" fill="#C084FC" opacity="0.16" />
-                                <circle cx="60" cy="60" r="34" fill="none" stroke="#C084FC" stroke-width="1.6" opacity="0.7" />
-                                <g clip-path="url(#eclipseClip)">
-                                    <circle class="eclipse-shadow" cx="60" cy="60" r="34" fill="#04060C" opacity="0.94" />
-                                </g>
-                                <circle cx="60" cy="60" r="46" fill="none" stroke="#C084FC" stroke-width="1" stroke-dasharray="2 8" opacity="0.35" />
-                            </svg>
-                        </div>
-                        <h3 class="text-2xl font-medium text-white">El Silencio Incierto</h3>
-                        <p class="text-sm text-slate-400 font-light leading-relaxed">
-                            Los momentos de duda, el cansancio mental de sobrepensar y la necesidad de pausar para no quemarme en mi propio fuego.
-                        </p>
-                        <span class="panel-foot">Duda // Pausa</span>
-                    </article>
-
-                    <!-- El Encuentro -->
-                    <article class="panel panel-emerald">
-                        <span class="eyebrow text-emerald-400">El Encuentro</span>
-                        <div class="panel-figure" aria-hidden="true">
-                            <svg viewBox="0 0 120 120" fill="none">
-                                <ellipse class="venn-core" cx="60" cy="60" rx="11" ry="24" fill="#34D399" opacity="0" />
-                                <circle class="venn-left" cx="52" cy="60" r="27" fill="none" stroke="#34D399" stroke-width="1.6" opacity="0.75" />
-                                <circle class="venn-right" cx="68" cy="60" r="27" fill="none" stroke="#38BDF8" stroke-width="1.6" opacity="0.75" />
-                            </svg>
-                        </div>
-                        <h3 class="text-2xl font-medium text-white">Ser Complementario</h3>
-                        <p class="text-sm text-slate-400 font-light leading-relaxed">
-                            El alivio de no tener que saberlo todo. Buscar personas que aporten lo que a mí me falta y brindar con generosidad lo que yo traigo a la mesa.
-                        </p>
-                        <span class="panel-foot">Cruce // Generosidad</span>
-                    </article>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- ============================================================
-             03 // LA MEMORIA VIVA
-             ============================================================ -->
-        <section class="chapter bleed band-void" id="cap-03">
-            <span class="chapter-index chapter-index-right" data-parallax="0.07" aria-hidden="true">03</span>
+        <section class="chapter" id="cap-memoria">
+            <span class="chapter-index chapter-index-right" data-parallax="0.07" aria-hidden="true">04</span>
             <div class="chapter-inner">
                 <div class="capsule-grid">
                     <div>
                         <div class="rise">
                             <div class="badge-pill bg-purple-500/10 border border-purple-500/30 text-purple-300 mb-4">
                                 <span class="bg-purple-400"></span>
-                                <span>03 / La Memoria Viva</span>
+                                <span>04 / Mi canal</span>
                             </div>
-                            <span class="eyebrow text-purple-400/70 block mb-2">YouTube &amp; Trascendencia</span>
+                            <span class="eyebrow text-purple-400/70 block mb-2">La Memoria Viva · YouTube</span>
                             <h2 class="display-lg text-gradient-purple kinetic mb-6">La huella incrustada en el tiempo.</h2>
                         </div>
                         <p class="lead rise rise-delay-1 mb-5">
@@ -2420,62 +2613,18 @@
         </section>
 
         <!-- ============================================================
-             04 // EL CIMIENTO — la cancha
+             05 // LO QUE ME SOSTIENE — El Anclaje
              ============================================================ -->
-        <section class="chapter" id="cap-04">
-            <span class="chapter-index chapter-index-left" data-parallax="0.06" aria-hidden="true">04</span>
-            <div class="chapter-inner">
-                <div class="court-grid">
-                    <div class="capsule-stage rise" aria-hidden="true">
-                        <svg class="court-svg" viewBox="0 0 120 160" fill="none" stroke="#34D399" stroke-width="1.4">
-                            <rect x="10" y="10" width="100" height="140" rx="3" opacity="0.85" />
-                            <line class="court-net" x1="10" y1="80" x2="110" y2="80" stroke-dasharray="3 3" />
-                            <line x1="25" y1="10" x2="25" y2="150" opacity="0.6" />
-                            <line x1="95" y1="10" x2="95" y2="150" opacity="0.6" />
-                            <line x1="25" y1="45" x2="95" y2="45" opacity="0.6" />
-                            <line x1="25" y1="115" x2="95" y2="115" opacity="0.6" />
-                            <line x1="60" y1="45" x2="60" y2="115" opacity="0.6" />
-                            <path class="rally-trail" d="M 42,138 C 80,112 30,74 28,34" stroke="#34D399" stroke-width="1" opacity="0.45" />
-                            <circle class="rally-ball" cx="42" cy="138" r="3.4" fill="#34D399" stroke="none" />
-                        </svg>
-                    </div>
-
-                    <div>
-                        <div class="rise">
-                            <div class="badge-pill bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 mb-4">
-                                <span class="bg-emerald-400"></span>
-                                <span>04 / El Cimiento</span>
-                            </div>
-                            <span class="eyebrow text-emerald-400/70 block mb-2">Entrenador Nacional // 2018</span>
-                            <h2 class="display-lg text-gradient-emerald kinetic mb-6">La cancha me enseñó a leer el alma bajo presión.</h2>
-                        </div>
-                        <p class="lead rise rise-delay-1 mb-8">
-                            El tenis nunca fue solo técnica o potencia física: es una radiografía del carácter humano. En un punto de quiebre nadie puede fingir quién es. Mi certificación en 2018 y los años en cancha me dejaron la templanza, la lectura gestual y la convicción de que la serenidad interna siempre le gana al caos exterior.
-                        </p>
-
-                        <div class="rise rise-delay-2">
-                            <div class="stat-row"><span>Certificación</span><strong>Entrenador Nacional · 2018</strong></div>
-                            <div class="stat-row"><span>Presencia</span><strong>En el presente</strong></div>
-                            <div class="stat-row"><span>Temple</span><strong>Estratégico</strong></div>
-                            <div class="stat-row"><span>Enfoque</span><strong>Punto a punto</strong></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ============================================================
-             05 // EL ANCLAJE — detrás del ruido
-             ============================================================ -->
-        <section class="chapter bleed band-void" id="cap-05">
-            <span class="chapter-index chapter-index-right" data-parallax="0.07" aria-hidden="true">05</span>
+        <section class="chapter bleed band-void" id="cap-anclaje">
+            <span class="chapter-index chapter-index-left" data-parallax="0.07" aria-hidden="true">05</span>
             <div class="chapter-inner">
                 <div class="rise mb-12 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
                     <div>
-                        <div class="badge-pill bg-sky-500/10 border border-sky-500/30 text-sky-300 mb-6">
+                        <div class="badge-pill bg-sky-500/10 border border-sky-500/30 text-sky-300 mb-4">
                             <span class="bg-sky-400"></span>
-                            <span>05 / El Anclaje</span>
+                            <span>05 / Lo que me sostiene</span>
                         </div>
+                        <span class="eyebrow text-sky-400/70 block mb-2">El Anclaje · Mi cable a tierra</span>
                         <h2 class="display-xl text-white kinetic">Detrás del Ruido.</h2>
                     </div>
                     <p class="lead max-w-md">
@@ -2561,15 +2710,6 @@
                     </div>
                     <p class="lead max-w-md">
                         Ideas cortas que voy anotando entre proyectos — sobre crear con IA, contar historias y sostener la cabeza cuando todo aprieta.
-                    </p>
-                </div>
-
-                <div class="rise rise-delay-1 mb-12" style="max-width: 62ch;">
-                    <p class="text-sm text-slate-300 font-light leading-relaxed">
-                        Soy Tomás David Honor. Mi trabajo audiovisual investiga la fricción fértil entre la sensibilidad analógica y los modelos de difusión generativa. En un entorno saturado de imágenes hiperrealistas sin propósito, busco restituirle al fotograma su misterio. La inteligencia artificial no es para mí un atajo de producción: es un nuevo lenguaje de la luz que requiere una mirada quirúrgica, respeto por el silencio y un pulso implacable en el montaje.
-                    </p>
-                    <p class="mt-4 pl-4 border-l-2 border-sky-500/40 text-sm text-slate-400 italic font-light">
-                        "No se trata de sustituir el alma, sino de amplificar la pregunta."
                     </p>
                 </div>
 
@@ -2670,9 +2810,9 @@
         </section>
 
         <!-- ============================================================
-             06 // DIÁLOGO — portal de cierre
+             06 // CONVERSEMOS — portal de cierre
              ============================================================ -->
-        <section class="chapter" id="cap-06">
+        <section class="chapter" id="cap-dialogo">
             <div class="chapter-inner">
                 <div class="portal">
                     <div class="portal-rings" aria-hidden="true">
@@ -2684,7 +2824,7 @@
 
                     <div class="badge-pill bg-sky-500/10 border border-sky-500/30 text-sky-300 mb-8 relative z-10 rise">
                         <span class="bg-sky-400"></span>
-                        <span>Diálogo &amp; Sinergia</span>
+                        <span>06 / Conversemos</span>
                     </div>
 
                     <h2 class="display-xl text-white max-w-4xl mb-7 relative z-10 kinetic">Si algo de esto resuena contigo, conversemos.</h2>
@@ -3166,7 +3306,7 @@
                 if (n.y < -m) n.y = height + m; else if (n.y > height + m) n.y = -m;
             }
 
-            updateLinks(true);
+            updateLinks(netStage >= 2);
 
             // Cursor sobre una neurona: dispara una cascada (con distancia
             // mínima entre disparos para no saturar)
@@ -3188,7 +3328,7 @@
             }
 
             // Actividad espontánea de fondo
-            if (Math.random() < 0.016 && neurons.length) {
+            if (netStage >= 1 && Math.random() < (netStage >= 2 ? 0.022 : 0.012) && neurons.length) {
                 firePulses((Math.random() * neurons.length) | 0, 1);
             }
 
@@ -3247,7 +3387,7 @@
                 const b = neurons[j];
                 const fade = 1 - links[k + 2] / linkDist;
                 const e = Math.max(a.energy, b.energy);
-                const alpha = fade * (0.07 + e * 0.4) * Math.min(a.vis, b.vis);
+                const alpha = fade * (0.07 + e * 0.4) * Math.min(a.vis, b.vis) * Math.max(linkFactor, e);
                 if (alpha < 0.015) continue;
                 const c = e > 0.15 ? (a.energy > b.energy ? a.c : b.c) : [210, 222, 240];
                 const q = linkCtrl(i, j);
@@ -3369,6 +3509,7 @@
         }, { passive: true });
         document.addEventListener('mouseleave', () => { pointerActive = false; });
         window.addEventListener('pointerdown', (e) => {
+            if (netVis < 0.2) return;
             const x = e.clientX;
             const y = e.clientY;
             const hit = nearestNeuron(x, y, 160);
@@ -3388,11 +3529,39 @@
             }
         }, { passive: true });
 
+        /* La red sólo vive en "03 · Cómo creo" (la sección de la mente): aparece
+           al entrar, se apaga al salir y acompaña los tres pasos del texto
+           (lensStage data-state): 0 difuso = neuronas sueltas, 1 enfocando =
+           se conectan y mandan pulsos, 2 cristalizado = red completa con
+           choques y rayos. Fuera de la sección no se calcula nada. */
+        const netSection = document.getElementById('cap-mente');
+        const netLens = document.getElementById('lens-stage');
+        let netVis = 0;
+        let netStage = 0;
+        let linkFactor = 0;
+
+        function netTarget() {
+            if (!netSection) return 1;
+            const r = netSection.getBoundingClientRect();
+            const enter = (height - r.top) / (height * 0.45);
+            const exit = r.bottom / (height * 0.45);
+            return Math.min(1, Math.max(0, Math.min(enter, exit)));
+        }
+
         function animateFX(now) {
             ctx.clearRect(0, 0, width, height);
-            if (!prefersReduced) stepNeurons(now || performance.now());
-            else updateLinks(false);
-            drawNeurons();
+            const target = netTarget();
+            netVis += (target - netVis) * 0.08;
+            if (target === 0 && netVis < 0.01) netVis = 0;
+            if (netVis > 0) {
+                netStage = netLens ? Number(netLens.dataset.state) || 0 : 2;
+                linkFactor += ((netStage >= 1 ? 1 : 0) - linkFactor) * 0.04;
+                if (!prefersReduced) stepNeurons(now || performance.now());
+                else { linkFactor = 1; updateLinks(false); }
+                ctx.globalAlpha = netVis;
+                drawNeurons();
+                ctx.globalAlpha = 1;
+            }
             for (let i = bolts.length - 1; i >= 0; i--) {
                 bolts[i].update();
                 bolts[i].draw();
