@@ -1905,6 +1905,27 @@
             box-shadow: 0 0 34px rgba(192, 132, 252, 0.35), inset 0 0 15px rgba(192, 132, 252, 0.15);
         }
 
+        /* Botón de algo que todavía no existe: sin brillo ni flecha */
+        .btn-portal-soon,
+        .btn-portal-soon:hover {
+            cursor: default;
+            color: #94A3B8;
+            border-color: rgba(168, 85, 247, 0.22);
+            box-shadow: none;
+        }
+
+        .soon-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            letter-spacing: 0.06em;
+            text-transform: none;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.35rem;
+            color: #D8B4FE;
+            background: rgba(168, 85, 247, 0.18);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+        }
+
         .badge-pill {
             display: inline-flex;
             align-items: center;
@@ -2170,7 +2191,7 @@
                     <span>↓</span>
                 </a>
                 <span class="text-slate-700">|</span>
-                <a href="portfolio.html" class="text-xs font-mono-custom tracking-wider text-slate-400 hover:text-purple-300 flex items-center gap-1.5 transition-colors group">
+                <a aria-disabled="true" title="Próximamente" class="cursor-default text-xs font-mono-custom tracking-wider text-slate-400 hover:text-purple-300 flex items-center gap-1.5 transition-colors group">
                     <span>Ir al Portfolio</span>
                     <span class="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30 font-mono-custom">Próximamente</span>
                     <span class="transform group-hover:translate-x-0.5 transition-transform">→</span>
@@ -2842,13 +2863,12 @@
                             </svg>
                         </a>
 
-                        <a href="portfolio.html" class="btn-portal btn-portal-secondary magnetic group w-full sm:w-auto">
+                        <!-- Portfolio todavía no existe: botón deshabilitado con aviso.
+                             Cuando esté listo, volver a un enlace a portfolio.html con la flecha. -->
+                        <span class="btn-portal btn-portal-secondary btn-portal-soon w-full sm:w-auto" aria-disabled="true">
                             <span class="relative z-10">Explorar Portfolio</span>
-                            <svg class="w-4 h-4 stroke-current fill-none relative z-10 transform group-hover:translate-x-1.5 transition-transform" viewBox="0 0 24 24" stroke-width="2">
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                                <polyline points="12 5 19 12 12 19"></polyline>
-                            </svg>
-                        </a>
+                            <span class="soon-tag relative z-10">Próximamente</span>
+                        </span>
                     </div>
 
                     <hr class="rule-glow w-full max-w-2xl mt-16 mb-6 relative z-10">
