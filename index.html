@@ -316,26 +316,35 @@
         .logo-piece {
             transform-box: fill-box;
             transform-origin: center;
-            transition: transform 1.9s cubic-bezier(0.16, 1, 0.3, 1),
-                        opacity 1.3s ease,
-                        filter 1.3s ease;
+            transition: transform 2.6s cubic-bezier(0.7, 0, 0.3, 1.12),
+                        opacity 1.2s ease,
+                        filter 1.8s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .hero-stage.is-intro .logo-piece {
             opacity: 0;
-            filter: blur(18px);
-            transform: scale(0.68) translateY(46px) rotate(-4deg);
+            filter: blur(16px);
         }
 
-        .hero-stage.is-intro .part-a { transform: translateY(-260px) scale(1.15); }
-        .hero-stage.is-intro .part-b { transform: translate(-300px, 90px) rotate(-26deg) scale(0.7); }
-        .hero-stage.is-intro .part-c { transform: translate(300px, 90px) rotate(26deg) scale(0.7); }
-        .hero-stage.is-intro .part-d { transform: translateY(260px) scale(0.6); }
+        .hero-stage.is-intro .part-a { transform: translateY(-300px) scale(1.12); }
+        .hero-stage.is-intro .part-b { transform: translate(-320px, 110px) rotate(-30deg) scale(0.66); }
+        .hero-stage.is-intro .part-c { transform: translate(320px, 110px) rotate(30deg) scale(0.66); }
+        .hero-stage.is-intro .part-d { transform: translateY(320px) scale(0.5); }
 
-        .hero-stage:not(.is-intro) .part-a { transition-delay: 0.05s; }
-        .hero-stage:not(.is-intro) .part-b { transition-delay: 0.18s; }
-        .hero-stage:not(.is-intro) .part-c { transition-delay: 0.3s; }
-        .hero-stage:not(.is-intro) .part-d { transition-delay: 0.42s; }
+        .hero-stage:not(.is-intro) .part-d { transition-delay: 0s; }
+        .hero-stage:not(.is-intro) .part-a { transition-delay: 0.14s; }
+        .hero-stage:not(.is-intro) .part-b { transition-delay: 0.3s; }
+        .hero-stage:not(.is-intro) .part-c { transition-delay: 0.38s; }
+
+        .hero-stage:not(.is-intro) .th-dagger-logo {
+            animation: logoSettle 1.4s ease-out 1.9s both;
+        }
+
+        @keyframes logoSettle {
+            0% { filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 22px rgba(46, 127, 255, 0.28)); }
+            45% { filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 34px rgba(160, 225, 255, 0.85)) brightness(1.25); }
+            100% { filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 22px rgba(46, 127, 255, 0.28)); }
+        }
 
         .blue-charge-beam {
             filter: drop-shadow(0 0 6px #00D4FF) drop-shadow(0 0 14px #2E7FFF);
@@ -2030,7 +2039,7 @@
             .rally-ball, .rally-trail, .court-net,
             .freq-bar, .paw-icon, .pulse-line path,
             .portal-ring, .badge-pill > span:first-child,
-            .sound-bar {
+            .sound-bar, .th-dagger-logo {
                 animation: none !important;
             }
 
