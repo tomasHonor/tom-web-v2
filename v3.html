@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Tomás David Honor</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Tomás David Honor: de entrenador nacional de tenis a creador con inteligencia artificial. Su recorrido, contado como un partido.">
+<meta property="og:title" content="Tomás David Honor">
+<meta property="og:description" content="De la cancha a crear con inteligencia artificial. Un recorrido contado como un partido.">
+<meta property="og:image" content="https://tomashonor.github.io/tom-web-v2/og-image.jpg">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&family=Caveat:wght@600&display=swap">
+<style>
+/* Layout: una cancha vista desde arriba. Dos líneas laterales bajan por toda la página;
+   cada sección es una zona de la cancha. La superficie cambia con la historia:
+   polvo de ladrillo (el origen) -> noche (crear con IA) -> cuaderno -> de vuelta al ladrillo. */
+:root {
+  color-scheme: dark;
+  --clay: #A8481E;
+  --clay-deep: #7E3413;
+  --chalk: #F6F1E7;
+  --night: #0A1120;
+  --night-2: #121C31;
+  --ball: #DDF247;
+  --ink: #1B1009;
+  --paper: #EFE8DA;
+  --line: rgba(246, 241, 231, 0.6);
+  --line-soft: rgba(246, 241, 231, 0.22);
+  --f-display: 'Archivo', 'Arial Narrow', 'Helvetica Neue', sans-serif;
+  --f-body: 'Instrument Sans', -apple-system, 'Segoe UI', sans-serif;
+  --f-mono: 'DM Mono', ui-monospace, 'SF Mono', monospace;
+  --f-hand: 'Caveat', 'Segoe Script', cursive;
+  --court: 1160px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--clay);
+  color: var(--chalk);
+  font-family: var(--f-body);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+a { color: inherit; }
+p { margin: 0; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+:focus-visible { outline: 3px solid var(--ball); outline-offset: 3px; }
+
+/* Superficies */
+.zone { position: relative; }
+.s-clay { background-color: var(--clay); color: var(--chalk); }
+.s-night { background-color: var(--night); color: var(--chalk); }
+.s-night2 { background-color: var(--night-2); color: var(--chalk); }
+.s-paper { background-color: var(--paper); color: var(--ink); --line: rgba(27, 16, 9, 0.55); --line-soft: rgba(27, 16, 9, 0.18); }
+.s-clay::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.5; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .14 0 0 0 0 .05 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* La cancha: columna central con líneas laterales continuas */
+.gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); position: relative; z-index: 2; }
+.court {
+  max-width: var(--court); margin: 0 auto;
+  border-left: 2px solid var(--line); border-right: 2px solid var(--line);
+  padding: clamp(4rem, 9vw, 7.5rem) clamp(1.1rem, 4.5vw, 4rem);
+  position: relative;
+}
+.zone + .zone .court, .split + .zone .court, .tape + .zone .court { border-top: 2px solid var(--line); }
+.mark {
+  font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+  display: flex; flex-wrap: wrap; gap: 0.5rem 0.9rem; align-items: center; margin-bottom: 1.6rem;
+}
+.mark b { font-weight: 500; white-space: nowrap; background: var(--chalk); color: var(--ink); padding: 0.2rem 0.55rem; }
+.s-night .mark b, .s-night2 .mark b { background: var(--ball); }
+.s-paper .mark b { background: var(--ink); color: var(--paper); }
+.h-big {
+  font-family: var(--f-display); font-stretch: 68%; font-weight: 800; text-transform: uppercase;
+  font-size: clamp(2.6rem, 7.2vw, 6rem); line-height: 0.92; letter-spacing: -0.01em;
+}
+.h-big em { font-style: normal; color: var(--ball); }
+.s-clay .h-big em { color: var(--ink); }
+.s-paper .h-big em { color: var(--clay); }
+.lead { font-size: clamp(1.1rem, 1.6vw, 1.3rem); line-height: 1.6; max-width: 62ch; }
+.prose { max-width: 62ch; display: grid; gap: 1.1rem; }
+.hand { font-family: var(--f-hand); font-size: 1.7rem; line-height: 1.15; color: var(--ball); transform: rotate(-2deg); display: inline-block; }
+.s-clay .hand { color: var(--chalk); }
+.s-paper .hand { color: var(--clay); }
+
+/* Marcador fijo */
+.board {
+  position: fixed; z-index: 30;
+  top: calc(12px + env(safe-area-inset-top, 0px)); left: max(12px, env(safe-area-inset-left, 0px));
+  background: var(--night); color: var(--chalk); font-family: var(--f-mono); font-size: 0.72rem;
+  letter-spacing: 0.06em; text-transform: uppercase; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--line-soft); min-width: 13.5rem;
+}
+.board-set { padding: 0.35rem 0.7rem; background: var(--ball); color: var(--ink); font-weight: 500; display: flex; justify-content: space-between; gap: 1rem; }
+.board-row { display: grid; grid-template-columns: 0.6rem 1fr auto; gap: 0.55rem; align-items: center; padding: 0.38rem 0.7rem; }
+.board-row + .board-row { border-top: 1px solid var(--line-soft); }
+.board-row i { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: transparent; }
+.board-row.serving i { background: var(--ball); }
+.board-pts { font-variant-numeric: tabular-nums; font-weight: 500; min-width: 2ch; text-align: right; }
+.board-pts.flip { animation: flip 0.45s ease; }
+@keyframes flip { 0% { transform: translateY(-60%); opacity: 0; } 100% { transform: none; opacity: 1; } }
+
+/* La pelota que acompaña el scroll */
+.ball {
+  position: fixed; z-index: 1; left: 0; top: 0; width: 20px; height: 20px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #F4FF9A, var(--ball) 55%, #A9BD22);
+  box-shadow: 10px 14px 10px rgba(0, 0, 0, 0.28); pointer-events: none; will-change: transform;
+}
+
+/* Hero */
+.hero .court { padding-top: clamp(7rem, 13vw, 9rem); padding-bottom: clamp(3rem, 6vw, 5rem); }
+.hero-top { display: flex; justify-content: flex-start; align-items: flex-start; gap: 1.5rem; margin-bottom: clamp(1.5rem, 4vw, 3rem); }
+.hero-main { display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem; }
+.hero-logo { height: clamp(14rem, 33vw, 29rem); width: auto; flex: none; margin-right: clamp(0rem, 4vw, 4rem); filter: drop-shadow(0 6px 0 rgba(0, 0, 0, 0.18)); }
+.hero-logo path { fill: var(--chalk); }
+.hero-note { text-align: left; }
+.name {
+  font-family: var(--f-display); font-stretch: 62%; font-weight: 900; text-transform: uppercase;
+  font-size: clamp(4.6rem, 14.5vw, 13rem); line-height: 0.8; letter-spacing: -0.015em;
+}
+.name span { display: block; }
+.name .out { color: transparent; -webkit-text-stroke: 2px var(--chalk); }
+.hero-foot { display: grid; grid-template-columns: 1.3fr 1fr; gap: clamp(1.5rem, 5vw, 4rem); align-items: end; margin-top: clamp(2rem, 5vw, 3.5rem); padding-top: 1.6rem; border-top: 2px solid var(--line); }
+.facts { list-style: none; margin: 0; padding: 0; font-family: var(--f-mono); font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; display: grid; gap: 0.5rem; }
+.facts li { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 1px dashed var(--line-soft); padding-bottom: 0.45rem; }
+.btn {
+  display: inline-flex; align-items: center; gap: 0.7rem; text-decoration: none; cursor: pointer; border: 0;
+  font-family: var(--f-display); font-stretch: 75%; font-weight: 800; text-transform: uppercase; font-size: 1.15rem; letter-spacing: 0.02em;
+  background: var(--ball); color: var(--ink); padding: 0.85rem 1.4rem; transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 5px 5px 0 var(--ink);
+}
+.btn:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--ink); }
+.btn-row { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; align-items: center; margin-top: 2rem; }
+
+/* Quién soy */
+.two { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(2rem, 6vw, 5rem); align-items: start; }
+.two > * { min-width: 0; }
+.quote { font-family: var(--f-display); font-stretch: 80%; font-weight: 600; font-size: clamp(1.4rem, 2.6vw, 2rem); line-height: 1.2; border-left: 6px solid var(--chalk); padding-left: 1.1rem; margin: 2rem 0 0; }
+.order { border: 2px solid var(--line); }
+.order-head { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; padding: 0.8rem 1rem; border-bottom: 2px solid var(--line); display: flex; justify-content: space-between; }
+.order a { display: grid; grid-template-columns: 2.6rem 1fr auto; gap: 0.8rem; align-items: baseline; padding: 0.85rem 1rem; text-decoration: none; transition: background 0.2s ease, color 0.2s ease; }
+.order a + a { border-top: 1px solid var(--line-soft); }
+.order a:hover { background: var(--chalk); color: var(--ink); }
+.order .n { font-family: var(--f-mono); font-size: 0.75rem; }
+.order .t { font-family: var(--f-display); font-stretch: 75%; font-weight: 700; text-transform: uppercase; font-size: 1.25rem; line-height: 1.1; }
+.order .d { display: block; font-family: var(--f-body); font-weight: 400; text-transform: none; font-size: 0.9rem; opacity: 0.85; margin-top: 0.15rem; }
+
+/* La cancha */
+.stats { width: 100%; border-collapse: collapse; font-family: var(--f-mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; }
+.stats caption { text-align: left; font-size: 0.72rem; letter-spacing: 0.14em; padding-bottom: 0.7rem; }
+.stats th, .stats td { padding: 0.85rem 0; border-top: 1px solid var(--line); text-align: left; font-weight: 400; }
+.stats td { text-align: right; font-weight: 500; }
+.stats tr:last-child th, .stats tr:last-child td { border-bottom: 1px solid var(--line); }
+.minicourt { width: 100%; max-width: 300px; height: auto; display: block; margin: 0 0 2rem auto; }
+.rally { stroke-dasharray: 6 7; animation: dash 2.4s linear infinite; }
+@keyframes dash { to { stroke-dashoffset: -52; } }
+
+/* Cómo soy: la cancha partida por la red */
+.split { display: grid; grid-template-columns: 1fr 1fr; position: relative; z-index: 2; }
+.half { padding: clamp(2.5rem, 6vw, 5rem) clamp(1.25rem, 5vw, 4.5rem); position: relative; }
+.half-in { max-width: 30rem; }
+.half.luz { background: var(--clay); display: flex; justify-content: flex-end; }
+.half.sombra { background: var(--night); border-left: 4px solid var(--chalk); }
+.half h3, .card h3 { font-family: var(--f-display); font-stretch: 70%; font-weight: 800; text-transform: uppercase; font-size: clamp(2rem, 4vw, 3.2rem); line-height: 0.95; margin: 0.8rem 0 1rem; }
+.tag { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; }
+.foot { font-family: var(--f-mono); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; margin-top: 1.5rem; display: block; }
+.tape { background: var(--chalk); color: var(--ink); position: relative; z-index: 2; }
+.tape-in { max-width: var(--court); margin: 0 auto; padding: clamp(2rem, 4vw, 3rem) clamp(1.1rem, 4.5vw, 4rem); display: grid; grid-template-columns: auto 1fr; gap: clamp(1.2rem, 4vw, 3.5rem); align-items: center; }
+.tape h3 { font-family: var(--f-display); font-stretch: 70%; font-weight: 900; text-transform: uppercase; font-size: clamp(2rem, 4.4vw, 3.6rem); line-height: 0.92; }
+.tape p { max-width: 58ch; }
+
+/* Cómo creo */
+.beats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: clamp(2.5rem, 5vw, 4rem); border-top: 2px solid var(--line); }
+.beat { padding: 1.6rem clamp(0.9rem, 2vw, 1.6rem) 0.4rem; min-width: 0; }
+.beat + .beat { border-left: 1px solid var(--line-soft); }
+.beat .num { font-family: var(--f-display); font-stretch: 62%; font-weight: 900; font-size: clamp(3.4rem, 6vw, 5.5rem); line-height: 1; color: var(--ball); display: block; }
+.beat h3 { font-family: var(--f-mono); font-weight: 500; font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; margin: 0.6rem 0 0.8rem; }
+.beat p { font-size: 1.12rem; line-height: 1.5; }
+.chips { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 2.6rem; padding: 0; list-style: none; font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.chips li { border: 1px solid var(--line); padding: 0.4rem 0.8rem; }
+.chips b { color: var(--ball); font-weight: 500; }
+
+/* Lo que hago */
+.reel { display: grid; grid-template-columns: 4fr 7fr; gap: 12px; margin-top: clamp(2rem, 4vw, 3rem); }
+.reel-side { display: grid; grid-template-rows: auto auto; gap: 12px; min-width: 0; }
+.reel-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.clip { position: relative; display: block; padding: 0; border: 0; background: var(--night); cursor: pointer; overflow: hidden; min-width: 0; color: var(--chalk); text-align: left; font: inherit; }
+.clip video { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.clip.wide video { aspect-ratio: 16 / 9; }
+.clip.tall video { aspect-ratio: 3 / 4; }
+.clip:hover video { transform: scale(1.04); }
+.clip-cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 2.4rem 0.9rem 0.75rem; background: linear-gradient(transparent, rgba(5, 8, 16, 0.85)); display: flex; justify-content: space-between; align-items: end; gap: 0.75rem; }
+.clip-cap strong { font-family: var(--f-display); font-stretch: 72%; font-weight: 800; text-transform: uppercase; font-size: 1.25rem; line-height: 1; }
+.clip-cap span { font-family: var(--f-mono); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ball); white-space: nowrap; }
+dialog.player { border: 2px solid var(--chalk); background: var(--night); color: var(--chalk); padding: 0; max-width: min(94vw, 1100px); width: 100%; }
+dialog.player::backdrop { background: rgba(5, 8, 16, 0.88); }
+dialog.player video { display: block; width: 100%; max-height: 78vh; background: #000; }
+.player-bar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.6rem 0.9rem; font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.player-bar button { font: inherit; letter-spacing: inherit; text-transform: inherit; background: var(--ball); color: var(--ink); border: 0; padding: 0.45rem 0.8rem; cursor: pointer; }
+
+/* Mi canal */
+.sets { display: grid; grid-template-columns: repeat(3, 1fr); border: 2px solid var(--line); margin-top: 2.5rem; }
+.sets div { padding: 1.3rem clamp(0.9rem, 2vw, 1.5rem); min-width: 0; }
+.sets div + div { border-left: 2px solid var(--line); }
+.sets dt { font-family: var(--f-display); font-stretch: 62%; font-weight: 900; font-size: clamp(2.6rem, 6vw, 4.6rem); line-height: 1; }
+.sets div:nth-child(2) dt { color: var(--ball); }
+.sets dd { margin: 0.5rem 0 0; font-size: 0.98rem; line-height: 1.45; }
+
+/* Lo que me sostiene */
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: clamp(2rem, 4vw, 3rem); border: 2px solid var(--line); }
+.card { padding: clamp(1.3rem, 2.5vw, 2rem); min-width: 0; display: flex; flex-direction: column; }
+.card + .card { border-left: 2px solid var(--line); }
+.card h3 { font-size: clamp(1.7rem, 3vw, 2.4rem); }
+.card .foot { margin-top: auto; padding-top: 1.5rem; }
+
+/* Notas */
+.notes { display: grid; gap: 0; margin-top: clamp(2rem, 4vw, 3rem); border-top: 2px solid var(--line); }
+.notes details { border-bottom: 2px solid var(--line); }
+.notes summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.6rem 2rem; padding: 1.5rem 0; align-items: start; }
+.notes summary::-webkit-details-marker { display: none; }
+.notes .n-title { font-family: var(--f-display); font-stretch: 72%; font-weight: 800; text-transform: uppercase; font-size: clamp(1.5rem, 3.4vw, 2.5rem); line-height: 1; display: block; margin-top: 0.5rem; }
+.notes .n-quote { display: block; margin-top: 0.9rem; max-width: 64ch; font-style: italic; }
+.notes .n-open { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; border: 1px solid var(--line); padding: 0.35rem 0.7rem; white-space: nowrap; }
+.notes details[open] .n-open { background: var(--ink); color: var(--paper); }
+.notes details[open] .n-open::after { content: " ×"; }
+.notes .n-body { padding: 0 0 1.8rem; }
+
+/* Contacto */
+.final .h-big { font-size: clamp(2.8rem, 8.6vw, 7.4rem); }
+.mail { font-family: var(--f-mono); font-size: 0.95rem; user-select: all; border-bottom: 1px dashed var(--line); }
+.end { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.8rem 2rem; margin-top: clamp(3rem, 7vw, 5rem); padding-top: 1.2rem; border-top: 2px solid var(--line); font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; }
+
+/* Aparición suave: el contenido es legible aunque no corra el script */
+.js .rv { opacity: 0.2; transform: translateY(26px); transition: opacity 0.8s ease, transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.js .rv.in { opacity: 1; transform: none; }
+.name span { animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.name span:nth-child(2) { animation-delay: 0.12s; }
+.name span:nth-child(3) { animation-delay: 0.24s; }
+@keyframes rise { from { transform: translateY(0.35em); opacity: 0; } to { transform: none; opacity: 1; } }
+
+@media (max-width: 820px) {
+  .two, .hero-foot, .split, .reel, .beats, .cards, .sets, .tape-in { grid-template-columns: 1fr; }
+  .half.luz { justify-content: flex-start; }
+  .hero-main { flex-direction: column-reverse; align-items: flex-start; gap: 1.4rem; }
+  .hero-logo { height: 6.5rem; margin: 0; }
+  .half.sombra { border-left: 0; border-top: 4px solid var(--chalk); }
+  .beat + .beat { border-left: 0; border-top: 1px solid var(--line-soft); }
+  .card + .card, .sets div + div { border-left: 0; border-top: 2px solid var(--line); }
+  .minicourt { margin: 0 0 2rem; max-width: 220px; }
+  .board { font-size: 0.64rem; min-width: 11.2rem; }
+  .name .out { -webkit-text-stroke-width: 1.5px; }
+  .notes summary { grid-template-columns: 1fr; }
+  .notes .n-open { justify-self: start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .ball { display: none; }
+  .js .rv { opacity: 1; transform: none; transition: none; }
+  .name span, .rally, .board-pts.flip { animation: none; }
+  .clip video { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<aside class="board" aria-label="Marcador del recorrido">
+  <div class="board-set"><span id="b-label">Saque</span><span id="b-step">0 / 9</span></div>
+  <div class="board-row serving"><i></i><span>T. Honor</span><span class="board-pts" id="b-me">0</span></div>
+  <div class="board-row"><i></i><span>El ruido</span><span class="board-pts" id="b-op">0</span></div>
+</aside>
+<div class="ball" id="ball" aria-hidden="true"></div>
+
+<main>
+<!-- HERO -->
+<header class="zone s-clay hero" id="inicio" data-label="Saque" data-me="0" data-op="0">
+  <div class="gutter"><div class="court">
+    <div class="hero-top">
+      
+      <p class="hero-note"><span class="hand">así se ve mi partido ↓</span></p>
+    </div>
+    <div class="hero-main"><h1 class="name" aria-label="Tomás David Honor"><span>Tomás</span><span class="out">David</span><span>Honor</span></h1>
+      <svg class="hero-logo" viewBox="250 533 652 1001" role="img" aria-label="Logo TH"><path d="M 271.566 558.072 L 269.947 556.285 L 270.304 554.656 C 272.75 552.979 276.232 553.139 279.267 553.101 C 340.834 552.692 402.404 552.875 463.968 553.652 L 655.531 553.261 L 803.571 553.158 C 821.032 553.115 838.533 553.145 855.991 553.396 C 861.501 553.475 878.841 551.153 882.338 554.878 L 880.917 557.298 C 864.093 595.712 875.491 650.285 880.449 692.486 C 857.947 652.891 840.585 625.137 792.512 611.812 C 783.241 609.277 773.73 607.72 764.135 607.166 C 722.731 604.567 677.642 608.429 635.915 607.13 C 605.837 606.194 611.751 635.869 611.809 656.653 L 612.015 721.065 C 612.155 807.021 612.829 894.62 611.847 980.439 C 641.511 979.745 672.242 980.117 701.996 980.158 L 702.18 853.084 C 702.23 833.348 703.394 807.895 700.757 788.529 C 699.824 781.673 691.244 771.354 686.463 765.839 C 720.081 766.459 759.513 766.782 792.986 765.515 C 787.335 772.35 779.133 782.829 776.901 791.149 C 768.761 821.487 776.243 868.173 773.062 898.341 C 774.579 975.257 773.314 1055.86 773.293 1132.96 L 773.191 1190.83 C 773.152 1214.51 769.866 1241.18 788.08 1259.06 C 762.239 1269.24 739.996 1295.68 721.768 1315.79 C 719.795 1317.96 714.59 1324.72 712.631 1326.21 C 709.599 1330.67 704.269 1338.56 700.347 1342.01 C 699.98 1341.32 699.525 1340.48 698.982 1339.47 C 699.31 1316.22 701.462 1286.22 701.639 1263.63 C 702.257 1184.47 702.002 1105.3 701.949 1026.23 L 612.032 1026.19 L 612.103 1303.74 L 612.011 1381.91 C 611.943 1405.15 607.696 1437.73 624.977 1455.09 C 625.331 1455.44 625.691 1455.79 626.056 1456.13 C 605.342 1471.66 587.99 1491.23 575.049 1513.66 C 565.235 1497.23 558.067 1488.56 546.364 1473.71 C 538.392 1465.86 533.235 1462.04 523.939 1456.05 C 536.97 1444.28 538.399 1432.71 538.615 1416.17 C 538.917 1393.05 538.801 1369.94 538.784 1346.82 L 538.699 1220.43 L 538.776 834.496 L 538.821 682.641 C 538.844 662.874 539.443 642.427 538.12 622.836 C 536.643 612.584 525.082 607.604 516.294 607.422 C 496.509 607.014 476.19 606.491 456.533 607.038 C 433.759 607.671 409.154 605.696 386.659 607.43 C 377.896 608.157 369.222 609.713 360.753 612.077 C 314.498 624.932 294.632 653.997 272.524 693 C 275.113 654.73 290.928 591.464 271.566 558.072 z"/><path d="M 535.251 1455.01 C 557.306 1433.76 546.866 1393.63 550.66 1369.55 C 553.023 1382.76 547.309 1396.5 554.103 1407.03 C 558.917 1409.87 558.238 1407.43 564.063 1408.51 C 564.36 1411.17 564.298 1412.25 565.444 1414.62 C 571.21 1414.2 576.421 1407.91 580.705 1409.81 L 581.452 1413.84 C 583.835 1415 584.064 1414.29 587.227 1413.32 C 590.868 1414.17 594.209 1415.21 597.454 1413.44 C 601.478 1408.62 599.849 1375.44 600.276 1365.63 C 601.025 1369.03 600.56 1377.08 600.74 1381.12 C 601.363 1395.06 600.002 1416.82 602.497 1429.96 L 602.667 1430.81 C 607.283 1448.17 611.107 1446.62 615.212 1456.94 L 614.404 1457.25 C 605.151 1460.98 582.066 1486.81 577.949 1496.85 L 576.043 1498.01 C 573.13 1496.52 560.993 1477.9 555.443 1472.29 C 553.652 1467.39 540.104 1458.24 535.251 1455.01 z"/><path d="M 602.667 1430.81 C 602.654 1424.46 603.025 1419.11 603.485 1412.8 C 604.401 1414.41 603.843 1422.92 604.098 1425.5 C 605.525 1439.91 611.265 1447.16 619.702 1457.79 C 622.012 1457.02 621.079 1457.72 622.355 1455.33 C 618.116 1450.55 613.869 1444.77 612.681 1438.49 C 607.212 1409.59 609.464 1373.38 609.522 1344 L 609.526 1196.14 L 609.511 1080.22 C 609.514 1069.03 608.722 1034.69 610.189 1026.05 C 613.953 1023.35 690.675 1024.79 702.388 1024.66 C 707.386 1030.16 703.638 1269.55 702.77 1293.2 C 702.814 1296.86 704.054 1300.33 704.158 1303.98 C 704.435 1313.77 699.534 1332.93 700.347 1342.01 C 699.98 1341.32 699.525 1340.48 698.982 1339.47 C 699.31 1316.22 701.462 1286.22 701.639 1263.63 C 702.257 1184.47 702.002 1105.3 701.949 1026.23 L 612.032 1026.19 L 612.103 1303.74 L 612.011 1381.91 C 611.943 1405.15 607.696 1437.73 624.977 1455.09 C 625.331 1455.44 625.691 1455.79 626.056 1456.13 C 605.342 1471.66 587.99 1491.23 575.049 1513.66 C 565.235 1497.23 558.067 1488.56 546.364 1473.71 C 549.297 1473.02 549.745 1475.04 553.843 1476.45 L 554.339 1475.31 C 552.786 1473.01 551.238 1470.8 549.849 1468.39 C 551.75 1469.96 553.168 1471.36 555.443 1472.29 C 560.993 1477.9 573.13 1496.52 576.043 1498.01 L 577.949 1496.85 C 582.066 1486.81 605.151 1460.98 614.404 1457.25 L 615.212 1456.94 C 611.107 1446.62 607.283 1448.17 602.667 1430.81 z"/><path d="M 271.566 558.072 L 269.947 556.285 L 270.304 554.656 C 272.75 552.979 276.232 553.139 279.267 553.101 C 340.834 552.692 402.404 552.875 463.968 553.652 L 655.531 553.261 L 803.571 553.158 C 821.032 553.115 838.533 553.145 855.991 553.396 C 861.501 553.475 878.841 551.153 882.338 554.878 L 880.917 557.298 C 822.903 556.615 275.299 556.27 271.566 558.072 z"/><path d="M 766.872 1259.73 C 778.059 1256.28 767.203 1246.93 765.573 1240.4 C 763.308 1231.34 764.19 1219.82 764.36 1210.38 C 764.72 1211.29 765.064 1219.55 765.106 1220.88 C 765.659 1238.16 768.044 1246.53 777.909 1260.94 C 779.23 1259.12 779.247 1259.66 782.176 1258.98 C 783.208 1255.58 771.063 1239.87 772.464 1233.89 C 773.428 1229.78 770.964 1221.13 771.168 1216.52 C 772.622 1183.68 770.755 1148.86 770.541 1116.14 L 770.777 976.445 C 770.856 952.746 770.589 928.571 770.637 904.859 C 770.645 901.166 771.108 901.008 773.062 898.341 C 774.579 975.257 773.314 1055.86 773.293 1132.96 L 773.191 1190.83 C 773.152 1214.51 769.866 1241.18 788.08 1259.06 C 762.239 1269.24 739.996 1295.68 721.768 1315.79 C 719.795 1317.96 714.59 1324.72 712.631 1326.21 L 711.989 1325.5 C 712.307 1323.89 726.814 1303.32 727.814 1302.87 L 728.546 1304.87 C 732.083 1303.57 735.245 1298 733.862 1294.26 L 732.048 1294.68 C 728.301 1298.43 711.547 1318.85 710.508 1323.02 L 709.196 1323.7 L 709.511 1319.83 C 725.826 1297.13 744.461 1276.59 766.872 1259.73 z"/><path d="M 709.511 1319.83 L 708.651 1319.49 C 708.015 1316.84 712.044 1289.53 712.595 1284.29 C 715.643 1255.29 715.254 1226.48 715.58 1197.36 C 718.13 1208.79 714.157 1270.64 717.631 1276.32 C 718.622 1275.42 718.299 1275.82 720.127 1275.61 C 726.549 1281.79 726.738 1279.37 734.199 1283.22 C 741.391 1278.85 739.698 1276.1 743.338 1269.35 C 747.32 1266.42 751.94 1268.17 755.77 1266.27 C 758.529 1264.9 763.822 1258.34 767.103 1257.55 L 766.872 1259.73 C 744.461 1276.59 725.826 1297.13 709.511 1319.83 z"/><path d="M 358.931 765.812 C 392.904 766.87 431.635 766.372 465.761 765.719 C 460.064 772.22 450.61 784.566 449.503 792.76 C 446.116 817.837 447.495 850.025 447.456 875.458 L 447.22 1039.85 C 447.206 1062.76 448.424 1101.17 446.974 1123.03 C 447.741 1150.06 446.977 1179.72 446.986 1207.03 L 447.489 1342.96 C 422.855 1312.29 401.48 1276.61 362.887 1259.05 C 381.113 1240.05 377.669 1216.98 377.703 1192.29 L 377.671 1135.59 C 377.556 1063.04 376.201 984.577 377.902 912.481 C 376.966 889.654 377.994 865.656 377.835 842.771 C 377.601 809.237 382.529 793.195 358.931 765.812 z"/><path d="M 377.902 912.481 C 378.987 914.173 380.002 915.096 380.011 916.866 C 380.065 927.042 379.223 937.82 379.618 947.986 C 381.256 990.239 380.396 1032.65 380.487 1074.96 C 380.564 1111.14 381.315 1147.27 380.629 1183.44 C 380.285 1201.63 382.32 1218.29 378.042 1236.19 C 375.822 1245.48 373.188 1249.14 367.935 1257.05 C 368.052 1257.48 368.169 1257.9 368.285 1258.32 C 396.143 1254.27 382.575 1157.76 386.03 1138.1 C 387.303 1130.85 386.276 1110.59 386.988 1103.16 C 389.121 1080.86 384.007 891.54 387.611 885.416 C 390.603 894.854 388.224 989.77 388.187 1006.8 L 387.941 1145.76 C 387.865 1173.85 388.068 1202.58 386.418 1230.62 C 385.906 1239.33 381.209 1249.17 377.487 1257.22 C 403.204 1270.14 426.27 1299.07 440.68 1323.51 C 433.202 1257.69 437.51 1187.9 436.517 1121.54 C 436.444 1116.67 435.961 1095.22 436.934 1091.68 C 438.739 1093.93 437.995 1173.92 437.996 1182.52 C 437.939 1217.82 438.478 1253.13 439.611 1288.41 C 439.947 1302.99 442.804 1311.42 443.206 1323.73 C 447.529 1319.85 444.356 1294.6 444.506 1287.07 C 445.55 1234.68 441.637 1181.94 445.545 1129.7 C 446.269 1120.03 441.773 1087.7 445.59 1080.24 L 446.504 1081.01 C 446.212 1089.53 445.495 1115.24 446.974 1123.03 C 447.741 1150.06 446.977 1179.72 446.986 1207.03 L 447.489 1342.96 C 422.855 1312.29 401.48 1276.61 362.887 1259.05 C 381.113 1240.05 377.669 1216.98 377.703 1192.29 L 377.671 1135.59 C 377.556 1063.04 376.201 984.577 377.902 912.481 z"/><path d="M 668.501 609.5 L 730.879 609.745 C 740.564 609.73 768.253 607.823 775.119 612.557 L 774.059 613.551 C 773.427 613.489 773.37 613.535 772.808 613.292 C 765.779 610.243 753.964 611.637 745.606 611.78 C 720.011 612.208 693.119 611.778 667.423 611.826 C 660.361 611.839 641.302 611.924 635.231 610.938 C 645.448 609.614 657.763 610.087 668.501 609.5 z"/><path d="M 392.501 609.496 C 426.29 609.28 476.694 608.885 509.685 610.996 C 508.748 611.555 499.37 611.48 497.5 611.51 C 462.155 611.857 426.808 611.895 391.462 611.625 C 386.551 611.63 379.398 613.259 376.484 612.382 C 379.013 610.535 388.725 609.959 392.501 609.496 z"/><path d="M 711.49 761.627 C 722.48 763.509 759.64 759.941 772.862 761.165 C 777.344 761.58 783.756 760.524 788.472 761.88 C 784.204 763.533 777.521 763.489 772.768 763.726 C 751.95 763.345 712.986 764.832 692.713 762.646 C 698.97 762.264 705.229 761.924 711.49 761.627 z"/><path d="M 389.285 761.624 C 395.01 764.307 452.686 758.705 461.46 762.515 C 452.875 763.517 447.455 763.59 438.749 763.733 C 415.329 764.429 388.994 763.564 365.442 763.111 C 367.203 762.489 385.797 761.81 389.285 761.624 z"/></svg></div>
+    <div class="hero-foot">
+      <div>
+        <p class="lead">No vengo del código ni del deporte por separado. Vengo de aprender a leer lo que pasa por dentro cuando todo aprieta. Hoy traduzco eso en proyectos, videos y páginas como esta.</p>
+        <div class="btn-row"><a class="btn" href="#quien">Empezar el partido <span aria-hidden="true">↓</span></a></div>
+      </div>
+      <ul class="facts">
+        <li><span>Formación</span><span>Entrenador nacional · 2018</span></li>
+        <li><span>Hoy</span><span>Creación &amp; IA</span></li>
+        <li><span>Superficie</span><span>Polvo de ladrillo → pantalla</span></li>
+      </ul>
+    </div>
+  </div></div>
+</header>
+
+<!-- QUIÉN SOY -->
+<section class="zone s-clay" id="quien" data-label="Peloteo" data-me="15" data-op="0">
+  <div class="gutter"><div class="court">
+    <p class="mark"><b>Peloteo</b> Quién soy</p>
+    <div class="two">
+      <div class="rv">
+        <h2 class="h-big">Hola, soy <em>Tomás.</em></h2>
+        <div class="prose" style="margin-top:1.8rem">
+          <p class="lead">Me formé como <strong>Entrenador Nacional de tenis en 2018</strong> y hoy <strong>creo videos, piezas y páginas con inteligencia artificial</strong>. Esta página es el recorrido entre esas dos cosas: de dónde vengo, cómo pienso, cómo creo y lo que me sostiene.</p>
+          <p>Mi trabajo audiovisual investiga la fricción fértil entre la sensibilidad analógica y los modelos de difusión generativa. En un entorno saturado de imágenes hiperrealistas sin propósito, busco restituirle al fotograma su misterio.</p>
+        </div>
+        <p class="quote">«No se trata de sustituir el alma, sino de amplificar la pregunta.»</p>
+      </div>
+      <nav class="order rv" aria-label="Orden de juego">
+        <div class="order-head"><span>Orden de juego</span><span>8 paradas</span></div>
+        <a href="#cancha"><span class="n">01</span><span class="t">De dónde vengo<span class="d">La cancha y lo que me enseñó</span></span><span aria-hidden="true">↓</span></a>
+        <a href="#soy"><span class="n">02</span><span class="t">Cómo soy<span class="d">Luz, sombra y complementariedad</span></span><span aria-hidden="true">↓</span></a>
+        <a href="#creo"><span class="n">03</span><span class="t">Cómo creo<span class="d">La IA como lente de la imaginación</span></span><span aria-hidden="true">↓</span></a>
+        <a href="#hago"><span class="n">04</span><span class="t">Lo que hago<span class="d">Videos hechos con IA</span></span><span aria-hidden="true">↓</span></a>
+        <a href="#canal"><span class="n">05</span><span class="t">Mi canal<span class="d">YouTube como cápsula del tiempo</span></span><span aria-hidden="true">↓</span></a>
+        <a href="#sosten"><span class="n">06</span><span class="t">Lo que me sostiene<span class="d">Mi cable a tierra</span></span><span aria-hidden="true">↓</span></a>
+        <a href="#notas"><span class="n">07</span><span class="t">Notas<span class="d">Apuntes sueltos en el camino</span></span><span aria-hidden="true">↓</span></a>
+        <a href="#conversemos"><span class="n">08</span><span class="t">Conversemos<span class="d">Tu saque</span></span><span aria-hidden="true">↓</span></a>
+      </nav>
+    </div>
+  </div></div>
+</section>
+
+<!-- DE DÓNDE VENGO -->
+<section class="zone s-clay" id="cancha" data-label="Primer set" data-me="30" data-op="0">
+  <div class="gutter"><div class="court">
+    <p class="mark"><b>Primer set</b> De dónde vengo · El cimiento</p>
+    <div class="two">
+      <div class="rv">
+        <h2 class="h-big">La cancha me enseñó a leer el alma <em>bajo presión.</em></h2>
+        <div class="prose" style="margin-top:1.8rem">
+          <p class="lead">El tenis nunca fue solo técnica o potencia física: es una radiografía del carácter humano. En un punto de quiebre nadie puede fingir quién es.</p>
+          <p>Mi certificación en 2018 y los años en cancha me dejaron la templanza, la lectura gestual y la convicción de que la serenidad interna siempre le gana al caos exterior.</p>
+        </div>
+      </div>
+      <div class="rv">
+        <svg class="minicourt" viewBox="0 0 120 160" fill="none" stroke="#F6F1E7" stroke-width="1.6" aria-hidden="true">
+          <rect x="6" y="6" width="108" height="148"/><line x1="20" y1="6" x2="20" y2="154"/><line x1="100" y1="6" x2="100" y2="154"/>
+          <line x1="20" y1="44" x2="100" y2="44"/><line x1="20" y1="116" x2="100" y2="116"/><line x1="60" y1="44" x2="60" y2="116"/>
+          <line x1="0" y1="80" x2="120" y2="80" stroke-width="3"/>
+          <path class="rally" d="M 42,138 C 80,112 30,74 28,34" stroke="#1B1009" stroke-width="1.6"/>
+          <circle cx="28" cy="34" r="4.2" fill="#DDF247" stroke="none"/>
+        </svg>
+        <table class="stats">
+          <caption>Ficha del jugador</caption>
+          <tr><th scope="row">Certificación</th><td>Entrenador nacional · 2018</td></tr>
+          <tr><th scope="row">Presencia</th><td>En el presente</td></tr>
+          <tr><th scope="row">Temple</th><td>Estratégico</td></tr>
+          <tr><th scope="row">Enfoque</th><td>Punto a punto</td></tr>
+        </table>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- CÓMO SOY -->
+<section class="zone s-clay" id="soy" data-label="Break point" data-me="30" data-op="15">
+  <div class="gutter"><div class="court" style="padding-bottom:clamp(2.5rem,5vw,4rem)">
+    <p class="mark"><b>Break point</b> Cómo soy · Luz, sombra y complementariedad</p>
+    <h2 class="h-big rv">No soy una persona completa, sino <em>complementaria.</em></h2>
+    <p class="lead rv" style="margin-top:1.6rem">Aceptar mis contradicciones me quitó el peso de fingir autosuficiencia. Las mejores cosas ocurren cuando mis fortalezas se cruzan con la mirada de otro.</p>
+  </div></div>
+</section>
+<div class="split">
+  <article class="half luz s-clay"><div class="half-in rv">
+    <span class="tag">Mi lado de la red · La luz</span>
+    <h3>Chispa creativa</h3>
+    <p>La intuición rápida, la pasión por ver conexiones donde otros ven puntos aislados, y el impulso imparable de materializar proyectos.</p>
+    <span class="foot">Intuición // Impulso</span>
+  </div></article>
+  <article class="half sombra"><div class="half-in rv">
+    <span class="tag" style="color:var(--ball)">El otro lado · La sombra</span>
+    <h3>El silencio incierto</h3>
+    <p>Los momentos de duda, el cansancio mental de sobrepensar y la necesidad de pausar para no quemarme en mi propio fuego.</p>
+    <span class="foot">Duda // Pausa · punto para el ruido</span>
+  </div></article>
+</div>
+<div class="tape"><div class="tape-in rv">
+  <h3>La red:<br>el encuentro</h3>
+  <div><p><strong>Ser complementario.</strong> El alivio de no tener que saberlo todo. Buscar personas que aporten lo que a mí me falta y brindar con generosidad lo que yo traigo a la mesa.</p><span class="foot">Cruce // Generosidad</span></div>
+</div></div>
+
+<!-- CÓMO CREO -->
+<section class="zone s-night" id="creo" data-label="Cambio de lado" data-me="40" data-op="15">
+  <div class="gutter"><div class="court">
+    <p class="mark"><b>Cambio de lado</b> Cómo creo · La IA como lente</p>
+    <h2 class="h-big rv">Hacer visible lo que antes solo vivía en la <em>imaginación.</em></h2>
+    <div class="beats">
+      <article class="beat rv"><span class="num">01</span><h3>Lo que hay adentro</h3><p>Siempre sentí que la mente alberga conceptos, atmósferas y narrativas que desbordan las palabras cotidianas.</p></article>
+      <article class="beat rv"><span class="num">02</span><h3>El lente</h3><p>La inteligencia artificial no sustituye el sentir humano; funciona como el lente que por fin enfoca el destello interno.</p></article>
+      <article class="beat rv"><span class="num">03</span><h3>La pieza</h3><p>Cada pieza, video o línea de código es un intento genuino de traducir ese mundo interior a algo tangible.</p></article>
+    </div>
+    <ul class="chips rv">
+      <li><b>Exploración</b> continua</li><li><b>IA</b> como extensión</li><li><b>Proceso</b> intuición + algoritmo</li>
+    </ul>
+  </div></div>
+</section>
+
+<!-- LO QUE HAGO -->
+<section class="zone s-night2" id="hago" data-label="Repeticiones" data-me="40" data-op="15">
+  <div class="gutter"><div class="court">
+    <p class="mark"><b>Repeticiones</b> Lo que hago</p>
+    <div class="two">
+      <h2 class="h-big rv">Mural de <em>exploración.</em></h2>
+      <p class="lead rv">Videos que hago con inteligencia artificial. Sueltos, sin orden y sin un fin específico. Tocá uno para verlo completo y con sonido.</p>
+    </div>
+    <div class="reel rv">
+      <button class="clip tall" type="button" data-src="videos/video-1.mp4" data-title="El Reflejo Virtual">
+        <video src="videos/video-1.mp4" poster="videos/video-1-poster.jpg" muted loop playsinline preload="none"></video>
+        <span class="clip-cap"><strong>El Reflejo Virtual</strong><span>Ver ▸</span></span>
+      </button>
+      <div class="reel-side">
+        <button class="clip wide" type="button" data-src="videos/video-2.mp4" data-title="Ruptura del Ruido">
+          <video src="videos/video-2.mp4" poster="videos/video-2-poster.jpg" muted loop playsinline preload="none"></video>
+          <span class="clip-cap"><strong>Ruptura del Ruido</strong><span>Ver ▸</span></span>
+        </button>
+        <div class="reel-pair">
+          <button class="clip wide" type="button" data-src="videos/video-3.mp4" data-title="Geometría Mental">
+            <video src="videos/video-3.mp4" poster="videos/video-3-poster.jpg" muted loop playsinline preload="none"></video>
+            <span class="clip-cap"><strong>Geometría Mental</strong><span>Ver ▸</span></span>
+          </button>
+          <button class="clip wide" type="button" data-src="videos/video-4.mp4" data-title="Destello Creativo">
+            <video src="videos/video-4.mp4" poster="videos/video-4-poster.jpg" muted loop playsinline preload="none"></video>
+            <span class="clip-cap"><strong>Destello Creativo</strong><span>Ver ▸</span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <p class="rv" style="margin-top:1.6rem"><span class="hand">se sigue sumando…</span></p>
+  </div></div>
+</section>
+
+<!-- MI CANAL -->
+<section class="zone s-night" id="canal" data-label="Cápsula" data-me="40" data-op="30">
+  <div class="gutter"><div class="court">
+    <p class="mark"><b>Cápsula</b> Mi canal · La memoria viva</p>
+    <div class="two">
+      <h2 class="h-big rv">La huella incrustada en el <em>tiempo.</em></h2>
+      <div class="prose rv">
+        <p class="lead">Más que acumular vistas o perseguir algoritmos, entiendo cada video y cada línea de este sitio como una botella lanzada al mar digital.</p>
+        <p>Me conmueve pensar en volver a estos registros dentro de diez años y encontrarme con las preguntas que me desvelaban, las batallas que libraba y los mensajes que necesitaba gritarle al mundo. No busco registrar la perfección, sino el testimonio honesto de quién me estaba convirtiendo mientras construía mi camino.</p>
+      </div>
+    </div>
+    <dl class="sets rv">
+      <div><dt>2018</dt><dd>La cancha y la certificación: el temple como cimiento.</dd></div>
+      <div><dt>Hoy</dt><dd>Traducir el mundo interior en piezas, código y atmósferas.</dd></div>
+      <div><dt>+10</dt><dd>Volver a estos registros y reencontrarme con quién fui.</dd></div>
+    </dl>
+  </div></div>
+</section>
+
+<!-- LO QUE ME SOSTIENE -->
+<section class="zone s-night2" id="sosten" data-label="Entre puntos" data-me="40" data-op="30">
+  <div class="gutter"><div class="court">
+    <p class="mark"><b>Entre puntos</b> Lo que me sostiene · Mi cable a tierra</p>
+    <div class="two">
+      <h2 class="h-big rv">Detrás del <em>ruido.</em></h2>
+      <p class="lead rv">Lo que queda cuando se apagan las pantallas y el murmullo de la ciudad. El espacio íntimo donde recupero mi centro.</p>
+    </div>
+    <div class="cards">
+      <article class="card rv"><span class="tag" style="color:var(--ball)">Auriculares puestos</span><h3>La frecuencia</h3><p>Donde las voces del autoengaño se callan y el alma íntegra habla. Con los auriculares puestos, el caos se ordena, bajan las ideas más puras y me encuentro conmigo sin poses.</p><span class="foot">Esencial // Mundo interior</span></article>
+      <article class="card rv"><span class="tag" style="color:var(--ball)">Cuatro patas</span><h3>Compañeros de calma</h3><p>En un mundo acelerado, mis compañeros de cuatro patas son mi cable a tierra. No saben de algoritmos ni pantallas: su afecto es simple, transparente y un recordatorio de volver a lo esencial.</p><span class="foot">Lealtad // Hogar &amp; presencia</span></article>
+      <article class="card rv"><span class="tag" style="color:var(--ball)">Sin producir</span><h3>Cuerpo &amp; juego</h3><p>Mover el cuerpo para vaciar tensiones mentales y sumergirme en una buena historia o videojuego para desconectar. Jugar sin la obligación de producir, solo por el placer de explorar.</p><span class="foot">Desconexión // Volver al origen</span></article>
+    </div>
+  </div></div>
+</section>
+
+<!-- NOTAS -->
+<section class="zone s-paper" id="notas" data-label="Apuntes" data-me="Ad" data-op="40">
+  <div class="gutter"><div class="court">
+    <p class="mark"><b>Cuaderno del banco</b> Notas &amp; reflexiones</p>
+    <div class="two">
+      <h2 class="h-big rv">Apuntes sueltos en el <em>camino.</em></h2>
+      <p class="lead rv">Ideas cortas que voy anotando entre proyectos: sobre crear con IA, contar historias y sostener la cabeza cuando todo aprieta.</p>
+    </div>
+    <div class="notes">
+      <details class="rv">
+        <summary><span><span class="tag">01 // Filosofía creativa · 4 min</span><span class="n-title">La ilusión del control en la era generativa</span><span class="n-quote">«El prompt no es un comando de ingeniería; es una conversación con un inconsciente colectivo comprimido en matrices numéricas.»</span></span><span class="n-open">Leer</span></summary>
+        <div class="n-body prose">
+          <p>Durante más de un siglo, el cine ha sido un arte de la voluntad impositiva: directores que exigían que el sol se pusiera a una hora específica, que la lágrima cayera exactamente sobre el pómulo izquierdo o que la luz rebotara con precisión milimétrica en una plancha de poliestireno.</p>
+          <p>Con la llegada de los modelos generativos de video (Kling, Hailuo, Runway), esa relación jerárquica se rompe. El prompt no es un comando de ingeniería; es una conversación con un inconsciente colectivo comprimido en matrices numéricas.</p>
+          <p>Crear arte hoy con IA no consiste en forzar una visión rígida, sino en cultivar una mirada atenta: saber reconocer el accidente prodigioso cuando el modelo ofrece un giro imprevisto de cámara, una mirada melancólica que no estaba escrita o una sombra que transforma la escena en poesía pura.</p>
+          <p><strong>«El creador moderno no es un arquitecto omnipotente; es un curador de misterios emergentes.»</strong></p>
+        </div>
+      </details>
+      <details class="rv">
+        <summary><span><span class="tag">02 // Narrativa auditiva · 3 min</span><span class="n-title">El algoritmo no tiene nostalgia (y por qué eso importa)</span><span class="n-quote">«Las máquinas no saben lo que duele un domingo por la tarde de lluvia. Es esa grieta sentimental, incomputable, donde el director humano debe sostener la cámara.»</span></span><span class="n-open">Leer</span></summary>
+        <div class="n-body prose">
+          <p>Las redes neuronales pueden predecir qué fotograma tiene mayor verosimilitud estadística luego del anterior. Pueden simular el grano de una película Kodak 5219 con una exactitud que engañaría a directores de fotografía veteranos.</p>
+          <p>Sin embargo, un modelo de lenguaje o de difusión carece de infancia. Nunca sintió la soledad de una estación de tren vacía al anochecer, ni la tristeza de despedir a un amigo de toda la vida.</p>
+          <p>Por eso, el cine hecho con IA que prescinde del corazón humano se vuelve frío, estéril y olvidable en cuestión de minutos. La técnica asombra diez segundos; la emoción humana resuena por décadas. Nuestra labor es inyectarle esa herida incurable a cada plano sintético.</p>
+        </div>
+      </details>
+      <details class="rv">
+        <summary><span><span class="tag">03 // Mentalidad de entrenador · 3 min</span><span class="n-title">Lo que la cancha me enseñó sobre iterar</span><span class="n-quote">«Un equipo no mejora por analizar el partido perfecto; mejora por revisar el que salió mal sin ponerse a la defensiva. Crear funciona exactamente igual.»</span></span><span class="n-open">Leer</span></summary>
+        <div class="n-body prose">
+          <p>Entrenando aprendí a separar la persona del resultado: un video que no funciona no dice nada de mi valor, dice algo sobre una decisión puntual que puedo corregir la próxima vez. Esa distancia es la que me permite seguir intentando sin quemarme.</p>
+        </div>
+      </details>
+    </div>
+  </div></div>
+</section>
+
+<!-- CONVERSEMOS -->
+<section class="zone s-clay final" id="conversemos" data-label="Match point" data-me="Ad" data-op="40">
+  <div class="gutter"><div class="court">
+    <p class="mark"><b>Match point</b> Conversemos · Tu saque</p>
+    <h2 class="h-big rv">Si algo de esto resuena contigo, <em>conversemos.</em></h2>
+    <p class="lead rv" style="margin-top:1.8rem">Creo en las coincidencias de miradas, en conspirar proyectos creativos y en construir cosas donde cada uno aporte lo mejor de su mundo.</p>
+    <div class="btn-row rv">
+      <a class="btn" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=tomashonor%40gmail.com&amp;su=Contacto%20desde%20tu%20web" target="_blank" rel="noopener">Escribime un mensaje <span aria-hidden="true">→</span></a>
+      <span class="mail">tomashonor@gmail.com</span>
+    </div>
+    <div class="end">
+      <span>Tomás David Honor · Juego, set y lo que venga</span>
+      <a href="index.html">Ver la versión anterior del sitio</a>
+    </div>
+  </div></div>
+</section>
+</main>
+
+<dialog class="player" id="player" aria-label="Reproductor de video">
+  <video id="player-video" controls playsinline></video>
+  <div class="player-bar"><span id="player-title"></span><button type="button" id="player-close">Cerrar</button></div>
+</dialog>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  root.classList.add('js');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Aparición de bloques
+  var rv = document.querySelectorAll('.rv');
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    rv.forEach(function (el) { io.observe(el); });
+  } else { rv.forEach(function (el) { el.classList.add('in'); }); }
+
+  // Marcador: cada sección es un punto del partido
+  var zones = Array.prototype.slice.call(document.querySelectorAll('[data-label]'));
+  var bLabel = document.getElementById('b-label'), bStep = document.getElementById('b-step');
+  var bMe = document.getElementById('b-me'), bOp = document.getElementById('b-op');
+  var rows = document.querySelectorAll('.board-row');
+  var current = -1;
+  function setScore(i) {
+    if (i === current) return; current = i;
+    var z = zones[i];
+    bLabel.textContent = z.dataset.label;
+    bStep.textContent = i + ' / ' + (zones.length - 1);
+    [[bMe, z.dataset.me], [bOp, z.dataset.op]].forEach(function (p) {
+      if (p[0].textContent !== p[1]) { p[0].textContent = p[1]; p[0].classList.remove('flip'); void p[0].offsetWidth; p[0].classList.add('flip'); }
+    });
+    rows[0].classList.toggle('serving', i % 2 === 0); rows[1].classList.toggle('serving', i % 2 === 1);
+  }
+
+  // Pelota: peloteo de lado a lado mientras se baja por la página
+  var ball = document.getElementById('ball'), ticking = false;
+  function frame() {
+    ticking = false;
+    var vh = window.innerHeight, vw = document.documentElement.clientWidth;
+    var mid = window.scrollY + vh * 0.45, idx = 0;
+    for (var i = 0; i < zones.length; i++) { if (zones[i].getBoundingClientRect().top + window.scrollY <= mid) idx = i; }
+    setScore(idx);
+    if (reduce) return;
+    var max = Math.max(1, document.documentElement.scrollHeight - vh);
+    var p = window.scrollY / max, ph = p * Math.PI * (zones.length + 1);
+    var amp = Math.min(vw * 0.5 - 22, 640);
+    var x = vw / 2 + Math.cos(ph) * amp - 10;
+    var lift = Math.abs(Math.sin(ph));
+    var y = vh * (0.3 + 0.42 * p) - lift * 26;
+    ball.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) scale(' + (0.85 + lift * 0.75).toFixed(3) + ')';
+  }
+  function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  frame();
+
+  // Videos: se reproducen en silencio solo cuando están a la vista
+  var clips = document.querySelectorAll('.clip');
+  if ('IntersectionObserver' in window && !reduce) {
+    var vio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        var v = e.target.querySelector('video');
+        if (e.isIntersecting) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } else { v.pause(); }
+      });
+    }, { threshold: 0.25 });
+    clips.forEach(function (c) { vio.observe(c); });
+  }
+  var dlg = document.getElementById('player'), pv = document.getElementById('player-video'), pt = document.getElementById('player-title');
+  function closePlayer() { pv.pause(); pv.removeAttribute('src'); pv.load(); if (dlg.open) dlg.close(); }
+  clips.forEach(function (c) {
+    c.addEventListener('click', function () {
+      pt.textContent = c.dataset.title; pv.src = c.dataset.src;
+      if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+      var pr = pv.play(); if (pr && pr.catch) pr.catch(function () {});
+    });
+  });
+  document.getElementById('player-close').addEventListener('click', closePlayer);
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) closePlayer(); });
+  dlg.addEventListener('close', function () { pv.pause(); });
+})();
+</script>
+</body>
+</html>
