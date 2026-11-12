@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Tomás David Honor</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Tomás David Honor: una inmersión desde lo que se ve en la superficie hasta lo que lo sostiene en el fondo.">
+<meta property="og:title" content="Tomás David Honor">
+<meta property="og:description" content="Una inmersión: de la superficie al fondo. Entrenador de tenis, creador con IA, y todo lo que hay debajo.">
+<meta property="og:image" content="https://tomashonor.github.io/tom-web-v2/og-image.jpg">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: una sola columna de agua. El fondo es un degradado continuo de la superficie al abismo;
+   cada sección declara de qué color entra y con cuál sale. Un profundímetro fijo mide la bajada. */
+:root {
+  color-scheme: dark;
+  --w0: #D3EDE6; --w1: #9BD0CA; --w2: #5BA9AB; --w3: #17607A; --w4: #0E4666; --w5: #0A3150;
+  --w6: #071F38; --w7: #041428; --w8: #020B19; --w9: #01060F;
+  --ink: #05242C;
+  --foam: #F2FAF7;
+  --lamp: #FFB55C;
+  --mist: rgba(242, 250, 247, 0.72);
+  --rule: rgba(242, 250, 247, 0.24);
+  --f-display: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+  --f-body: 'Figtree', -apple-system, 'Segoe UI', sans-serif;
+  --f-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--w9); color: var(--foam); font-family: var(--f-body); font-size: 1.0625rem; line-height: 1.7; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+p { margin: 0; } h1, h2, h3 { margin: 0; font-weight: 400; text-wrap: balance; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--lamp); outline-offset: 4px; }
+
+.layer { position: relative; overflow: hidden; background: linear-gradient(var(--from), var(--to)); }
+.layer.steep { background: linear-gradient(var(--from) 0, var(--to) 20rem); }
+.wrap { position: relative; z-index: 2; max-width: 1080px; margin: 0 auto; padding-block: clamp(4.5rem, 10vw, 8.5rem); padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+.steep .wrap { padding-top: clamp(15rem, 24vw, 19rem); }
+.light { color: var(--ink); --mist: rgba(5, 36, 44, 0.78); --rule: rgba(5, 36, 44, 0.28); --lamp: #0B5566; }
+
+.depth { font-family: var(--f-mono); font-size: 0.74rem; letter-spacing: 0.14em; text-transform: uppercase; display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; align-items: center; margin-bottom: 1.8rem; color: var(--mist); }
+.depth b { font-weight: 500; color: var(--lamp); }
+.depth::after { content: ""; flex: 1 1 3rem; height: 1px; background: var(--rule); }
+.title { font-family: var(--f-display); font-size: clamp(2.7rem, 6.6vw, 5.6rem); line-height: 1.02; letter-spacing: -0.012em; }
+.title em { color: var(--lamp); }
+.lead { font-size: clamp(1.14rem, 1.7vw, 1.34rem); line-height: 1.6; max-width: 60ch; }
+.prose { display: grid; gap: 1.15rem; max-width: 60ch; color: var(--mist); }
+.prose .lead, .prose strong { color: inherit; }
+.prose .lead { color: currentColor; }
+.cols { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(2rem, 6vw, 5rem); align-items: start; }
+.cols > * { min-width: 0; }
+.aside { font-family: var(--f-display); font-style: italic; font-size: clamp(1.5rem, 2.8vw, 2.2rem); line-height: 1.25; }
+.small { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mist); }
+
+/* Superficie */
+.hero .wrap { padding-top: clamp(5.5rem, 10vw, 8rem); padding-bottom: clamp(3rem, 6vw, 5rem); }
+.hero::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.55;
+  background: repeating-linear-gradient(104deg, transparent 0 7%, rgba(255, 255, 255, 0.5) 9% 10%, transparent 12% 19%, rgba(255, 255, 255, 0.35) 21% 23%, transparent 25% 31%);
+  -webkit-mask-image: linear-gradient(#000, transparent 85%); mask-image: linear-gradient(#000, transparent 85%); }
+.hero-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: clamp(3rem, 9vw, 7rem); }
+.logo { height: 3.6rem; width: auto; flex: none; }
+.logo path { fill: currentColor; }
+.name { font-family: var(--f-display); font-size: clamp(3.6rem, 12.5vw, 11rem); line-height: 0.9; letter-spacing: -0.025em; }
+.name i { display: block; padding-left: clamp(1.5rem, 9vw, 9rem); }
+.hero-foot { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: clamp(1.5rem, 5vw, 4rem); align-items: end; margin-top: clamp(2.2rem, 5vw, 4rem); padding-top: 1.6rem; border-top: 1px solid var(--rule); }
+.dive { display: inline-flex; align-items: center; gap: 0.8rem; text-decoration: none; font-family: var(--f-mono); font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; background: var(--ink); color: var(--foam); padding: 1rem 1.4rem; border-radius: 999px; transition: transform 0.25s ease, background 0.25s ease; }
+.dive:hover { transform: translateY(3px); }
+.dive span { animation: bob 1.8s ease-in-out infinite; }
+@keyframes bob { 50% { transform: translateY(4px); } }
+.deep .dive { background: var(--lamp); color: var(--w8); }
+
+/* Lo que flota: videos */
+.reel { display: grid; grid-template-columns: 4fr 7fr; gap: 14px; margin-top: clamp(2rem, 4vw, 3rem); }
+.reel-side { display: grid; gap: 14px; min-width: 0; }
+.reel-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.clip { position: relative; display: block; padding: 0; border: 0; border-radius: 14px; background: var(--w7); cursor: pointer; overflow: hidden; min-width: 0; color: var(--foam); text-align: left; font: inherit; }
+.clip video { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.clip.wide video { aspect-ratio: 16 / 9; } .clip.tall video { aspect-ratio: 3 / 4; }
+.clip:hover video { transform: scale(1.04); }
+.clip-cap { position: absolute; inset: auto 0 0 0; padding: 2.6rem 1rem 0.8rem; background: linear-gradient(transparent, rgba(2, 11, 25, 0.85)); display: flex; justify-content: space-between; align-items: end; gap: 0.75rem; }
+.clip-cap strong { font-family: var(--f-display); font-weight: 400; font-style: italic; font-size: 1.45rem; line-height: 1; }
+.clip-cap span { font-family: var(--f-mono); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--lamp); white-space: nowrap; }
+dialog.player { border: 1px solid var(--rule); border-radius: 14px; background: var(--w8); color: var(--foam); padding: 0; max-width: min(94vw, 1100px); width: 100%; overflow: hidden; }
+dialog.player::backdrop { background: rgba(1, 6, 15, 0.9); }
+dialog.player video { display: block; width: 100%; max-height: 78vh; background: #000; }
+.player-bar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.7rem 1rem; font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.player-bar button { font: inherit; letter-spacing: inherit; text-transform: inherit; background: var(--lamp); color: var(--w8); border: 0; border-radius: 999px; padding: 0.45rem 0.9rem; cursor: pointer; }
+
+/* Ficha y listas */
+.sheet { margin: 0; display: grid; border-top: 1px solid var(--rule); }
+.sheet div { display: flex; justify-content: space-between; gap: 1.5rem; padding: 0.95rem 0; border-bottom: 1px solid var(--rule); }
+.sheet dt { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mist); }
+.sheet dd { margin: 0; text-align: right; font-family: var(--f-display); font-size: 1.3rem; line-height: 1.2; }
+
+/* Cómo creo */
+.steps { display: grid; gap: 0; margin-top: clamp(2.5rem, 5vw, 4rem); counter-reset: s; }
+.step { display: grid; grid-template-columns: 5.5rem 1fr; gap: 1rem 2rem; padding: 1.8rem 0; border-top: 1px solid var(--rule); align-items: baseline; }
+.step::before { counter-increment: s; content: "0" counter(s); font-family: var(--f-display); font-style: italic; font-size: 3.2rem; line-height: 1; color: var(--lamp); }
+.step p { font-family: var(--f-display); font-size: clamp(1.45rem, 2.9vw, 2.3rem); line-height: 1.22; max-width: 30ch; }
+.step p + .small { display: block; margin-top: 0.7rem; }
+
+/* Cómo soy: luz, sombra, encuentro */
+.trio { display: grid; gap: clamp(3.5rem, 9vw, 7rem); margin-top: clamp(3rem, 7vw, 5.5rem); }
+.trio article { max-width: 34rem; }
+.trio article:nth-child(2) { margin-left: auto; }
+.trio article:nth-child(3) { margin-inline: auto; text-align: center; position: relative; }
+.trio h3 { font-family: var(--f-display); font-size: clamp(2.2rem, 4.6vw, 3.6rem); line-height: 1.05; margin: 0.6rem 0 1rem; }
+.trio p { color: var(--mist); }
+.sombra h3, .sombra p { opacity: 0.62; }
+.encuentro::before { content: ""; position: absolute; left: 50%; top: 50%; width: min(46rem, 150%); aspect-ratio: 1; transform: translate(-50%, -50%); background: radial-gradient(circle, rgba(255, 181, 92, 0.2), rgba(255, 181, 92, 0.06) 40%, transparent 68%); pointer-events: none; z-index: -1; }
+.encuentro h3 { color: var(--lamp); font-style: italic; }
+.encuentro p { color: var(--foam); }
+
+/* El ancla */
+.anchor-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1.6rem, 4vw, 3rem); margin-top: clamp(2.5rem, 5vw, 4rem); }
+.anchor-row article { min-width: 0; border-top: 1px solid var(--lamp); padding-top: 1.3rem; }
+.anchor-row h3 { font-family: var(--f-display); font-size: 2rem; line-height: 1.1; margin: 0.4rem 0 0.8rem; }
+.anchor-row p { color: var(--mist); }
+.anchor-ico { width: clamp(4.5rem, 9vw, 7rem); height: auto; display: block; color: var(--lamp); margin-bottom: 1.6rem; }
+
+/* Bitácora */
+.log { margin-top: clamp(2rem, 4vw, 3rem); border-top: 1px solid var(--rule); }
+.log details { border-bottom: 1px solid var(--rule); }
+.log summary { list-style: none; cursor: pointer; padding: 1.6rem 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.8rem 2rem; align-items: start; }
+.log summary::-webkit-details-marker { display: none; }
+.log .l-title { display: block; font-family: var(--f-display); font-size: clamp(1.7rem, 3.6vw, 2.7rem); line-height: 1.08; margin-top: 0.5rem; }
+.log .l-quote { display: block; margin-top: 0.9rem; max-width: 62ch; color: var(--mist); font-style: italic; }
+.log .l-open { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; border: 1px solid var(--rule); border-radius: 999px; padding: 0.4rem 0.9rem; white-space: nowrap; }
+.log details[open] .l-open { background: var(--lamp); color: var(--w8); border-color: var(--lamp); }
+.log .l-body { padding-bottom: 2rem; }
+
+/* La cápsula */
+.capsule { border: 1px solid var(--lamp); border-radius: 22px; padding: clamp(1.6rem, 5vw, 3.6rem); position: relative; background: rgba(255, 181, 92, 0.035); }
+.capsule::before { content: "Cápsula del tiempo · abrir en diez años"; position: absolute; top: 0; left: clamp(1.2rem, 4vw, 3rem); transform: translateY(-50%); background: var(--w8); padding: 0 0.8rem; font-family: var(--f-mono); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--lamp); max-width: calc(100% - 2.4rem); }
+.years { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1rem, 3vw, 2.5rem); margin: 2.6rem 0 0; }
+.years div { min-width: 0; }
+.years dt { font-family: var(--f-display); font-style: italic; font-size: clamp(2.6rem, 6vw, 4.6rem); line-height: 1; color: var(--lamp); }
+.years dd { margin: 0.6rem 0 0; color: var(--mist); font-size: 0.98rem; line-height: 1.5; }
+
+/* Cierre */
+.final .title { font-size: clamp(2.9rem, 8vw, 7rem); }
+.contact { display: flex; flex-wrap: wrap; gap: 1rem 1.6rem; align-items: center; margin-top: 2.2rem; }
+.mail { font-family: var(--f-mono); font-size: 0.95rem; user-select: all; border-bottom: 1px dashed var(--rule); }
+.end { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.8rem 2rem; margin-top: clamp(3.5rem, 8vw, 6rem); padding-top: 1.3rem; border-top: 1px solid var(--rule); }
+
+/* Profundímetro */
+.gauge { position: fixed; z-index: 30; right: max(14px, env(safe-area-inset-right, 0px)); top: 50%; transform: translateY(-50%); height: min(62vh, 30rem); width: 4.6rem; color: #fff; mix-blend-mode: difference; pointer-events: none; font-family: var(--f-mono); font-size: 0.66rem; letter-spacing: 0.08em; }
+.gauge-track { position: absolute; right: 0; top: 0; bottom: 0; width: 1px; background: currentColor; opacity: 0.55; }
+.gauge-tick { position: absolute; right: 0; width: 0.6rem; height: 1px; background: currentColor; opacity: 0.7; }
+.gauge-tick span { position: absolute; right: 0.95rem; top: -0.55rem; white-space: nowrap; opacity: 0.8; }
+.gauge-now { position: absolute; right: -4px; width: 9px; height: 9px; border-radius: 50%; background: currentColor; transform: translateY(-50%); top: 0; }
+.gauge-now span { position: absolute; right: 1.1rem; top: -0.5rem; white-space: nowrap; font-size: 0.8rem; font-weight: 500; }
+.readout { position: fixed; z-index: 30; top: calc(12px + env(safe-area-inset-top, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); display: none; font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.08em; background: rgba(2, 11, 25, 0.82); color: var(--foam); padding: 0.45rem 0.8rem; border-radius: 999px; font-variant-numeric: tabular-nums; }
+#snow { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+
+.js .rv { opacity: 0.15; transform: translateY(28px); transition: opacity 1s ease, transform 1.1s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.js .rv.in { opacity: 1; transform: none; }
+
+@media (min-width: 900px) { .wrap { padding-right: max(7rem, env(safe-area-inset-right, 0px)); } }
+@media (max-width: 899px) { .gauge { display: none; } .readout { display: block; } }
+@media (max-width: 760px) {
+  .cols, .hero-foot, .reel, .anchor-row { grid-template-columns: 1fr; }
+  .step { grid-template-columns: 1fr; gap: 0.6rem; }
+  .trio article:nth-child(2) { margin-left: 0; }
+  .years { grid-template-columns: 1fr; }
+  .log summary { grid-template-columns: 1fr; } .log .l-open { justify-self: start; }
+  .sheet div { flex-direction: column; gap: 0.2rem; } .sheet dd { text-align: left; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; } #snow { display: none; }
+  .js .rv { opacity: 1; transform: none; transition: none; } .dive span { animation: none; } .clip video { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="snow" aria-hidden="true"></canvas>
+<div class="gauge" aria-hidden="true" id="gauge">
+  <div class="gauge-track"></div>
+  <div class="gauge-now" id="gauge-now"><span id="gauge-val">0 m</span></div>
+</div>
+<div class="readout" id="readout" aria-hidden="true">0 m · 1.0 atm</div>
+
+<main>
+<!-- SUPERFICIE -->
+<header class="layer light hero" id="superficie" data-depth="0" style="--from:var(--w0);--to:var(--w1)">
+  <div class="wrap">
+    <div class="hero-top"><svg class="logo" viewBox="250 533 652 1001" role="img" aria-label="Logo TH"><path d="M 271.566 558.072 L 269.947 556.285 L 270.304 554.656 C 272.75 552.979 276.232 553.139 279.267 553.101 C 340.834 552.692 402.404 552.875 463.968 553.652 L 655.531 553.261 L 803.571 553.158 C 821.032 553.115 838.533 553.145 855.991 553.396 C 861.501 553.475 878.841 551.153 882.338 554.878 L 880.917 557.298 C 864.093 595.712 875.491 650.285 880.449 692.486 C 857.947 652.891 840.585 625.137 792.512 611.812 C 783.241 609.277 773.73 607.72 764.135 607.166 C 722.731 604.567 677.642 608.429 635.915 607.13 C 605.837 606.194 611.751 635.869 611.809 656.653 L 612.015 721.065 C 612.155 807.021 612.829 894.62 611.847 980.439 C 641.511 979.745 672.242 980.117 701.996 980.158 L 702.18 853.084 C 702.23 833.348 703.394 807.895 700.757 788.529 C 699.824 781.673 691.244 771.354 686.463 765.839 C 720.081 766.459 759.513 766.782 792.986 765.515 C 787.335 772.35 779.133 782.829 776.901 791.149 C 768.761 821.487 776.243 868.173 773.062 898.341 C 774.579 975.257 773.314 1055.86 773.293 1132.96 L 773.191 1190.83 C 773.152 1214.51 769.866 1241.18 788.08 1259.06 C 762.239 1269.24 739.996 1295.68 721.768 1315.79 C 719.795 1317.96 714.59 1324.72 712.631 1326.21 C 709.599 1330.67 704.269 1338.56 700.347 1342.01 C 699.98 1341.32 699.525 1340.48 698.982 1339.47 C 699.31 1316.22 701.462 1286.22 701.639 1263.63 C 702.257 1184.47 702.002 1105.3 701.949 1026.23 L 612.032 1026.19 L 612.103 1303.74 L 612.011 1381.91 C 611.943 1405.15 607.696 1437.73 624.977 1455.09 C 625.331 1455.44 625.691 1455.79 626.056 1456.13 C 605.342 1471.66 587.99 1491.23 575.049 1513.66 C 565.235 1497.23 558.067 1488.56 546.364 1473.71 C 538.392 1465.86 533.235 1462.04 523.939 1456.05 C 536.97 1444.28 538.399 1432.71 538.615 1416.17 C 538.917 1393.05 538.801 1369.94 538.784 1346.82 L 538.699 1220.43 L 538.776 834.496 L 538.821 682.641 C 538.844 662.874 539.443 642.427 538.12 622.836 C 536.643 612.584 525.082 607.604 516.294 607.422 C 496.509 607.014 476.19 606.491 456.533 607.038 C 433.759 607.671 409.154 605.696 386.659 607.43 C 377.896 608.157 369.222 609.713 360.753 612.077 C 314.498 624.932 294.632 653.997 272.524 693 C 275.113 654.73 290.928 591.464 271.566 558.072 z"/><path d="M 535.251 1455.01 C 557.306 1433.76 546.866 1393.63 550.66 1369.55 C 553.023 1382.76 547.309 1396.5 554.103 1407.03 C 558.917 1409.87 558.238 1407.43 564.063 1408.51 C 564.36 1411.17 564.298 1412.25 565.444 1414.62 C 571.21 1414.2 576.421 1407.91 580.705 1409.81 L 581.452 1413.84 C 583.835 1415 584.064 1414.29 587.227 1413.32 C 590.868 1414.17 594.209 1415.21 597.454 1413.44 C 601.478 1408.62 599.849 1375.44 600.276 1365.63 C 601.025 1369.03 600.56 1377.08 600.74 1381.12 C 601.363 1395.06 600.002 1416.82 602.497 1429.96 L 602.667 1430.81 C 607.283 1448.17 611.107 1446.62 615.212 1456.94 L 614.404 1457.25 C 605.151 1460.98 582.066 1486.81 577.949 1496.85 L 576.043 1498.01 C 573.13 1496.52 560.993 1477.9 555.443 1472.29 C 553.652 1467.39 540.104 1458.24 535.251 1455.01 z"/><path d="M 602.667 1430.81 C 602.654 1424.46 603.025 1419.11 603.485 1412.8 C 604.401 1414.41 603.843 1422.92 604.098 1425.5 C 605.525 1439.91 611.265 1447.16 619.702 1457.79 C 622.012 1457.02 621.079 1457.72 622.355 1455.33 C 618.116 1450.55 613.869 1444.77 612.681 1438.49 C 607.212 1409.59 609.464 1373.38 609.522 1344 L 609.526 1196.14 L 609.511 1080.22 C 609.514 1069.03 608.722 1034.69 610.189 1026.05 C 613.953 1023.35 690.675 1024.79 702.388 1024.66 C 707.386 1030.16 703.638 1269.55 702.77 1293.2 C 702.814 1296.86 704.054 1300.33 704.158 1303.98 C 704.435 1313.77 699.534 1332.93 700.347 1342.01 C 699.98 1341.32 699.525 1340.48 698.982 1339.47 C 699.31 1316.22 701.462 1286.22 701.639 1263.63 C 702.257 1184.47 702.002 1105.3 701.949 1026.23 L 612.032 1026.19 L 612.103 1303.74 L 612.011 1381.91 C 611.943 1405.15 607.696 1437.73 624.977 1455.09 C 625.331 1455.44 625.691 1455.79 626.056 1456.13 C 605.342 1471.66 587.99 1491.23 575.049 1513.66 C 565.235 1497.23 558.067 1488.56 546.364 1473.71 C 549.297 1473.02 549.745 1475.04 553.843 1476.45 L 554.339 1475.31 C 552.786 1473.01 551.238 1470.8 549.849 1468.39 C 551.75 1469.96 553.168 1471.36 555.443 1472.29 C 560.993 1477.9 573.13 1496.52 576.043 1498.01 L 577.949 1496.85 C 582.066 1486.81 605.151 1460.98 614.404 1457.25 L 615.212 1456.94 C 611.107 1446.62 607.283 1448.17 602.667 1430.81 z"/><path d="M 271.566 558.072 L 269.947 556.285 L 270.304 554.656 C 272.75 552.979 276.232 553.139 279.267 553.101 C 340.834 552.692 402.404 552.875 463.968 553.652 L 655.531 553.261 L 803.571 553.158 C 821.032 553.115 838.533 553.145 855.991 553.396 C 861.501 553.475 878.841 551.153 882.338 554.878 L 880.917 557.298 C 822.903 556.615 275.299 556.27 271.566 558.072 z"/><path d="M 766.872 1259.73 C 778.059 1256.28 767.203 1246.93 765.573 1240.4 C 763.308 1231.34 764.19 1219.82 764.36 1210.38 C 764.72 1211.29 765.064 1219.55 765.106 1220.88 C 765.659 1238.16 768.044 1246.53 777.909 1260.94 C 779.23 1259.12 779.247 1259.66 782.176 1258.98 C 783.208 1255.58 771.063 1239.87 772.464 1233.89 C 773.428 1229.78 770.964 1221.13 771.168 1216.52 C 772.622 1183.68 770.755 1148.86 770.541 1116.14 L 770.777 976.445 C 770.856 952.746 770.589 928.571 770.637 904.859 C 770.645 901.166 771.108 901.008 773.062 898.341 C 774.579 975.257 773.314 1055.86 773.293 1132.96 L 773.191 1190.83 C 773.152 1214.51 769.866 1241.18 788.08 1259.06 C 762.239 1269.24 739.996 1295.68 721.768 1315.79 C 719.795 1317.96 714.59 1324.72 712.631 1326.21 L 711.989 1325.5 C 712.307 1323.89 726.814 1303.32 727.814 1302.87 L 728.546 1304.87 C 732.083 1303.57 735.245 1298 733.862 1294.26 L 732.048 1294.68 C 728.301 1298.43 711.547 1318.85 710.508 1323.02 L 709.196 1323.7 L 709.511 1319.83 C 725.826 1297.13 744.461 1276.59 766.872 1259.73 z"/><path d="M 709.511 1319.83 L 708.651 1319.49 C 708.015 1316.84 712.044 1289.53 712.595 1284.29 C 715.643 1255.29 715.254 1226.48 715.58 1197.36 C 718.13 1208.79 714.157 1270.64 717.631 1276.32 C 718.622 1275.42 718.299 1275.82 720.127 1275.61 C 726.549 1281.79 726.738 1279.37 734.199 1283.22 C 741.391 1278.85 739.698 1276.1 743.338 1269.35 C 747.32 1266.42 751.94 1268.17 755.77 1266.27 C 758.529 1264.9 763.822 1258.34 767.103 1257.55 L 766.872 1259.73 C 744.461 1276.59 725.826 1297.13 709.511 1319.83 z"/><path d="M 358.931 765.812 C 392.904 766.87 431.635 766.372 465.761 765.719 C 460.064 772.22 450.61 784.566 449.503 792.76 C 446.116 817.837 447.495 850.025 447.456 875.458 L 447.22 1039.85 C 447.206 1062.76 448.424 1101.17 446.974 1123.03 C 447.741 1150.06 446.977 1179.72 446.986 1207.03 L 447.489 1342.96 C 422.855 1312.29 401.48 1276.61 362.887 1259.05 C 381.113 1240.05 377.669 1216.98 377.703 1192.29 L 377.671 1135.59 C 377.556 1063.04 376.201 984.577 377.902 912.481 C 376.966 889.654 377.994 865.656 377.835 842.771 C 377.601 809.237 382.529 793.195 358.931 765.812 z"/><path d="M 377.902 912.481 C 378.987 914.173 380.002 915.096 380.011 916.866 C 380.065 927.042 379.223 937.82 379.618 947.986 C 381.256 990.239 380.396 1032.65 380.487 1074.96 C 380.564 1111.14 381.315 1147.27 380.629 1183.44 C 380.285 1201.63 382.32 1218.29 378.042 1236.19 C 375.822 1245.48 373.188 1249.14 367.935 1257.05 C 368.052 1257.48 368.169 1257.9 368.285 1258.32 C 396.143 1254.27 382.575 1157.76 386.03 1138.1 C 387.303 1130.85 386.276 1110.59 386.988 1103.16 C 389.121 1080.86 384.007 891.54 387.611 885.416 C 390.603 894.854 388.224 989.77 388.187 1006.8 L 387.941 1145.76 C 387.865 1173.85 388.068 1202.58 386.418 1230.62 C 385.906 1239.33 381.209 1249.17 377.487 1257.22 C 403.204 1270.14 426.27 1299.07 440.68 1323.51 C 433.202 1257.69 437.51 1187.9 436.517 1121.54 C 436.444 1116.67 435.961 1095.22 436.934 1091.68 C 438.739 1093.93 437.995 1173.92 437.996 1182.52 C 437.939 1217.82 438.478 1253.13 439.611 1288.41 C 439.947 1302.99 442.804 1311.42 443.206 1323.73 C 447.529 1319.85 444.356 1294.6 444.506 1287.07 C 445.55 1234.68 441.637 1181.94 445.545 1129.7 C 446.269 1120.03 441.773 1087.7 445.59 1080.24 L 446.504 1081.01 C 446.212 1089.53 445.495 1115.24 446.974 1123.03 C 447.741 1150.06 446.977 1179.72 446.986 1207.03 L 447.489 1342.96 C 422.855 1312.29 401.48 1276.61 362.887 1259.05 C 381.113 1240.05 377.669 1216.98 377.703 1192.29 L 377.671 1135.59 C 377.556 1063.04 376.201 984.577 377.902 912.481 z"/><path d="M 668.501 609.5 L 730.879 609.745 C 740.564 609.73 768.253 607.823 775.119 612.557 L 774.059 613.551 C 773.427 613.489 773.37 613.535 772.808 613.292 C 765.779 610.243 753.964 611.637 745.606 611.78 C 720.011 612.208 693.119 611.778 667.423 611.826 C 660.361 611.839 641.302 611.924 635.231 610.938 C 645.448 609.614 657.763 610.087 668.501 609.5 z"/><path d="M 392.501 609.496 C 426.29 609.28 476.694 608.885 509.685 610.996 C 508.748 611.555 499.37 611.48 497.5 611.51 C 462.155 611.857 426.808 611.895 391.462 611.625 C 386.551 611.63 379.398 613.259 376.484 612.382 C 379.013 610.535 388.725 609.959 392.501 609.496 z"/><path d="M 711.49 761.627 C 722.48 763.509 759.64 759.941 772.862 761.165 C 777.344 761.58 783.756 760.524 788.472 761.88 C 784.204 763.533 777.521 763.489 772.768 763.726 C 751.95 763.345 712.986 764.832 692.713 762.646 C 698.97 762.264 705.229 761.924 711.49 761.627 z"/><path d="M 389.285 761.624 C 395.01 764.307 452.686 758.705 461.46 762.515 C 452.875 763.517 447.455 763.59 438.749 763.733 C 415.329 764.429 388.994 763.564 365.442 763.111 C 367.203 762.489 385.797 761.81 389.285 761.624 z"/></svg><span class="small">Superficie · 0 m · 1 atm</span></div>
+    <h1 class="name">Tomás David <i>Honor</i></h1>
+    <div class="hero-foot">
+      <p class="lead">No vengo del código ni del deporte por separado. Vengo de aprender a leer lo que pasa por dentro cuando todo aprieta. Lo que se ve desde arriba es poco: esta página baja.</p>
+      <div><a class="dive" href="#quien">Empezar a bajar <span aria-hidden="true">↓</span></a></div>
+    </div>
+  </div>
+</header>
+
+<section class="layer light" id="quien" data-depth="2" style="--from:var(--w1);--to:var(--w2)">
+  <div class="wrap">
+    <p class="depth"><b>−2 m</b> Quién soy</p>
+    <div class="cols">
+      <div class="rv">
+        <h2 class="title">Hola, soy <em>Tomás.</em></h2>
+        <div class="prose" style="margin-top:1.8rem">
+          <p class="lead">Me formé como <strong>Entrenador Nacional de tenis en 2018</strong> y hoy <strong>creo videos, piezas y páginas con inteligencia artificial</strong>.</p>
+          <p>Esta página es el recorrido entre esas dos cosas: de dónde vengo, cómo pienso, cómo creo y lo que me sostiene. Arriba está lo que se ve. Más abajo, lo que cuesta mostrar.</p>
+        </div>
+      </div>
+      <p class="aside rv">«No se trata de sustituir el alma, sino de amplificar la pregunta.»</p>
+    </div>
+  </div>
+</section>
+
+<!-- LO QUE FLOTA -->
+<section class="layer steep deep" id="hago" data-depth="6" style="--from:var(--w2);--to:var(--w3)">
+  <div class="wrap">
+    <p class="depth"><b>−6 m</b> Lo que hago · lo que flota cerca de la superficie</p>
+    <div class="cols">
+      <h2 class="title rv">Mural de <em>exploración.</em></h2>
+      <p class="lead rv">Videos que hago con inteligencia artificial. Sueltos, sin orden y sin un fin específico. Tocá uno para verlo completo y con sonido.</p>
+    </div>
+    <div class="reel rv">
+      <button class="clip tall" type="button" data-src="videos/video-1.mp4" data-title="El Reflejo Virtual">
+        <video src="videos/video-1.mp4" poster="videos/video-1-poster.jpg" muted loop playsinline preload="none"></video>
+        <span class="clip-cap"><strong>El Reflejo Virtual</strong><span>Ver ▸</span></span>
+      </button>
+      <div class="reel-side">
+        <button class="clip wide" type="button" data-src="videos/video-2.mp4" data-title="Ruptura del Ruido">
+          <video src="videos/video-2.mp4" poster="videos/video-2-poster.jpg" muted loop playsinline preload="none"></video>
+          <span class="clip-cap"><strong>Ruptura del Ruido</strong><span>Ver ▸</span></span>
+        </button>
+        <div class="reel-pair">
+          <button class="clip wide" type="button" data-src="videos/video-3.mp4" data-title="Geometría Mental">
+            <video src="videos/video-3.mp4" poster="videos/video-3-poster.jpg" muted loop playsinline preload="none"></video>
+            <span class="clip-cap"><strong>Geometría Mental</strong><span>Ver ▸</span></span>
+          </button>
+          <button class="clip wide" type="button" data-src="videos/video-4.mp4" data-title="Destello Creativo">
+            <video src="videos/video-4.mp4" poster="videos/video-4-poster.jpg" muted loop playsinline preload="none"></video>
+            <span class="clip-cap"><strong>Destello Creativo</strong><span>Ver ▸</span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DE DÓNDE VENGO -->
+<section class="layer deep" id="cancha" data-depth="14" style="--from:var(--w3);--to:var(--w4)">
+  <div class="wrap">
+    <p class="depth"><b>−14 m</b> De dónde vengo · donde aprendí la presión</p>
+    <div class="cols">
+      <div class="rv">
+        <h2 class="title">La cancha me enseñó a leer el alma <em>bajo presión.</em></h2>
+        <div class="prose" style="margin-top:1.8rem">
+          <p class="lead">El tenis nunca fue solo técnica o potencia física: es una radiografía del carácter humano. En un punto de quiebre nadie puede fingir quién es.</p>
+          <p>Mi certificación en 2018 y los años en cancha me dejaron la templanza, la lectura gestual y la convicción de que la serenidad interna siempre le gana al caos exterior.</p>
+        </div>
+      </div>
+      <dl class="sheet rv">
+        <div><dt>Certificación</dt><dd>Entrenador Nacional · 2018</dd></div>
+        <div><dt>Presencia</dt><dd>En el presente</dd></div>
+        <div><dt>Temple</dt><dd>Estratégico</dd></div>
+        <div><dt>Enfoque</dt><dd>Punto a punto</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- CÓMO CREO -->
+<section class="layer deep" id="creo" data-depth="22" style="--from:var(--w4);--to:var(--w5)">
+  <div class="wrap">
+    <p class="depth"><b>−22 m</b> Cómo creo · la IA como lente</p>
+    <h2 class="title rv">Hacer visible lo que antes solo vivía en la <em>imaginación.</em></h2>
+    <div class="steps">
+      <div class="step rv"><div><p>Siempre sentí que la mente alberga conceptos, atmósferas y narrativas que desbordan las palabras cotidianas.</p><span class="small">Lo que hay adentro</span></div></div>
+      <div class="step rv"><div><p>La inteligencia artificial no sustituye el sentir humano; funciona como el lente que por fin enfoca el destello interno.</p><span class="small">El lente</span></div></div>
+      <div class="step rv"><div><p>Cada pieza, video o línea de código es un intento genuino de traducir ese mundo interior a algo tangible.</p><span class="small">La pieza</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CÓMO SOY -->
+<section class="layer deep" id="soy" data-depth="32" style="--from:var(--w5);--to:var(--w7)">
+  <div class="wrap">
+    <p class="depth"><b>−32 m</b> Cómo soy · hasta acá llega la luz de arriba</p>
+    <h2 class="title rv">No soy una persona completa, sino <em>complementaria.</em></h2>
+    <p class="lead rv" style="margin-top:1.6rem;color:var(--mist)">Aceptar mis contradicciones me quitó el peso de fingir autosuficiencia. Las mejores cosas ocurren cuando mis fortalezas se cruzan con la mirada de otro.</p>
+    <div class="trio">
+      <article class="rv"><span class="small">La luz</span><h3>Chispa creativa</h3><p>La intuición rápida, la pasión por ver conexiones donde otros ven puntos aislados, y el impulso imparable de materializar proyectos.</p></article>
+      <article class="sombra rv"><span class="small">La sombra</span><h3>El silencio incierto</h3><p>Los momentos de duda, el cansancio mental de sobrepensar y la necesidad de pausar para no quemarme en mi propio fuego.</p></article>
+      <article class="encuentro rv"><span class="small" style="color:var(--lamp)">El encuentro · otra luz</span><h3>Ser complementario</h3><p>El alivio de no tener que saberlo todo. Buscar personas que aporten lo que a mí me falta y brindar con generosidad lo que yo traigo a la mesa.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- EL ANCLA -->
+<section class="layer deep" id="ancla" data-depth="44" style="--from:var(--w7);--to:var(--w8)">
+  <div class="wrap">
+    <p class="depth"><b>−44 m</b> Lo que me sostiene · el ancla</p>
+    <svg class="anchor-ico rv" viewBox="0 0 64 80" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="32" cy="10" r="6"/><path d="M32 16v56M18 28h28M8 50c2 14 12 22 24 22s22-8 24-22M8 50l-4 8M8 50l8 4M56 50l4 8M56 50l-8 4"/></svg>
+    <div class="cols">
+      <h2 class="title rv">Detrás del <em>ruido.</em></h2>
+      <p class="lead rv" style="color:var(--mist)">Lo que queda cuando se apagan las pantallas y el murmullo de la ciudad. El espacio íntimo donde recupero mi centro.</p>
+    </div>
+    <div class="anchor-row">
+      <article class="rv"><span class="small">Auriculares puestos</span><h3>La frecuencia</h3><p>Donde las voces del autoengaño se callan y el alma íntegra habla. Con los auriculares puestos, el caos se ordena, bajan las ideas más puras y me encuentro conmigo sin poses.</p></article>
+      <article class="rv"><span class="small">Cuatro patas</span><h3>Compañeros de calma</h3><p>En un mundo acelerado, mis compañeros de cuatro patas son mi cable a tierra. No saben de algoritmos ni pantallas: su afecto es simple, transparente y un recordatorio de volver a lo esencial.</p></article>
+      <article class="rv"><span class="small">Sin producir</span><h3>Cuerpo &amp; juego</h3><p>Mover el cuerpo para vaciar tensiones mentales y sumergirme en una buena historia o videojuego para desconectar. Jugar sin la obligación de producir, solo por el placer de explorar.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- BITÁCORA -->
+<section class="layer deep" id="notas" data-depth="52" style="--from:var(--w8);--to:var(--w8)">
+  <div class="wrap">
+    <p class="depth"><b>−52 m</b> Bitácora de inmersión · notas &amp; reflexiones</p>
+    <div class="cols">
+      <h2 class="title rv">Apuntes sueltos en el <em>camino.</em></h2>
+      <p class="lead rv" style="color:var(--mist)">Ideas cortas que voy anotando entre proyectos: sobre crear con IA, contar historias y sostener la cabeza cuando todo aprieta.</p>
+    </div>
+    <div class="log">
+      <details class="rv">
+        <summary><span><span class="small">Entrada 01 · Filosofía creativa · 4 min</span><span class="l-title">La ilusión del control en la era generativa</span><span class="l-quote">«El prompt no es un comando de ingeniería; es una conversación con un inconsciente colectivo comprimido en matrices numéricas.»</span></span><span class="l-open">Leer</span></summary>
+        <div class="l-body prose">
+          <p>Durante más de un siglo, el cine ha sido un arte de la voluntad impositiva: directores que exigían que el sol se pusiera a una hora específica, que la lágrima cayera exactamente sobre el pómulo izquierdo o que la luz rebotara con precisión milimétrica en una plancha de poliestireno.</p>
+          <p>Con la llegada de los modelos generativos de video (Kling, Hailuo, Runway), esa relación jerárquica se rompe. El prompt no es un comando de ingeniería; es una conversación con un inconsciente colectivo comprimido en matrices numéricas.</p>
+          <p>Crear arte hoy con IA no consiste en forzar una visión rígida, sino en cultivar una mirada atenta: saber reconocer el accidente prodigioso cuando el modelo ofrece un giro imprevisto de cámara, una mirada melancólica que no estaba escrita o una sombra que transforma la escena en poesía pura.</p>
+          <p><strong>«El creador moderno no es un arquitecto omnipotente; es un curador de misterios emergentes.»</strong></p>
+        </div>
+      </details>
+      <details class="rv">
+        <summary><span><span class="small">Entrada 02 · Narrativa auditiva · 3 min</span><span class="l-title">El algoritmo no tiene nostalgia (y por qué eso importa)</span><span class="l-quote">«Las máquinas no saben lo que duele un domingo por la tarde de lluvia. Es esa grieta sentimental, incomputable, donde el director humano debe sostener la cámara.»</span></span><span class="l-open">Leer</span></summary>
+        <div class="l-body prose">
+          <p>Las redes neuronales pueden predecir qué fotograma tiene mayor verosimilitud estadística luego del anterior. Pueden simular el grano de una película Kodak 5219 con una exactitud que engañaría a directores de fotografía veteranos.</p>
+          <p>Sin embargo, un modelo de lenguaje o de difusión carece de infancia. Nunca sintió la soledad de una estación de tren vacía al anochecer, ni la tristeza de despedir a un amigo de toda la vida.</p>
+          <p>Por eso, el cine hecho con IA que prescinde del corazón humano se vuelve frío, estéril y olvidable en cuestión de minutos. La técnica asombra diez segundos; la emoción humana resuena por décadas. Nuestra labor es inyectarle esa herida incurable a cada plano sintético.</p>
+        </div>
+      </details>
+      <details class="rv">
+        <summary><span><span class="small">Entrada 03 · Mentalidad de entrenador · 3 min</span><span class="l-title">Lo que la cancha me enseñó sobre iterar</span><span class="l-quote">«Un equipo no mejora por analizar el partido perfecto; mejora por revisar el que salió mal sin ponerse a la defensiva. Crear funciona exactamente igual.»</span></span><span class="l-open">Leer</span></summary>
+        <div class="l-body prose">
+          <p>Entrenando aprendí a separar la persona del resultado: un video que no funciona no dice nada de mi valor, dice algo sobre una decisión puntual que puedo corregir la próxima vez. Esa distancia es la que me permite seguir intentando sin quemarme.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- EL FONDO: LA CÁPSULA -->
+<section class="layer deep" id="capsula" data-depth="60" style="--from:var(--w8);--to:var(--w9)">
+  <div class="wrap">
+    <p class="depth"><b>−60 m</b> El fondo · mi canal, la memoria viva</p>
+    <div class="capsule rv">
+      <h2 class="title">Una botella lanzada al mar <em>digital.</em></h2>
+      <div class="prose" style="margin-top:1.8rem">
+        <p class="lead">Más que acumular vistas o perseguir algoritmos, entiendo cada video y cada línea de este sitio como una botella lanzada al mar digital. Aprovechar las herramientas de nuestra época es también una forma de trascender el instante.</p>
+        <p>Me conmueve pensar en volver a estos registros dentro de diez años y encontrarme con las preguntas que me desvelaban, las batallas que libraba y los mensajes que necesitaba gritarle al mundo. No busco registrar la perfección, sino el testimonio honesto de quién me estaba convirtiendo mientras construía mi camino.</p>
+      </div>
+      <dl class="years">
+        <div><dt>2018</dt><dd>La cancha y la certificación: el temple como cimiento.</dd></div>
+        <div><dt>Hoy</dt><dd>Traducir el mundo interior en piezas, código y atmósferas.</dd></div>
+        <div><dt>+10</dt><dd>Volver a estos registros y reencontrarme con quién fui.</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section class="layer deep final" id="conversemos" data-depth="60" style="--from:var(--w9);--to:var(--w9)">
+  <div class="wrap">
+    <p class="depth"><b>Desde el fondo</b> Conversemos</p>
+    <h2 class="title rv">Si algo de esto resuena contigo, <em>conversemos.</em></h2>
+    <p class="lead rv" style="margin-top:1.8rem;color:var(--mist)">Creo en las coincidencias de miradas, en conspirar proyectos creativos y en construir cosas donde cada uno aporte lo mejor de su mundo.</p>
+    <div class="contact rv">
+      <a class="dive" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=tomashonor%40gmail.com&amp;su=Contacto%20desde%20tu%20web" target="_blank" rel="noopener">Escribime un mensaje →</a>
+      <span class="mail">tomashonor@gmail.com</span>
+    </div>
+    <div class="end small">
+      <a href="#superficie">Volver a la superficie ↑</a>
+      <span>Otras versiones: <a href="index.html">v2</a> · <a href="v3.html">v3</a></span>
+    </div>
+  </div>
+</section>
+</main>
+
+<dialog class="player" id="player" aria-label="Reproductor de video">
+  <video id="player-video" controls playsinline></video>
+  <div class="player-bar"><span id="player-title"></span><button type="button" id="player-close">Cerrar</button></div>
+</dialog>
+
+<script>
+(function () {
+  document.documentElement.classList.add('js');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var MAX = 60;
+
+  var rv = document.querySelectorAll('.rv');
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    rv.forEach(function (el) { io.observe(el); });
+  } else { rv.forEach(function (el) { el.classList.add('in'); }); }
+
+  // Profundímetro: la profundidad se interpola entre las capas; presión = 1 atm + 1 atm cada 10 m
+  var gauge = document.getElementById('gauge'), now = document.getElementById('gauge-now');
+  var val = document.getElementById('gauge-val'), readout = document.getElementById('readout');
+  for (var m = 0; m <= MAX; m += 10) {
+    var t = document.createElement('div'); t.className = 'gauge-tick'; t.style.top = (m / MAX * 100) + '%';
+    t.innerHTML = '<span>' + (m ? '−' + m : '0') + '</span>'; gauge.appendChild(t);
+  }
+  var layers = Array.prototype.slice.call(document.querySelectorAll('[data-depth]'));
+  var depth = 0;
+  function measure() {
+    var mid = window.scrollY + window.innerHeight * 0.4, d = 0;
+    for (var i = 0; i < layers.length; i++) {
+      var top = layers[i].getBoundingClientRect().top + window.scrollY, h = layers[i].offsetHeight;
+      var a = +layers[i].dataset.depth, b = i + 1 < layers.length ? +layers[i + 1].dataset.depth : a;
+      if (mid >= top) d = a + (b - a) * Math.min(1, (mid - top) / h);
+    }
+    if (window.scrollY < 4) d = 0;
+    depth = d;
+    var txt = (d < 0.5 ? '0' : '−' + Math.round(d)) + ' m';
+    val.textContent = txt; now.style.top = (d / MAX * 100) + '%';
+    readout.textContent = txt + ' · ' + (1 + d / 10).toFixed(1) + ' atm';
+  }
+
+  // Nieve marina: partículas que suben mientras se baja
+  var cv = document.getElementById('snow'), ctx = cv.getContext('2d'), parts = [], W = 0, H = 0, lastY = window.scrollY;
+  function size() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var n = Math.round(Math.min(90, W / 14)); parts = [];
+    for (var i = 0; i < n; i++) parts.push({ x: Math.random() * W, y: Math.random() * H, r: 0.6 + Math.random() * 1.7, s: 0.15 + Math.random() * 0.5, w: Math.random() * 6.28, z: 0.3 + Math.random() * 0.7 });
+  }
+  function tick() {
+    var dy = window.scrollY - lastY; lastY = window.scrollY;
+    ctx.clearRect(0, 0, W, H);
+    var k = Math.min(1, depth / 26);
+    if (k > 0.02) {
+      for (var i = 0; i < parts.length; i++) {
+        var p = parts[i]; p.w += 0.01;
+        p.y -= p.s + dy * 0.35 * p.z; p.x += Math.sin(p.w) * 0.25;
+        if (p.y < -5) p.y = H + 5; if (p.y > H + 5) p.y = -5;
+        ctx.globalAlpha = k * 0.5 * p.z; ctx.fillStyle = depth > 40 && i % 9 === 0 ? '#FFB55C' : '#F2FAF7';
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.2832); ctx.fill();
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  var ticking = false;
+  window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(function () { ticking = false; measure(); }); } }, { passive: true });
+  window.addEventListener('resize', function () { measure(); if (!reduce) size(); });
+  measure();
+  if (!reduce) { size(); tick(); }
+
+  // Videos
+  var clips = document.querySelectorAll('.clip');
+  if ('IntersectionObserver' in window && !reduce) {
+    var vio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        var v = e.target.querySelector('video');
+        if (e.isIntersecting) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } else { v.pause(); }
+      });
+    }, { threshold: 0.25 });
+    clips.forEach(function (c) { vio.observe(c); });
+  }
+  var dlg = document.getElementById('player'), pv = document.getElementById('player-video'), pt = document.getElementById('player-title');
+  function closePlayer() { pv.pause(); pv.removeAttribute('src'); pv.load(); if (dlg.open) dlg.close(); }
+  clips.forEach(function (c) {
+    c.addEventListener('click', function () {
+      pt.textContent = c.dataset.title; pv.src = c.dataset.src;
+      if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+      var pr = pv.play(); if (pr && pr.catch) pr.catch(function () {});
+    });
+  });
+  document.getElementById('player-close').addEventListener('click', closePlayer);
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) closePlayer(); });
+  dlg.addEventListener('close', function () { pv.pause(); });
+})();
+</script>
+</body>
+</html>
