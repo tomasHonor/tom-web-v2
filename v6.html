@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Tomás David Honor</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Tomás David Honor: de entrenador nacional de tenis a creador con inteligencia artificial. Una página que se sintoniza: del ruido a la señal.">
+<meta property="og:title" content="Tomás David Honor">
+<meta property="og:description" content="Del ruido a la señal. Una página que se sintoniza como una radio.">
+<meta property="og:image" content="https://tomashonor.github.io/tom-web-v2/og-image.jpg">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<script>if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('intro-on');</script>
+<style>
+/* Layout: el frente de un receptor de radio. Arriba, fijo, el dial: una escala de 87 a 108 con una
+   aguja naranja que avanza con el scroll. Cada sección es una emisora con su frecuencia. */
+:root {
+  color-scheme: light;
+  --body: #E6E2D8;
+  --panel: #F3F0E9;
+  --ink: #161514;
+  --mid: #66625A;
+  --line: rgba(22, 21, 20, 0.2);
+  --orange: #EE4B11;
+  --dark: #191816;
+  --dial-h: 3.6rem;
+  --f-sans: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif;
+  --f-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--dial-h) + 1rem); }
+html.intro-on, html.intro-on body { overflow: hidden; }
+body { margin: 0; background: var(--body); color: var(--ink); font-family: var(--f-sans); font-size: 1.0625rem; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+p { margin: 0; } h1, h2, h3 { margin: 0; text-wrap: balance; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
+.gut { padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px)); }
+.in { max-width: 1120px; margin: 0 auto; }
+.mono { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.dim { color: var(--mid); }
+
+/* Estática: un lienzo chico estirado a pantalla completa */
+.static { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 60; pointer-events: none; image-rendering: pixelated; opacity: 0; mix-blend-mode: multiply; }
+
+/* ---------- INTRO: estática, la frecuencia sube, se encuentra la señal ---------- */
+.intro { display: none; }
+.intro-on .intro { position: fixed; inset: 0; z-index: 100; background: var(--body); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(1.2rem, 4vh, 2.4rem); padding: 1.5rem; cursor: pointer; overflow: hidden; transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.7, 0, 0.2, 1); }
+.intro canvas { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; transition: opacity 1.1s ease; }
+.intro.locked canvas { opacity: 0; }
+.intro-logo { position: relative; height: min(34vh, 16rem); width: auto; filter: blur(9px); opacity: 0.35; animation: jitter 0.12s steps(2) infinite; transition: filter 0.9s ease, opacity 0.9s ease; }
+.intro-logo path { fill: var(--ink); }
+.intro.locked .intro-logo { filter: none; opacity: 1; animation: none; }
+@keyframes jitter { 0% { transform: translate(-5px, 2px) skewX(-4deg); } 50% { transform: translate(6px, -2px) skewX(5deg); } 100% { transform: translate(-2px, 1px) skewX(0deg); } }
+.intro-freq { position: relative; font-family: var(--f-mono); font-weight: 700; font-size: clamp(3rem, 13vw, 6.5rem); line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.intro-freq small { font-size: 0.28em; letter-spacing: 0.1em; font-weight: 500; margin-left: 0.4em; }
+.intro.locked .intro-freq { color: var(--orange); }
+.intro-status { position: relative; background: var(--ink); color: var(--panel); padding: 0.4rem 0.8rem; }
+.intro.open { opacity: 0; transform: scale(1.06); pointer-events: none; }
+.skip { position: absolute; z-index: 3; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; background: var(--panel); color: var(--ink); border: 1px solid var(--ink); padding: 0.45rem 0.8rem; cursor: pointer; }
+
+/* ---------- El dial fijo ---------- */
+.dial { position: fixed; z-index: 50; top: 0; left: 0; right: 0; height: calc(var(--dial-h) + env(safe-area-inset-top, 0px)); padding-top: env(safe-area-inset-top, 0px); background: var(--panel); border-bottom: 1px solid var(--ink); display: grid; grid-template-columns: auto 1fr auto; align-items: stretch; }
+.dial-logo { display: grid; place-items: center; padding: 0 0.9rem 0 max(14px, env(safe-area-inset-left, 0px)); border-right: 1px solid var(--line); }
+.dial-logo svg { height: 2rem; width: auto; display: block; }
+.dial-logo svg path { fill: var(--ink); }
+.scale { position: relative; margin: 0 clamp(0.7rem, 2vw, 1.6rem); }
+.scale::before { content: ""; position: absolute; left: 0; right: 0; bottom: 0.55rem; height: 0.7rem; background: repeating-linear-gradient(90deg, var(--ink) 0 1px, transparent 1px calc(100% / 42)); opacity: 0.55; }
+.scale::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0.55rem; height: 1.15rem; background: repeating-linear-gradient(90deg, var(--ink) 0 1px, transparent 1px calc(100% / 4.2)); }
+.scale-n { position: absolute; top: 0.45rem; transform: translateX(-50%); font-family: var(--f-mono); font-size: 0.62rem; color: var(--mid); }
+.scale a { position: absolute; bottom: 0.2rem; width: 1.4rem; height: 1.9rem; transform: translateX(-50%); z-index: 2; }
+.scale a::after { content: ""; position: absolute; left: 50%; bottom: 0; width: 0.42rem; height: 0.42rem; margin-left: -0.21rem; border-radius: 50%; background: var(--ink); }
+.scale a.on::after { background: var(--orange); transform: scale(1.5); }
+.needle { position: absolute; top: 0.3rem; bottom: 0.2rem; width: 2px; margin-left: -1px; background: var(--orange); left: 0; z-index: 3; box-shadow: 0 0 0 3px rgba(238, 75, 17, 0.16); }
+.readout { display: grid; align-content: center; justify-items: end; padding: 0 max(14px, env(safe-area-inset-right, 0px)) 0 0.9rem; border-left: 1px solid var(--line); min-width: 6.4rem; }
+.readout b { font-family: var(--f-mono); font-weight: 700; font-size: 1.15rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.readout span { font-family: var(--f-mono); font-size: 0.56rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mid); white-space: nowrap; max-width: 9rem; overflow: hidden; text-overflow: ellipsis; }
+
+/* ---------- Frente del equipo ---------- */
+.front { padding-top: calc(var(--dial-h) + env(safe-area-inset-top, 0px)); background: var(--panel); border-bottom: 1px solid var(--ink); }
+.front-in { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(2rem, 6vw, 5rem); align-items: center; padding-block: clamp(2.5rem, 7vw, 5.5rem); }
+.front-in > * { min-width: 0; }
+.grille { aspect-ratio: 1; width: 100%; max-width: 24rem; border-radius: 50%; background: radial-gradient(circle, var(--ink) 0 22%, transparent 24%) 0 0 / 14px 14px; -webkit-mask-image: radial-gradient(circle, #000 68%, transparent 69%); mask-image: radial-gradient(circle, #000 68%, transparent 69%); justify-self: center; opacity: 0.9; }
+.name { font-weight: 800; font-size: clamp(3rem, 9.5vw, 7.6rem); line-height: 0.9; letter-spacing: -0.05em; }
+.name span { color: var(--orange); }
+.wave { display: block; width: 100%; height: 5rem; margin: 1.6rem 0 1.2rem; }
+.lead { font-size: clamp(1.12rem, 1.7vw, 1.3rem); line-height: 1.55; max-width: 56ch; }
+.front-row { display: flex; flex-wrap: wrap; gap: 1.2rem 2rem; align-items: center; margin-top: 1.8rem; }
+.power { display: inline-flex; align-items: center; gap: 0.9rem; text-decoration: none; font-weight: 700; font-size: 1.05rem; }
+.power i { width: 3.6rem; height: 3.6rem; border-radius: 50%; background: var(--orange); display: grid; place-items: center; color: var(--panel); font-style: normal; font-size: 1.4rem; box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.2), 0 3px 0 var(--ink); transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.power:hover i { transform: translateY(2px); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.2), 0 1px 0 var(--ink); }
+
+/* ---------- Emisoras ---------- */
+.st { padding-block: clamp(3.5rem, 8vw, 6.5rem); border-bottom: 1px solid var(--ink); position: relative; }
+.st.alt { background: var(--panel); }
+.st.dark { background: var(--dark); color: var(--panel); --mid: #A8A399; --line: rgba(243, 240, 233, 0.24); }
+.st-grid { display: grid; grid-template-columns: 13.5rem 1fr; gap: clamp(1.5rem, 5vw, 4rem); align-items: start; }
+.st-grid > * { min-width: 0; }
+.freq { position: sticky; top: calc(var(--dial-h) + 1.4rem); }
+.freq b { display: block; font-family: var(--f-mono); font-weight: 700; font-size: clamp(3rem, 6vw, 4.4rem); line-height: 1; letter-spacing: -0.05em; font-variant-numeric: tabular-nums; }
+.freq b::after { content: ""; display: block; width: 100%; height: 2px; background: var(--orange); margin: 0.9rem 0 0.7rem; }
+.h { font-weight: 800; font-size: clamp(2.2rem, 5.6vw, 4.2rem); line-height: 0.98; letter-spacing: -0.04em; }
+.h em { font-style: normal; color: var(--orange); }
+.stack { display: grid; gap: 1.1rem; max-width: 60ch; margin-top: 1.6rem; }
+.pull { font-weight: 700; font-size: clamp(1.4rem, 3vw, 2rem); line-height: 1.2; letter-spacing: -0.02em; margin-top: 2rem; padding: 1.2rem 0 0; border-top: 2px solid var(--ink); max-width: 30ch; }
+.specs { margin: 2.2rem 0 0; display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--ink); }
+.specs div { padding: 0.9rem 1rem; min-width: 0; }
+.specs div + div { border-left: 1px solid var(--ink); }
+.specs dt { font-family: var(--f-mono); font-size: 0.64rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid); }
+.specs dd { margin: 0.35rem 0 0; font-weight: 700; line-height: 1.2; }
+
+/* Tres perillas */
+.knobs { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1.2rem, 3vw, 2.4rem); margin-top: 2.4rem; }
+.knobs article { min-width: 0; }
+.knob { width: 5rem; height: 5rem; border-radius: 50%; border: 2px solid var(--ink); position: relative; margin-bottom: 1.1rem; background: var(--panel); box-shadow: 0 4px 0 var(--ink); }
+.knob::after { content: ""; position: absolute; left: 50%; top: 0.4rem; width: 3px; height: 1.5rem; margin-left: -1.5px; background: var(--orange); transform-origin: 50% 2.1rem; transform: rotate(var(--r, 0deg)); }
+.knobs h3 { font-weight: 800; font-size: 1.5rem; line-height: 1.1; letter-spacing: -0.02em; margin: 0.3rem 0 0.6rem; }
+.knobs p { color: var(--mid); font-size: 1rem; }
+
+/* Cadena de señal */
+.chain { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 2.4rem; counter-reset: c; }
+.chain article { border: 1px solid var(--ink); padding: 1.2rem 1.2rem 1.4rem; position: relative; min-width: 0; background: var(--body); counter-increment: c; }
+.chain article + article { border-left: 0; }
+.chain article + article::before { content: "→"; position: absolute; left: -0.75rem; top: 1.1rem; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--orange); color: var(--panel); display: grid; place-items: center; font-size: 0.9rem; z-index: 2; }
+.chain .mono::before { content: "0" counter(c) " · "; }
+.chain p { margin-top: 0.7rem; font-size: 1.08rem; line-height: 1.45; font-weight: 500; }
+
+/* Transmisiones */
+.reel { display: grid; grid-template-columns: 4fr 7fr; gap: 12px; margin-top: 2.2rem; }
+.reel-side { display: grid; gap: 12px; min-width: 0; }
+.reel-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.clip { position: relative; display: block; padding: 0; border: 0; background: #000; cursor: pointer; overflow: hidden; min-width: 0; color: var(--panel); text-align: left; font: inherit; border-radius: 6px; }
+.clip video { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.clip.wide video { aspect-ratio: 16 / 9; } .clip.tall video { aspect-ratio: 3 / 4; }
+.clip:hover video { transform: scale(1.04); }
+.clip-cap { position: absolute; inset: auto 0 0 0; padding: 2.6rem 0.9rem 0.75rem; background: linear-gradient(transparent, rgba(15, 14, 12, 0.9)); display: flex; justify-content: space-between; align-items: end; gap: 0.75rem; }
+.clip-cap strong { font-weight: 700; font-size: 1.15rem; line-height: 1.1; letter-spacing: -0.02em; }
+.clip-cap span { font-family: var(--f-mono); font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--orange); white-space: nowrap; background: var(--panel); padding: 0.15rem 0.4rem; }
+dialog.player { border: 1px solid var(--panel); border-radius: 8px; background: var(--dark); color: var(--panel); padding: 0; max-width: min(94vw, 1100px); width: 100%; overflow: hidden; }
+dialog.player::backdrop { background: rgba(15, 14, 12, 0.92); }
+dialog.player video { display: block; width: 100%; max-height: 78vh; background: #000; }
+.player-bar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.6rem 0.9rem; font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.player-bar button { font: inherit; letter-spacing: inherit; text-transform: inherit; background: var(--orange); color: var(--panel); border: 0; padding: 0.4rem 0.8rem; cursor: pointer; }
+
+/* Cinta */
+.tape { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin: 2.4rem 0 0; border-top: 2px solid var(--ink); }
+.tape div { padding: 1.1rem 1.2rem 0 0; min-width: 0; position: relative; }
+.tape div::before { content: ""; position: absolute; left: 0; top: -0.45rem; width: 0.75rem; height: 0.75rem; border-radius: 50%; background: var(--ink); }
+.tape div:nth-child(2)::before { background: var(--orange); }
+.tape dt { font-family: var(--f-mono); font-weight: 700; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1; letter-spacing: -0.04em; }
+.tape dd { margin: 0.5rem 0 0; color: var(--mid); font-size: 1rem; }
+
+/* Memorias: botones de preset */
+.presets { margin-top: 2.2rem; border: 1px solid var(--ink); background: var(--body); }
+.keys { display: grid; grid-template-columns: repeat(3, 1fr); }
+.keys button { font-family: var(--f-mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; background: var(--panel); color: var(--ink); border: 0; border-bottom: 1px solid var(--ink); padding: 1rem 0.6rem; cursor: pointer; display: grid; gap: 0.2rem; justify-items: center; min-width: 0; }
+.keys button + button { border-left: 1px solid var(--ink); }
+.keys button b { font-size: 1.5rem; font-weight: 700; line-height: 1; }
+.keys button[aria-selected="true"] { background: var(--ink); color: var(--panel); box-shadow: inset 0 4px 0 var(--orange); }
+.preset { padding: clamp(1.3rem, 3vw, 2.2rem); }
+.preset h3 { font-weight: 800; font-size: clamp(1.7rem, 3.6vw, 2.4rem); line-height: 1.05; letter-spacing: -0.03em; margin: 0.4rem 0 0.8rem; }
+.preset p { max-width: 58ch; }
+
+/* Notas */
+.notes { margin-top: 2rem; border-top: 2px solid var(--ink); }
+.notes details { border-bottom: 1px solid var(--line); }
+.notes summary { cursor: pointer; list-style: none; padding: 1.3rem 0; display: grid; gap: 0.45rem; }
+.notes summary::-webkit-details-marker { display: none; }
+.notes summary b { font-weight: 800; font-size: clamp(1.4rem, 3.2vw, 1.9rem); line-height: 1.1; letter-spacing: -0.03em; }
+.notes summary em { color: var(--mid); }
+.notes summary u { font-family: var(--f-mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; background: var(--ink); color: var(--panel); padding: 0.3rem 0.6rem; justify-self: start; margin-top: 0.3rem; }
+.notes details[open] summary u { display: none; }
+.notes .stack { margin: 0; padding-bottom: 1.6rem; }
+
+/* Línea abierta */
+.final .h { font-size: clamp(2.6rem, 8vw, 6.4rem); }
+.contact { display: flex; flex-wrap: wrap; gap: 1rem 1.6rem; align-items: center; margin-top: 2rem; }
+.cta { display: inline-flex; align-items: center; gap: 0.7rem; text-decoration: none; font-weight: 700; font-size: 1.05rem; background: var(--orange); color: var(--panel); padding: 0.9rem 1.4rem; border-radius: 999px; box-shadow: 0 4px 0 var(--panel); transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.cta:hover { transform: translateY(2px); box-shadow: 0 2px 0 var(--panel); }
+.mail { font-family: var(--f-mono); font-size: 0.95rem; user-select: all; border-bottom: 1px dashed var(--line); }
+.foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.8rem 2rem; margin-top: clamp(3rem, 7vw, 5rem); padding-top: 1.2rem; border-top: 1px solid var(--line); }
+.foot button { font: inherit; letter-spacing: inherit; text-transform: inherit; background: none; color: inherit; border: 1px solid var(--line); padding: 0.4rem 0.8rem; cursor: pointer; }
+
+.js .rv { opacity: 0.15; translate: 0 22px; transition: opacity 0.8s ease, translate 0.9s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.js .rv.on { opacity: 1; translate: 0 0; }
+
+@media (max-width: 820px) {
+  :root { --dial-h: 3.2rem; }
+  .front-in { grid-template-columns: 1fr; }
+  .grille { max-width: 9rem; justify-self: start; order: -1; }
+  .st-grid { grid-template-columns: 1fr; }
+  .freq { position: static; display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+  .freq b { font-size: 2.6rem; } .freq b::after { margin: 0.5rem 0 0; }
+  .specs { grid-template-columns: 1fr 1fr; } .specs div:nth-child(3) { border-left: 0; } .specs div:nth-child(n+3) { border-top: 1px solid var(--ink); }
+  .knobs, .chain, .reel, .tape { grid-template-columns: 1fr; }
+  .chain article + article { border-left: 1px solid var(--ink); border-top: 0; }
+  .chain article + article::before { content: "↓"; left: 1.2rem; top: -0.75rem; }
+  .tape { border-top: 0; border-left: 2px solid var(--ink); } .tape div { padding: 0 0 1.4rem 1.3rem; } .tape div::before { left: -0.45rem; top: 0.5rem; }
+  .scale-n:nth-of-type(even) { display: none; }
+  .readout { min-width: 4.6rem; } .readout span { display: none; }
+  .dial-logo { padding-right: 0.6rem; } .dial-logo svg { height: 1.7rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .static { display: none; }
+  .js .rv { opacity: 1; translate: 0 0; transition: none; } .clip video, .power i, .cta { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- INTRO -->
+<div class="intro" id="intro" aria-hidden="true">
+  <canvas id="intro-noise" width="200" height="200"></canvas>
+  <svg class="intro-logo" viewBox="250 533 652 1001" aria-hidden="true"><path d="M 271.566 558.072 L 269.947 556.285 L 270.304 554.656 C 272.75 552.979 276.232 553.139 279.267 553.101 C 340.834 552.692 402.404 552.875 463.968 553.652 L 655.531 553.261 L 803.571 553.158 C 821.032 553.115 838.533 553.145 855.991 553.396 C 861.501 553.475 878.841 551.153 882.338 554.878 L 880.917 557.298 C 864.093 595.712 875.491 650.285 880.449 692.486 C 857.947 652.891 840.585 625.137 792.512 611.812 C 783.241 609.277 773.73 607.72 764.135 607.166 C 722.731 604.567 677.642 608.429 635.915 607.13 C 605.837 606.194 611.751 635.869 611.809 656.653 L 612.015 721.065 C 612.155 807.021 612.829 894.62 611.847 980.439 C 641.511 979.745 672.242 980.117 701.996 980.158 L 702.18 853.084 C 702.23 833.348 703.394 807.895 700.757 788.529 C 699.824 781.673 691.244 771.354 686.463 765.839 C 720.081 766.459 759.513 766.782 792.986 765.515 C 787.335 772.35 779.133 782.829 776.901 791.149 C 768.761 821.487 776.243 868.173 773.062 898.341 C 774.579 975.257 773.314 1055.86 773.293 1132.96 L 773.191 1190.83 C 773.152 1214.51 769.866 1241.18 788.08 1259.06 C 762.239 1269.24 739.996 1295.68 721.768 1315.79 C 719.795 1317.96 714.59 1324.72 712.631 1326.21 C 709.599 1330.67 704.269 1338.56 700.347 1342.01 C 699.98 1341.32 699.525 1340.48 698.982 1339.47 C 699.31 1316.22 701.462 1286.22 701.639 1263.63 C 702.257 1184.47 702.002 1105.3 701.949 1026.23 L 612.032 1026.19 L 612.103 1303.74 L 612.011 1381.91 C 611.943 1405.15 607.696 1437.73 624.977 1455.09 C 625.331 1455.44 625.691 1455.79 626.056 1456.13 C 605.342 1471.66 587.99 1491.23 575.049 1513.66 C 565.235 1497.23 558.067 1488.56 546.364 1473.71 C 538.392 1465.86 533.235 1462.04 523.939 1456.05 C 536.97 1444.28 538.399 1432.71 538.615 1416.17 C 538.917 1393.05 538.801 1369.94 538.784 1346.82 L 538.699 1220.43 L 538.776 834.496 L 538.821 682.641 C 538.844 662.874 539.443 642.427 538.12 622.836 C 536.643 612.584 525.082 607.604 516.294 607.422 C 496.509 607.014 476.19 606.491 456.533 607.038 C 433.759 607.671 409.154 605.696 386.659 607.43 C 377.896 608.157 369.222 609.713 360.753 612.077 C 314.498 624.932 294.632 653.997 272.524 693 C 275.113 654.73 290.928 591.464 271.566 558.072 z"/><path d="M 535.251 1455.01 C 557.306 1433.76 546.866 1393.63 550.66 1369.55 C 553.023 1382.76 547.309 1396.5 554.103 1407.03 C 558.917 1409.87 558.238 1407.43 564.063 1408.51 C 564.36 1411.17 564.298 1412.25 565.444 1414.62 C 571.21 1414.2 576.421 1407.91 580.705 1409.81 L 581.452 1413.84 C 583.835 1415 584.064 1414.29 587.227 1413.32 C 590.868 1414.17 594.209 1415.21 597.454 1413.44 C 601.478 1408.62 599.849 1375.44 600.276 1365.63 C 601.025 1369.03 600.56 1377.08 600.74 1381.12 C 601.363 1395.06 600.002 1416.82 602.497 1429.96 L 602.667 1430.81 C 607.283 1448.17 611.107 1446.62 615.212 1456.94 L 614.404 1457.25 C 605.151 1460.98 582.066 1486.81 577.949 1496.85 L 576.043 1498.01 C 573.13 1496.52 560.993 1477.9 555.443 1472.29 C 553.652 1467.39 540.104 1458.24 535.251 1455.01 z"/><path d="M 602.667 1430.81 C 602.654 1424.46 603.025 1419.11 603.485 1412.8 C 604.401 1414.41 603.843 1422.92 604.098 1425.5 C 605.525 1439.91 611.265 1447.16 619.702 1457.79 C 622.012 1457.02 621.079 1457.72 622.355 1455.33 C 618.116 1450.55 613.869 1444.77 612.681 1438.49 C 607.212 1409.59 609.464 1373.38 609.522 1344 L 609.526 1196.14 L 609.511 1080.22 C 609.514 1069.03 608.722 1034.69 610.189 1026.05 C 613.953 1023.35 690.675 1024.79 702.388 1024.66 C 707.386 1030.16 703.638 1269.55 702.77 1293.2 C 702.814 1296.86 704.054 1300.33 704.158 1303.98 C 704.435 1313.77 699.534 1332.93 700.347 1342.01 C 699.98 1341.32 699.525 1340.48 698.982 1339.47 C 699.31 1316.22 701.462 1286.22 701.639 1263.63 C 702.257 1184.47 702.002 1105.3 701.949 1026.23 L 612.032 1026.19 L 612.103 1303.74 L 612.011 1381.91 C 611.943 1405.15 607.696 1437.73 624.977 1455.09 C 625.331 1455.44 625.691 1455.79 626.056 1456.13 C 605.342 1471.66 587.99 1491.23 575.049 1513.66 C 565.235 1497.23 558.067 1488.56 546.364 1473.71 C 549.297 1473.02 549.745 1475.04 553.843 1476.45 L 554.339 1475.31 C 552.786 1473.01 551.238 1470.8 549.849 1468.39 C 551.75 1469.96 553.168 1471.36 555.443 1472.29 C 560.993 1477.9 573.13 1496.52 576.043 1498.01 L 577.949 1496.85 C 582.066 1486.81 605.151 1460.98 614.404 1457.25 L 615.212 1456.94 C 611.107 1446.62 607.283 1448.17 602.667 1430.81 z"/><path d="M 271.566 558.072 L 269.947 556.285 L 270.304 554.656 C 272.75 552.979 276.232 553.139 279.267 553.101 C 340.834 552.692 402.404 552.875 463.968 553.652 L 655.531 553.261 L 803.571 553.158 C 821.032 553.115 838.533 553.145 855.991 553.396 C 861.501 553.475 878.841 551.153 882.338 554.878 L 880.917 557.298 C 822.903 556.615 275.299 556.27 271.566 558.072 z"/><path d="M 766.872 1259.73 C 778.059 1256.28 767.203 1246.93 765.573 1240.4 C 763.308 1231.34 764.19 1219.82 764.36 1210.38 C 764.72 1211.29 765.064 1219.55 765.106 1220.88 C 765.659 1238.16 768.044 1246.53 777.909 1260.94 C 779.23 1259.12 779.247 1259.66 782.176 1258.98 C 783.208 1255.58 771.063 1239.87 772.464 1233.89 C 773.428 1229.78 770.964 1221.13 771.168 1216.52 C 772.622 1183.68 770.755 1148.86 770.541 1116.14 L 770.777 976.445 C 770.856 952.746 770.589 928.571 770.637 904.859 C 770.645 901.166 771.108 901.008 773.062 898.341 C 774.579 975.257 773.314 1055.86 773.293 1132.96 L 773.191 1190.83 C 773.152 1214.51 769.866 1241.18 788.08 1259.06 C 762.239 1269.24 739.996 1295.68 721.768 1315.79 C 719.795 1317.96 714.59 1324.72 712.631 1326.21 L 711.989 1325.5 C 712.307 1323.89 726.814 1303.32 727.814 1302.87 L 728.546 1304.87 C 732.083 1303.57 735.245 1298 733.862 1294.26 L 732.048 1294.68 C 728.301 1298.43 711.547 1318.85 710.508 1323.02 L 709.196 1323.7 L 709.511 1319.83 C 725.826 1297.13 744.461 1276.59 766.872 1259.73 z"/><path d="M 709.511 1319.83 L 708.651 1319.49 C 708.015 1316.84 712.044 1289.53 712.595 1284.29 C 715.643 1255.29 715.254 1226.48 715.58 1197.36 C 718.13 1208.79 714.157 1270.64 717.631 1276.32 C 718.622 1275.42 718.299 1275.82 720.127 1275.61 C 726.549 1281.79 726.738 1279.37 734.199 1283.22 C 741.391 1278.85 739.698 1276.1 743.338 1269.35 C 747.32 1266.42 751.94 1268.17 755.77 1266.27 C 758.529 1264.9 763.822 1258.34 767.103 1257.55 L 766.872 1259.73 C 744.461 1276.59 725.826 1297.13 709.511 1319.83 z"/><path d="M 358.931 765.812 C 392.904 766.87 431.635 766.372 465.761 765.719 C 460.064 772.22 450.61 784.566 449.503 792.76 C 446.116 817.837 447.495 850.025 447.456 875.458 L 447.22 1039.85 C 447.206 1062.76 448.424 1101.17 446.974 1123.03 C 447.741 1150.06 446.977 1179.72 446.986 1207.03 L 447.489 1342.96 C 422.855 1312.29 401.48 1276.61 362.887 1259.05 C 381.113 1240.05 377.669 1216.98 377.703 1192.29 L 377.671 1135.59 C 377.556 1063.04 376.201 984.577 377.902 912.481 C 376.966 889.654 377.994 865.656 377.835 842.771 C 377.601 809.237 382.529 793.195 358.931 765.812 z"/><path d="M 377.902 912.481 C 378.987 914.173 380.002 915.096 380.011 916.866 C 380.065 927.042 379.223 937.82 379.618 947.986 C 381.256 990.239 380.396 1032.65 380.487 1074.96 C 380.564 1111.14 381.315 1147.27 380.629 1183.44 C 380.285 1201.63 382.32 1218.29 378.042 1236.19 C 375.822 1245.48 373.188 1249.14 367.935 1257.05 C 368.052 1257.48 368.169 1257.9 368.285 1258.32 C 396.143 1254.27 382.575 1157.76 386.03 1138.1 C 387.303 1130.85 386.276 1110.59 386.988 1103.16 C 389.121 1080.86 384.007 891.54 387.611 885.416 C 390.603 894.854 388.224 989.77 388.187 1006.8 L 387.941 1145.76 C 387.865 1173.85 388.068 1202.58 386.418 1230.62 C 385.906 1239.33 381.209 1249.17 377.487 1257.22 C 403.204 1270.14 426.27 1299.07 440.68 1323.51 C 433.202 1257.69 437.51 1187.9 436.517 1121.54 C 436.444 1116.67 435.961 1095.22 436.934 1091.68 C 438.739 1093.93 437.995 1173.92 437.996 1182.52 C 437.939 1217.82 438.478 1253.13 439.611 1288.41 C 439.947 1302.99 442.804 1311.42 443.206 1323.73 C 447.529 1319.85 444.356 1294.6 444.506 1287.07 C 445.55 1234.68 441.637 1181.94 445.545 1129.7 C 446.269 1120.03 441.773 1087.7 445.59 1080.24 L 446.504 1081.01 C 446.212 1089.53 445.495 1115.24 446.974 1123.03 C 447.741 1150.06 446.977 1179.72 446.986 1207.03 L 447.489 1342.96 C 422.855 1312.29 401.48 1276.61 362.887 1259.05 C 381.113 1240.05 377.669 1216.98 377.703 1192.29 L 377.671 1135.59 C 377.556 1063.04 376.201 984.577 377.902 912.481 z"/><path d="M 668.501 609.5 L 730.879 609.745 C 740.564 609.73 768.253 607.823 775.119 612.557 L 774.059 613.551 C 773.427 613.489 773.37 613.535 772.808 613.292 C 765.779 610.243 753.964 611.637 745.606 611.78 C 720.011 612.208 693.119 611.778 667.423 611.826 C 660.361 611.839 641.302 611.924 635.231 610.938 C 645.448 609.614 657.763 610.087 668.501 609.5 z"/><path d="M 392.501 609.496 C 426.29 609.28 476.694 608.885 509.685 610.996 C 508.748 611.555 499.37 611.48 497.5 611.51 C 462.155 611.857 426.808 611.895 391.462 611.625 C 386.551 611.63 379.398 613.259 376.484 612.382 C 379.013 610.535 388.725 609.959 392.501 609.496 z"/><path d="M 711.49 761.627 C 722.48 763.509 759.64 759.941 772.862 761.165 C 777.344 761.58 783.756 760.524 788.472 761.88 C 784.204 763.533 777.521 763.489 772.768 763.726 C 751.95 763.345 712.986 764.832 692.713 762.646 C 698.97 762.264 705.229 761.924 711.49 761.627 z"/><path d="M 389.285 761.624 C 395.01 764.307 452.686 758.705 461.46 762.515 C 452.875 763.517 447.455 763.59 438.749 763.733 C 415.329 764.429 388.994 763.564 365.442 763.111 C 367.203 762.489 385.797 761.81 389.285 761.624 z"/></svg>
+  <p class="intro-freq"><span id="intro-n">87.5</span><small>FM</small></p>
+  <p class="intro-status mono" id="intro-status">Buscando señal…</p>
+  <button class="skip" id="skip" type="button">Saltar</button>
+</div>
+
+<canvas class="static" id="static" width="160" height="160" aria-hidden="true"></canvas>
+
+<!-- DIAL -->
+<nav class="dial" aria-label="Dial de emisoras">
+  <a class="dial-logo" href="#inicio" aria-label="Inicio"><svg viewBox="250 533 652 1001" aria-hidden="true"><path d="M 271.566 558.072 L 269.947 556.285 L 270.304 554.656 C 272.75 552.979 276.232 553.139 279.267 553.101 C 340.834 552.692 402.404 552.875 463.968 553.652 L 655.531 553.261 L 803.571 553.158 C 821.032 553.115 838.533 553.145 855.991 553.396 C 861.501 553.475 878.841 551.153 882.338 554.878 L 880.917 557.298 C 864.093 595.712 875.491 650.285 880.449 692.486 C 857.947 652.891 840.585 625.137 792.512 611.812 C 783.241 609.277 773.73 607.72 764.135 607.166 C 722.731 604.567 677.642 608.429 635.915 607.13 C 605.837 606.194 611.751 635.869 611.809 656.653 L 612.015 721.065 C 612.155 807.021 612.829 894.62 611.847 980.439 C 641.511 979.745 672.242 980.117 701.996 980.158 L 702.18 853.084 C 702.23 833.348 703.394 807.895 700.757 788.529 C 699.824 781.673 691.244 771.354 686.463 765.839 C 720.081 766.459 759.513 766.782 792.986 765.515 C 787.335 772.35 779.133 782.829 776.901 791.149 C 768.761 821.487 776.243 868.173 773.062 898.341 C 774.579 975.257 773.314 1055.86 773.293 1132.96 L 773.191 1190.83 C 773.152 1214.51 769.866 1241.18 788.08 1259.06 C 762.239 1269.24 739.996 1295.68 721.768 1315.79 C 719.795 1317.96 714.59 1324.72 712.631 1326.21 C 709.599 1330.67 704.269 1338.56 700.347 1342.01 C 699.98 1341.32 699.525 1340.48 698.982 1339.47 C 699.31 1316.22 701.462 1286.22 701.639 1263.63 C 702.257 1184.47 702.002 1105.3 701.949 1026.23 L 612.032 1026.19 L 612.103 1303.74 L 612.011 1381.91 C 611.943 1405.15 607.696 1437.73 624.977 1455.09 C 625.331 1455.44 625.691 1455.79 626.056 1456.13 C 605.342 1471.66 587.99 1491.23 575.049 1513.66 C 565.235 1497.23 558.067 1488.56 546.364 1473.71 C 538.392 1465.86 533.235 1462.04 523.939 1456.05 C 536.97 1444.28 538.399 1432.71 538.615 1416.17 C 538.917 1393.05 538.801 1369.94 538.784 1346.82 L 538.699 1220.43 L 538.776 834.496 L 538.821 682.641 C 538.844 662.874 539.443 642.427 538.12 622.836 C 536.643 612.584 525.082 607.604 516.294 607.422 C 496.509 607.014 476.19 606.491 456.533 607.038 C 433.759 607.671 409.154 605.696 386.659 607.43 C 377.896 608.157 369.222 609.713 360.753 612.077 C 314.498 624.932 294.632 653.997 272.524 693 C 275.113 654.73 290.928 591.464 271.566 558.072 z"/><path d="M 535.251 1455.01 C 557.306 1433.76 546.866 1393.63 550.66 1369.55 C 553.023 1382.76 547.309 1396.5 554.103 1407.03 C 558.917 1409.87 558.238 1407.43 564.063 1408.51 C 564.36 1411.17 564.298 1412.25 565.444 1414.62 C 571.21 1414.2 576.421 1407.91 580.705 1409.81 L 581.452 1413.84 C 583.835 1415 584.064 1414.29 587.227 1413.32 C 590.868 1414.17 594.209 1415.21 597.454 1413.44 C 601.478 1408.62 599.849 1375.44 600.276 1365.63 C 601.025 1369.03 600.56 1377.08 600.74 1381.12 C 601.363 1395.06 600.002 1416.82 602.497 1429.96 L 602.667 1430.81 C 607.283 1448.17 611.107 1446.62 615.212 1456.94 L 614.404 1457.25 C 605.151 1460.98 582.066 1486.81 577.949 1496.85 L 576.043 1498.01 C 573.13 1496.52 560.993 1477.9 555.443 1472.29 C 553.652 1467.39 540.104 1458.24 535.251 1455.01 z"/><path d="M 602.667 1430.81 C 602.654 1424.46 603.025 1419.11 603.485 1412.8 C 604.401 1414.41 603.843 1422.92 604.098 1425.5 C 605.525 1439.91 611.265 1447.16 619.702 1457.79 C 622.012 1457.02 621.079 1457.72 622.355 1455.33 C 618.116 1450.55 613.869 1444.77 612.681 1438.49 C 607.212 1409.59 609.464 1373.38 609.522 1344 L 609.526 1196.14 L 609.511 1080.22 C 609.514 1069.03 608.722 1034.69 610.189 1026.05 C 613.953 1023.35 690.675 1024.79 702.388 1024.66 C 707.386 1030.16 703.638 1269.55 702.77 1293.2 C 702.814 1296.86 704.054 1300.33 704.158 1303.98 C 704.435 1313.77 699.534 1332.93 700.347 1342.01 C 699.98 1341.32 699.525 1340.48 698.982 1339.47 C 699.31 1316.22 701.462 1286.22 701.639 1263.63 C 702.257 1184.47 702.002 1105.3 701.949 1026.23 L 612.032 1026.19 L 612.103 1303.74 L 612.011 1381.91 C 611.943 1405.15 607.696 1437.73 624.977 1455.09 C 625.331 1455.44 625.691 1455.79 626.056 1456.13 C 605.342 1471.66 587.99 1491.23 575.049 1513.66 C 565.235 1497.23 558.067 1488.56 546.364 1473.71 C 549.297 1473.02 549.745 1475.04 553.843 1476.45 L 554.339 1475.31 C 552.786 1473.01 551.238 1470.8 549.849 1468.39 C 551.75 1469.96 553.168 1471.36 555.443 1472.29 C 560.993 1477.9 573.13 1496.52 576.043 1498.01 L 577.949 1496.85 C 582.066 1486.81 605.151 1460.98 614.404 1457.25 L 615.212 1456.94 C 611.107 1446.62 607.283 1448.17 602.667 1430.81 z"/><path d="M 271.566 558.072 L 269.947 556.285 L 270.304 554.656 C 272.75 552.979 276.232 553.139 279.267 553.101 C 340.834 552.692 402.404 552.875 463.968 553.652 L 655.531 553.261 L 803.571 553.158 C 821.032 553.115 838.533 553.145 855.991 553.396 C 861.501 553.475 878.841 551.153 882.338 554.878 L 880.917 557.298 C 822.903 556.615 275.299 556.27 271.566 558.072 z"/><path d="M 766.872 1259.73 C 778.059 1256.28 767.203 1246.93 765.573 1240.4 C 763.308 1231.34 764.19 1219.82 764.36 1210.38 C 764.72 1211.29 765.064 1219.55 765.106 1220.88 C 765.659 1238.16 768.044 1246.53 777.909 1260.94 C 779.23 1259.12 779.247 1259.66 782.176 1258.98 C 783.208 1255.58 771.063 1239.87 772.464 1233.89 C 773.428 1229.78 770.964 1221.13 771.168 1216.52 C 772.622 1183.68 770.755 1148.86 770.541 1116.14 L 770.777 976.445 C 770.856 952.746 770.589 928.571 770.637 904.859 C 770.645 901.166 771.108 901.008 773.062 898.341 C 774.579 975.257 773.314 1055.86 773.293 1132.96 L 773.191 1190.83 C 773.152 1214.51 769.866 1241.18 788.08 1259.06 C 762.239 1269.24 739.996 1295.68 721.768 1315.79 C 719.795 1317.96 714.59 1324.72 712.631 1326.21 L 711.989 1325.5 C 712.307 1323.89 726.814 1303.32 727.814 1302.87 L 728.546 1304.87 C 732.083 1303.57 735.245 1298 733.862 1294.26 L 732.048 1294.68 C 728.301 1298.43 711.547 1318.85 710.508 1323.02 L 709.196 1323.7 L 709.511 1319.83 C 725.826 1297.13 744.461 1276.59 766.872 1259.73 z"/><path d="M 709.511 1319.83 L 708.651 1319.49 C 708.015 1316.84 712.044 1289.53 712.595 1284.29 C 715.643 1255.29 715.254 1226.48 715.58 1197.36 C 718.13 1208.79 714.157 1270.64 717.631 1276.32 C 718.622 1275.42 718.299 1275.82 720.127 1275.61 C 726.549 1281.79 726.738 1279.37 734.199 1283.22 C 741.391 1278.85 739.698 1276.1 743.338 1269.35 C 747.32 1266.42 751.94 1268.17 755.77 1266.27 C 758.529 1264.9 763.822 1258.34 767.103 1257.55 L 766.872 1259.73 C 744.461 1276.59 725.826 1297.13 709.511 1319.83 z"/><path d="M 358.931 765.812 C 392.904 766.87 431.635 766.372 465.761 765.719 C 460.064 772.22 450.61 784.566 449.503 792.76 C 446.116 817.837 447.495 850.025 447.456 875.458 L 447.22 1039.85 C 447.206 1062.76 448.424 1101.17 446.974 1123.03 C 447.741 1150.06 446.977 1179.72 446.986 1207.03 L 447.489 1342.96 C 422.855 1312.29 401.48 1276.61 362.887 1259.05 C 381.113 1240.05 377.669 1216.98 377.703 1192.29 L 377.671 1135.59 C 377.556 1063.04 376.201 984.577 377.902 912.481 C 376.966 889.654 377.994 865.656 377.835 842.771 C 377.601 809.237 382.529 793.195 358.931 765.812 z"/><path d="M 377.902 912.481 C 378.987 914.173 380.002 915.096 380.011 916.866 C 380.065 927.042 379.223 937.82 379.618 947.986 C 381.256 990.239 380.396 1032.65 380.487 1074.96 C 380.564 1111.14 381.315 1147.27 380.629 1183.44 C 380.285 1201.63 382.32 1218.29 378.042 1236.19 C 375.822 1245.48 373.188 1249.14 367.935 1257.05 C 368.052 1257.48 368.169 1257.9 368.285 1258.32 C 396.143 1254.27 382.575 1157.76 386.03 1138.1 C 387.303 1130.85 386.276 1110.59 386.988 1103.16 C 389.121 1080.86 384.007 891.54 387.611 885.416 C 390.603 894.854 388.224 989.77 388.187 1006.8 L 387.941 1145.76 C 387.865 1173.85 388.068 1202.58 386.418 1230.62 C 385.906 1239.33 381.209 1249.17 377.487 1257.22 C 403.204 1270.14 426.27 1299.07 440.68 1323.51 C 433.202 1257.69 437.51 1187.9 436.517 1121.54 C 436.444 1116.67 435.961 1095.22 436.934 1091.68 C 438.739 1093.93 437.995 1173.92 437.996 1182.52 C 437.939 1217.82 438.478 1253.13 439.611 1288.41 C 439.947 1302.99 442.804 1311.42 443.206 1323.73 C 447.529 1319.85 444.356 1294.6 444.506 1287.07 C 445.55 1234.68 441.637 1181.94 445.545 1129.7 C 446.269 1120.03 441.773 1087.7 445.59 1080.24 L 446.504 1081.01 C 446.212 1089.53 445.495 1115.24 446.974 1123.03 C 447.741 1150.06 446.977 1179.72 446.986 1207.03 L 447.489 1342.96 C 422.855 1312.29 401.48 1276.61 362.887 1259.05 C 381.113 1240.05 377.669 1216.98 377.703 1192.29 L 377.671 1135.59 C 377.556 1063.04 376.201 984.577 377.902 912.481 z"/><path d="M 668.501 609.5 L 730.879 609.745 C 740.564 609.73 768.253 607.823 775.119 612.557 L 774.059 613.551 C 773.427 613.489 773.37 613.535 772.808 613.292 C 765.779 610.243 753.964 611.637 745.606 611.78 C 720.011 612.208 693.119 611.778 667.423 611.826 C 660.361 611.839 641.302 611.924 635.231 610.938 C 645.448 609.614 657.763 610.087 668.501 609.5 z"/><path d="M 392.501 609.496 C 426.29 609.28 476.694 608.885 509.685 610.996 C 508.748 611.555 499.37 611.48 497.5 611.51 C 462.155 611.857 426.808 611.895 391.462 611.625 C 386.551 611.63 379.398 613.259 376.484 612.382 C 379.013 610.535 388.725 609.959 392.501 609.496 z"/><path d="M 711.49 761.627 C 722.48 763.509 759.64 759.941 772.862 761.165 C 777.344 761.58 783.756 760.524 788.472 761.88 C 784.204 763.533 777.521 763.489 772.768 763.726 C 751.95 763.345 712.986 764.832 692.713 762.646 C 698.97 762.264 705.229 761.924 711.49 761.627 z"/><path d="M 389.285 761.624 C 395.01 764.307 452.686 758.705 461.46 762.515 C 452.875 763.517 447.455 763.59 438.749 763.733 C 415.329 764.429 388.994 763.564 365.442 763.111 C 367.203 762.489 385.797 761.81 389.285 761.624 z"/></svg></a>
+  <div class="scale" id="scale"><div class="needle" id="needle"></div></div>
+  <div class="readout"><b id="r-f">87.5</b><span id="r-n">Sin señal</span></div>
+</nav>
+
+<main>
+<header class="front gut" id="inicio" data-f="87.5" data-n="Encendido">
+  <div class="in front-in">
+    <div class="grille" aria-hidden="true"></div>
+    <div>
+      <p class="mono dim">Receptor · modelo TDH · una sola frecuencia: la propia</p>
+      <h1 class="name">Tomás David <span>Honor</span></h1>
+      <canvas class="wave" id="wave" aria-hidden="true"></canvas>
+      <p class="lead">No vengo del código ni del deporte por separado. Vengo de aprender a leer lo que pasa por dentro cuando todo aprieta. Hay mucho ruido afuera; esta página lo va bajando hasta que queda la señal.</p>
+      <div class="front-row">
+        <a class="power" href="#quien"><i aria-hidden="true">↓</i>Empezar a sintonizar</a>
+        <span class="mono dim">9 emisoras · 87 a 108 FM</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="st gut" id="quien" data-f="88.1" data-n="Quién soy">
+  <div class="in st-grid">
+    <div class="freq"><b>88.1</b><span class="mono dim">Quién soy</span></div>
+    <div class="rv">
+      <h2 class="h scr">Hola, soy <em>Tomás.</em></h2>
+      <div class="stack">
+        <p class="lead">Me formé como <strong>Entrenador Nacional de tenis en 2018</strong> y hoy <strong>creo videos, piezas y páginas con inteligencia artificial</strong>. Esta página es el recorrido entre esas dos cosas: de dónde vengo, cómo pienso, cómo creo y lo que me sostiene.</p>
+        <p class="dim">Mi trabajo audiovisual investiga la fricción fértil entre la sensibilidad analógica y los modelos de difusión generativa. En un entorno saturado de imágenes hiperrealistas sin propósito, busco restituirle al fotograma su misterio.</p>
+      </div>
+      <p class="pull">«No se trata de sustituir el alma, sino de amplificar la pregunta.»</p>
+    </div>
+  </div>
+</section>
+
+<section class="st alt gut" id="cancha" data-f="90.3" data-n="De dónde vengo">
+  <div class="in st-grid">
+    <div class="freq"><b>90.3</b><span class="mono dim">De dónde vengo</span></div>
+    <div class="rv">
+      <h2 class="h scr">La cancha me enseñó a leer el alma <em>bajo presión.</em></h2>
+      <div class="stack">
+        <p class="lead">El tenis nunca fue solo técnica o potencia física: es una radiografía del carácter humano. En un punto de quiebre nadie puede fingir quién es.</p>
+        <p class="dim">Mi certificación en 2018 y los años en cancha me dejaron la templanza, la lectura gestual y la convicción de que la serenidad interna siempre le gana al caos exterior.</p>
+      </div>
+      <dl class="specs">
+        <div><dt>Certificación</dt><dd>Entrenador Nacional · 2018</dd></div>
+        <div><dt>Presencia</dt><dd>En el presente</dd></div>
+        <div><dt>Temple</dt><dd>Estratégico</dd></div>
+        <div><dt>Enfoque</dt><dd>Punto a punto</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section class="st gut" id="soy" data-f="92.7" data-n="Cómo soy">
+  <div class="in st-grid">
+    <div class="freq"><b>92.7</b><span class="mono dim">Cómo soy</span></div>
+    <div class="rv">
+      <h2 class="h scr">No soy una persona completa, sino <em>complementaria.</em></h2>
+      <div class="stack"><p class="lead">Aceptar mis contradicciones me quitó el peso de fingir autosuficiencia. Las mejores cosas ocurren cuando mis fortalezas se cruzan con la mirada de otro.</p></div>
+      <div class="knobs">
+        <article><div class="knob" style="--r:55deg" aria-hidden="true"></div><span class="mono dim">La luz</span><h3>Chispa creativa</h3><p>La intuición rápida, la pasión por ver conexiones donde otros ven puntos aislados, y el impulso imparable de materializar proyectos.</p></article>
+        <article><div class="knob" style="--r:-70deg" aria-hidden="true"></div><span class="mono dim">La sombra</span><h3>El silencio incierto</h3><p>Los momentos de duda, el cansancio mental de sobrepensar y la necesidad de pausar para no quemarme en mi propio fuego.</p></article>
+        <article><div class="knob" style="--r:0deg" aria-hidden="true"></div><span class="mono dim">El encuentro</span><h3>Ser complementario</h3><p>El alivio de no tener que saberlo todo. Buscar personas que aporten lo que a mí me falta y brindar con generosidad lo que yo traigo a la mesa.</p></article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="st alt gut" id="creo" data-f="95.1" data-n="Cómo creo">
+  <div class="in st-grid">
+    <div class="freq"><b>95.1</b><span class="mono dim">Cómo creo</span></div>
+    <div class="rv">
+      <h2 class="h scr">Hacer visible lo que antes solo vivía en la <em>imaginación.</em></h2>
+      <div class="chain">
+        <article><span class="mono dim">Señal de entrada</span><p>Siempre sentí que la mente alberga conceptos, atmósferas y narrativas que desbordan las palabras cotidianas.</p></article>
+        <article><span class="mono dim">El lente</span><p>La inteligencia artificial no sustituye el sentir humano; funciona como el lente que por fin enfoca el destello interno.</p></article>
+        <article><span class="mono dim">Salida</span><p>Cada pieza, video o línea de código es un intento genuino de traducir ese mundo interior a algo tangible.</p></article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="st dark gut" id="hago" data-f="97.5" data-n="Lo que hago">
+  <div class="in st-grid">
+    <div class="freq"><b>97.5</b><span class="mono dim">Lo que hago</span></div>
+    <div class="rv">
+      <h2 class="h scr">Mural de <em>exploración.</em></h2>
+      <div class="stack"><p class="lead">Videos que hago con inteligencia artificial. Sueltos, sin orden y sin un fin específico. Tocá uno para verlo completo y con sonido.</p></div>
+      <div class="reel">
+        <button class="clip tall" type="button" data-src="videos/video-1.mp4" data-title="El Reflejo Virtual"><video src="videos/video-1.mp4" poster="videos/video-1-poster.jpg" muted loop playsinline preload="none"></video><span class="clip-cap"><strong>El Reflejo Virtual</strong><span>▶ Ver</span></span></button>
+        <div class="reel-side">
+          <button class="clip wide" type="button" data-src="videos/video-2.mp4" data-title="Ruptura del Ruido"><video src="videos/video-2.mp4" poster="videos/video-2-poster.jpg" muted loop playsinline preload="none"></video><span class="clip-cap"><strong>Ruptura del Ruido</strong><span>▶ Ver</span></span></button>
+          <div class="reel-pair">
+            <button class="clip wide" type="button" data-src="videos/video-3.mp4" data-title="Geometría Mental"><video src="videos/video-3.mp4" poster="videos/video-3-poster.jpg" muted loop playsinline preload="none"></video><span class="clip-cap"><strong>Geometría Mental</strong><span>▶ Ver</span></span></button>
+            <button class="clip wide" type="button" data-src="videos/video-4.mp4" data-title="Destello Creativo"><video src="videos/video-4.mp4" poster="videos/video-4-poster.jpg" muted loop playsinline preload="none"></video><span class="clip-cap"><strong>Destello Creativo</strong><span>▶ Ver</span></span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="st gut" id="canal" data-f="99.9" data-n="Mi canal">
+  <div class="in st-grid">
+    <div class="freq"><b>99.9</b><span class="mono dim">Mi canal · en grabación</span></div>
+    <div class="rv">
+      <h2 class="h scr">La huella incrustada en el <em>tiempo.</em></h2>
+      <div class="stack">
+        <p class="lead">Más que acumular vistas o perseguir algoritmos, entiendo cada video y cada línea de este sitio como una botella lanzada al mar digital.</p>
+        <p class="dim">Me conmueve pensar en volver a estos registros dentro de diez años y encontrarme con las preguntas que me desvelaban, las batallas que libraba y los mensajes que necesitaba gritarle al mundo. No busco registrar la perfección, sino el testimonio honesto de quién me estaba convirtiendo mientras construía mi camino.</p>
+      </div>
+      <dl class="tape">
+        <div><dt>2018</dt><dd>La cancha y la certificación: el temple como cimiento.</dd></div>
+        <div><dt>Hoy</dt><dd>Traducir el mundo interior en piezas, código y atmósferas.</dd></div>
+        <div><dt>+10</dt><dd>Volver a estos registros y reencontrarme con quién fui.</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section class="st alt gut" id="sosten" data-f="102.3" data-n="Lo que me sostiene">
+  <div class="in st-grid">
+    <div class="freq"><b>102.3</b><span class="mono dim">Lo que me sostiene</span></div>
+    <div class="rv">
+      <h2 class="h scr">Detrás del <em>ruido.</em></h2>
+      <div class="stack"><p class="lead">Lo que queda cuando se apagan las pantallas y el murmullo de la ciudad. El espacio íntimo donde recupero mi centro. Tres memorias guardadas:</p></div>
+      <div class="presets">
+        <div class="keys" role="tablist" aria-label="Memorias guardadas">
+          <button type="button" role="tab" id="k1" aria-controls="p1" aria-selected="true"><b>1</b>Frecuencia</button>
+          <button type="button" role="tab" id="k2" aria-controls="p2" aria-selected="false"><b>2</b>Calma</button>
+          <button type="button" role="tab" id="k3" aria-controls="p3" aria-selected="false"><b>3</b>Juego</button>
+        </div>
+        <div class="preset" role="tabpanel" id="p1" aria-labelledby="k1"><span class="mono dim">Auriculares puestos</span><h3>La frecuencia</h3><p>Donde las voces del autoengaño se callan y el alma íntegra habla. Con los auriculares puestos, el caos se ordena, bajan las ideas más puras y me encuentro conmigo sin poses.</p></div>
+        <div class="preset" role="tabpanel" id="p2" aria-labelledby="k2" hidden><span class="mono dim">Cuatro patas</span><h3>Compañeros de calma</h3><p>En un mundo acelerado, mis compañeros de cuatro patas son mi cable a tierra. No saben de algoritmos ni pantallas: su afecto es simple, transparente y un recordatorio de volver a lo esencial.</p></div>
+        <div class="preset" role="tabpanel" id="p3" aria-labelledby="k3" hidden><span class="mono dim">Sin producir</span><h3>Cuerpo &amp; juego</h3><p>Mover el cuerpo para vaciar tensiones mentales y sumergirme en una buena historia o videojuego para desconectar. Jugar sin la obligación de producir, solo por el placer de explorar.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="st gut" id="notas" data-f="104.7" data-n="Notas">
+  <div class="in st-grid">
+    <div class="freq"><b>104.7</b><span class="mono dim">Notas &amp; reflexiones</span></div>
+    <div class="rv">
+      <h2 class="h scr">Apuntes sueltos en el <em>camino.</em></h2>
+      <div class="stack"><p class="lead">Ideas cortas que voy anotando entre proyectos: sobre crear con IA, contar historias y sostener la cabeza cuando todo aprieta.</p></div>
+      <div class="notes">
+        <details>
+          <summary><span class="mono dim">01 · Filosofía creativa · 4 min</span><b>La ilusión del control en la era generativa</b><em>«El prompt no es un comando de ingeniería; es una conversación con un inconsciente colectivo comprimido en matrices numéricas.»</em><u>Leer</u></summary>
+          <div class="stack">
+            <p>Durante más de un siglo, el cine ha sido un arte de la voluntad impositiva: directores que exigían que el sol se pusiera a una hora específica, que la lágrima cayera exactamente sobre el pómulo izquierdo o que la luz rebotara con precisión milimétrica en una plancha de poliestireno.</p>
+            <p>Con la llegada de los modelos generativos de video (Kling, Hailuo, Runway), esa relación jerárquica se rompe. El prompt no es un comando de ingeniería; es una conversación con un inconsciente colectivo comprimido en matrices numéricas.</p>
+            <p>Crear arte hoy con IA no consiste en forzar una visión rígida, sino en cultivar una mirada atenta: saber reconocer el accidente prodigioso cuando el modelo ofrece un giro imprevisto de cámara, una mirada melancólica que no estaba escrita o una sombra que transforma la escena en poesía pura.</p>
+            <p><strong>«El creador moderno no es un arquitecto omnipotente; es un curador de misterios emergentes.»</strong></p>
+          </div>
+        </details>
+        <details>
+          <summary><span class="mono dim">02 · Narrativa auditiva · 3 min</span><b>El algoritmo no tiene nostalgia (y por qué eso importa)</b><em>«Las máquinas no saben lo que duele un domingo por la tarde de lluvia. Es esa grieta sentimental, incomputable, donde el director humano debe sostener la cámara.»</em><u>Leer</u></summary>
+          <div class="stack">
+            <p>Las redes neuronales pueden predecir qué fotograma tiene mayor verosimilitud estadística luego del anterior. Pueden simular el grano de una película Kodak 5219 con una exactitud que engañaría a directores de fotografía veteranos.</p>
+            <p>Sin embargo, un modelo de lenguaje o de difusión carece de infancia. Nunca sintió la soledad de una estación de tren vacía al anochecer, ni la tristeza de despedir a un amigo de toda la vida.</p>
+            <p>Por eso, el cine hecho con IA que prescinde del corazón humano se vuelve frío, estéril y olvidable en cuestión de minutos. <strong>La técnica asombra diez segundos; la emoción humana resuena por décadas.</strong> Nuestra labor es inyectarle esa herida incurable a cada plano sintético.</p>
+          </div>
+        </details>
+        <details>
+          <summary><span class="mono dim">03 · Mentalidad de entrenador · 3 min</span><b>Lo que la cancha me enseñó sobre iterar</b><em>«Un equipo no mejora por analizar el partido perfecto; mejora por revisar el que salió mal sin ponerse a la defensiva. Crear funciona exactamente igual.»</em><u>Leer</u></summary>
+          <div class="stack">
+            <p>Entrenando aprendí a separar la persona del resultado: un video que no funciona no dice nada de mi valor, dice algo sobre una decisión puntual que puedo corregir la próxima vez. Esa distancia es la que me permite seguir intentando sin quemarme.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="st dark final gut" id="conversemos" data-f="107.1" data-n="Línea abierta">
+  <div class="in">
+    <p class="mono" style="color:var(--orange)">107.1 · Línea abierta · señal limpia</p>
+    <h2 class="h scr rv" style="margin-top:1rem">Si algo de esto resuena contigo, <em>conversemos.</em></h2>
+    <div class="stack rv"><p class="lead" style="color:var(--mid)">Creo en las coincidencias de miradas, en conspirar proyectos creativos y en construir cosas donde cada uno aporte lo mejor de su mundo.</p></div>
+    <div class="contact rv">
+      <a class="cta" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=tomashonor%40gmail.com&amp;su=Contacto%20desde%20tu%20web" target="_blank" rel="noopener">Escribime un mensaje →</a>
+      <span class="mail">tomashonor@gmail.com</span>
+    </div>
+    <p class="foot mono"><a href="#inicio">Volver al inicio ↑</a><button id="replay" type="button">Ver la intro de nuevo</button><span>Otras versiones: <a href="index.html">v2</a> · <a href="v3.html">v3</a> · <a href="v4.html">v4</a> · <a href="v5.html">v5</a></span></p>
+  </div>
+</section>
+</main>
+
+<dialog class="player" id="player" aria-label="Reproductor de video">
+  <video id="player-video" controls playsinline></video>
+  <div class="player-bar"><span id="player-title"></span><button type="button" id="player-close">Cerrar</button></div>
+</dialog>
+
+<script>
+(function () {
+  var root = document.documentElement; root.classList.add('js');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var LO = 87, HI = 108;
+
+  function noise(cv, strength) {
+    var c = cv.getContext('2d'), img = c.createImageData(cv.width, cv.height), d = img.data;
+    for (var i = 0; i < d.length; i += 4) { var v = Math.random() * 255 | 0; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = strength; }
+    c.putImageData(img, 0, 0);
+  }
+
+  // ----- Intro: estática, la frecuencia sube hasta 100.0, se encuentra la señal -----
+  var intro = document.getElementById('intro'), inCv = document.getElementById('intro-noise');
+  var inN = document.getElementById('intro-n'), inS = document.getElementById('intro-status');
+  var timers = [], introLoop = null, sweep = null;
+  function stopIntroLoops() { clearInterval(introLoop); clearInterval(sweep); introLoop = sweep = null; }
+  function endIntro() {
+    timers.forEach(clearTimeout); timers = []; stopIntroLoops();
+    intro.style.cssText = 'position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--body);transition:opacity .8s ease,transform .8s cubic-bezier(.7,0,.2,1)';
+    intro.classList.add('locked', 'open'); root.classList.remove('intro-on');
+    timers.push(setTimeout(function () { intro.style.cssText = 'display:none'; }, 900));
+  }
+  function runIntro() {
+    timers.forEach(clearTimeout); timers = []; stopIntroLoops();
+    intro.style.cssText = ''; intro.className = 'intro'; inS.textContent = 'Buscando señal…';
+    root.classList.add('intro-on'); window.scrollTo(0, 0);
+    var f = 87.5; inN.textContent = f.toFixed(1);
+    introLoop = setInterval(function () { noise(inCv, 255); }, 60);
+    sweep = setInterval(function () { f = Math.min(100, f + 0.3 + Math.random() * 0.5); inN.textContent = f.toFixed(1); }, 55);
+    timers.push(setTimeout(function () {
+      clearInterval(sweep); sweep = null; inN.textContent = '100.0'; inS.textContent = 'Señal encontrada · Tomás David Honor';
+      intro.classList.add('locked');
+    }, 1900));
+    timers.push(setTimeout(endIntro, 3900));
+  }
+  intro.addEventListener('click', endIntro);
+  document.addEventListener('keydown', function (e) { if (root.classList.contains('intro-on') && (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); endIntro(); } });
+  document.getElementById('replay').addEventListener('click', function () { if (!reduce) runIntro(); else window.scrollTo(0, 0); });
+  if (root.classList.contains('intro-on')) runIntro();
+
+  // ----- Dial: emisoras, aguja y lectura -----
+  var scale = document.getElementById('scale'), needle = document.getElementById('needle');
+  var rF = document.getElementById('r-f'), rN = document.getElementById('r-n');
+  var zones = Array.prototype.slice.call(document.querySelectorAll('[data-f]'));
+  function pct(f) { return (f - LO) / (HI - LO) * 100; }
+  for (var n = 88; n <= 108; n += 4) { var s = document.createElement('span'); s.className = 'scale-n'; s.style.left = pct(n) + '%'; s.textContent = n; scale.appendChild(s); }
+  var marks = zones.slice(1).map(function (z) {
+    var a = document.createElement('a'); a.href = '#' + z.id; a.style.left = pct(+z.dataset.f) + '%';
+    a.setAttribute('aria-label', z.dataset.f + ' ' + z.dataset.n); scale.appendChild(a); return a;
+  });
+
+  // ----- Estática general: baja a medida que se avanza -----
+  var st = document.getElementById('static'), level = 0, lastNoise = 0;
+  var wave = document.getElementById('wave'), wctx = wave.getContext('2d'), t0 = performance.now();
+  function sizeWave() { var r = Math.min(window.devicePixelRatio || 1, 2); wave.width = wave.clientWidth * r; wave.height = wave.clientHeight * r; }
+  function drawWave(t, chaos) {
+    var w = wave.width, h = wave.height; if (!w) return;
+    wctx.clearRect(0, 0, w, h); wctx.lineWidth = Math.max(2, h / 34); wctx.lineJoin = 'round';
+    wctx.strokeStyle = '#EE4B11'; wctx.beginPath();
+    for (var x = 0; x <= w; x += 4) {
+      var p = x / w, env = Math.sin(p * Math.PI);
+      var y = h / 2 + Math.sin(p * 22 + t / 420) * h * 0.3 * env + (Math.random() - 0.5) * h * 0.75 * chaos * env;
+      if (x === 0) wctx.moveTo(x, y); else wctx.lineTo(x, y);
+    }
+    wctx.stroke();
+  }
+  var cur = -1;
+  function measure() {
+    var mid = window.scrollY + window.innerHeight * 0.42, f = +zones[0].dataset.f, idx = 0;
+    for (var i = 0; i < zones.length; i++) {
+      var top = zones[i].getBoundingClientRect().top + window.scrollY;
+      if (mid >= top) {
+        var a = +zones[i].dataset.f, b = i + 1 < zones.length ? +zones[i + 1].dataset.f : a;
+        f = a + (b - a) * Math.min(1, (mid - top) / zones[i].offsetHeight); idx = i;
+      }
+    }
+    needle.style.left = pct(f) + '%'; rF.textContent = f.toFixed(1);
+    if (idx !== cur) { cur = idx; rN.textContent = zones[idx].dataset.n; marks.forEach(function (m, j) { m.classList.toggle('on', j === idx - 1); }); }
+    var max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    level = Math.max(0, 1 - (window.scrollY / max) / 0.45);
+  }
+  function loop(t) {
+    if (t - lastNoise > 90) {
+      lastNoise = t;
+      if (level > 0.01) { noise(st, 255); st.style.opacity = (0.13 * level).toFixed(3); } else if (st.style.opacity !== '0') { st.style.opacity = '0'; }
+      if (wave.getBoundingClientRect().bottom > 0) drawWave(t - t0, 0.15 + 0.85 * level);
+    }
+    requestAnimationFrame(loop);
+  }
+  var ticking = false;
+  window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(function () { ticking = false; measure(); }); } }, { passive: true });
+  window.addEventListener('resize', function () { sizeWave(); measure(); if (reduce) drawWave(0, 0); });
+  sizeWave(); measure();
+  if (reduce) drawWave(0, 0); else requestAnimationFrame(loop);
+
+  // ----- Títulos que se "sintonizan" al aparecer -----
+  var GL = '▚▞░▒▓/|_+-=#01';
+  function scramble(el) {
+    var nodes = [], w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), nd;
+    while ((nd = w.nextNode())) nodes.push({ n: nd, t: nd.nodeValue });
+    el.setAttribute('aria-label', el.textContent);
+    var total = nodes.reduce(function (a, x) { return a + x.t.length; }, 0), start = performance.now(), dur = 750;
+    (function step(now) {
+      var k = Math.min(1, (now - start) / dur), shown = Math.floor(total * k), seen = 0;
+      nodes.forEach(function (x) {
+        var out = '';
+        for (var i = 0; i < x.t.length; i++, seen++) { var ch = x.t[i]; out += (seen < shown || ch === ' ') ? ch : GL[Math.random() * GL.length | 0]; }
+        x.n.nodeValue = out;
+      });
+      if (k < 1) requestAnimationFrame(step);
+    })(start);
+  }
+  var rv = document.querySelectorAll('.rv');
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('on'); io.unobserve(e.target);
+        var h = e.target.classList.contains('scr') ? e.target : e.target.querySelector('.scr'); if (h) scramble(h);
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.08 });
+    rv.forEach(function (el) { io.observe(el); });
+  } else { rv.forEach(function (el) { el.classList.add('on'); }); }
+
+  // ----- Memorias -----
+  var keys = Array.prototype.slice.call(document.querySelectorAll('.keys button'));
+  keys.forEach(function (k) {
+    k.addEventListener('click', function () {
+      keys.forEach(function (o) { var sel = o === k; o.setAttribute('aria-selected', sel ? 'true' : 'false'); document.getElementById(o.getAttribute('aria-controls')).hidden = !sel; });
+    });
+  });
+
+  // ----- Videos -----
+  var clips = document.querySelectorAll('.clip');
+  if ('IntersectionObserver' in window && !reduce) {
+    var vio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        var v = e.target.querySelector('video');
+        if (e.isIntersecting) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } else { v.pause(); }
+      });
+    }, { threshold: 0.25 });
+    clips.forEach(function (c) { vio.observe(c); });
+  }
+  var dlg = document.getElementById('player'), pv = document.getElementById('player-video'), pt = document.getElementById('player-title');
+  function closePlayer() { pv.pause(); pv.removeAttribute('src'); pv.load(); if (dlg.open) dlg.close(); }
+  clips.forEach(function (c) {
+    c.addEventListener('click', function () {
+      pt.textContent = c.dataset.title; pv.src = c.dataset.src;
+      if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+      var pr = pv.play(); if (pr && pr.catch) pr.catch(function () {});
+    });
+  });
+  document.getElementById('player-close').addEventListener('click', closePlayer);
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) closePlayer(); });
+  dlg.addEventListener('close', function () { pv.pause(); });
+})();
+</script>
+</body>
+</html>
