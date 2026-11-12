@@ -295,7 +295,7 @@ html.intro-on, html.intro-on body { overflow: hidden; }
 .intro-score span { display: inline-block; min-width: 3ch; padding: 0.35rem 0.6rem; margin: 0 0.15rem; background: var(--night); color: var(--chalk); opacity: 0; transform: translateY(8px); transition: opacity 0.3s ease, transform 0.3s ease; }
 .intro-score span.on { opacity: 1; transform: none; }
 .intro-score span.win { background: var(--ball); color: var(--ink); }
-.intro-name { position: absolute; left: 0; right: 0; top: 8%; text-align: center; font-family: var(--f-display); font-stretch: 62%; font-weight: 900; text-transform: uppercase; font-size: clamp(1.6rem, 6vw, 2.6rem); opacity: 0; transition: opacity 0.6s ease 0.2s; }
+.intro-name { position: absolute; left: 0; right: 0; top: 8%; text-align: center; font-family: var(--f-display); font-stretch: 62%; font-weight: 900; text-transform: uppercase; font-size: clamp(1.6rem, 6vw, 2.6rem); opacity: 0; z-index: 3; transition: opacity 0.6s ease; }
 .intro.named .intro-name { opacity: 1; }
 .intro-skip { position: absolute; right: max(14px, env(safe-area-inset-right, 0px)); bottom: calc(14px + env(safe-area-inset-bottom, 0px)); font-family: var(--f-mono); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; background: none; color: var(--chalk); border: 1px solid var(--line); padding: 0.45rem 0.8rem; cursor: pointer; }
 </style>
@@ -673,7 +673,7 @@ html.intro-on, html.intro-on body { overflow: hidden; }
   function at(ms, fn) { t.push(setTimeout(fn, ms)); }
   at(150, function () { intro.classList.add('serve'); });
   at(800, function () { intro.classList.add('hit'); });
-  at(1200, function () { intro.classList.add('named'); });
+  at(2000, function () { intro.classList.add('named'); });
   scores.forEach(function (s, i) { at(1500 + i * 380, function () { s.classList.add('on'); }); });
   at(3600, finish);
   intro.addEventListener('click', finish);
