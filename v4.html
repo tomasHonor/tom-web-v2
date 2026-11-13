@@ -97,40 +97,57 @@ a { color: inherit; }
 .play { display: inline-flex; align-items: center; gap: 0.8rem; text-decoration: none; font-family: var(--f-title); text-transform: uppercase; letter-spacing: 0.06em; font-size: 1.2rem; background: var(--sub); color: var(--ink); padding: 0.75rem 1.4rem; border: 0; cursor: pointer; transition: transform 0.2s ease; }
 .play:hover { transform: translateY(-2px); }
 
-/* ---------- Claqueta ---------- */
-.slate { display: grid; grid-template-columns: auto 1fr; border: 2px solid var(--white); margin-bottom: clamp(2rem, 5vw, 3.5rem); font-family: var(--f-script); text-transform: uppercase; }
-.slate-stripes { width: clamp(3.2rem, 8vw, 6rem); background: repeating-linear-gradient(-45deg, var(--white) 0 14px, var(--black) 14px 28px); border-right: 2px solid var(--white); }
-.slate dl { margin: 0; display: grid; grid-template-columns: auto auto 1fr; }
-.slate dl div { padding: 0.55rem 0.9rem; min-width: 0; }
-.slate dl div + div { border-left: 2px solid var(--white); }
-.slate dt { font-size: 0.62rem; letter-spacing: 0.16em; color: var(--dim); }
-.slate dd { margin: 0; font-weight: 700; font-size: 1.05rem; letter-spacing: 0.04em; line-height: 1.25; }
-
-/* ---------- Escenas en negro ---------- */
-.scene { background: var(--black); padding-block: clamp(4rem, 9vw, 7.5rem); position: relative; }
-.scene.alt { background: var(--desk); }
-.h { font-family: var(--f-title); text-transform: uppercase; font-size: clamp(2.7rem, 8vw, 6.6rem); line-height: 0.96; letter-spacing: 0.005em; }
+/* ---------- Escenas: el mismo lenguaje del cartel (imagen, título gigante, amarillo) ---------- */
+.sc { position: relative; overflow: hidden; background: var(--black); padding-block: clamp(4.5rem, 10vw, 8rem); }
+.sc.img { min-height: min(94svh, 54rem); display: grid; align-items: center; }
+.sc.img::before { content: ""; position: absolute; inset: 0; background: var(--bg) var(--pos, center) / cover no-repeat; filter: saturate(1.15) contrast(1.05); }
+.sc.img::after { content: ""; position: absolute; inset: 0; background: linear-gradient(var(--black), transparent 16%, transparent 80%, var(--black)), linear-gradient(90deg, rgba(12, 10, 8, 0.92) 0%, rgba(12, 10, 8, 0.62) 42%, rgba(12, 10, 8, 0) 78%); }
+.sc.img.rt::after { background: linear-gradient(var(--black), transparent 16%, transparent 80%, var(--black)), linear-gradient(270deg, rgba(12, 10, 8, 0.92) 0%, rgba(12, 10, 8, 0.62) 42%, rgba(12, 10, 8, 0) 78%); }
+.sc.img.full::after { background: linear-gradient(var(--black), rgba(12, 10, 8, 0.34) 20%, rgba(12, 10, 8, 0.52) 68%, var(--black)); }
+.sc.glow { background: radial-gradient(ellipse 70% 55% at 85% 0%, rgba(244, 196, 48, 0.16), transparent 70%), radial-gradient(ellipse 60% 50% at 0% 100%, rgba(196, 98, 45, 0.16), transparent 70%), var(--black); }
+.sc > .gut { position: relative; z-index: 2; }
+.sc.rt .col { margin-left: auto; }
+.col { max-width: 40rem; }
+.kick { font-family: var(--f-script); font-size: 0.82rem; letter-spacing: 0.22em; text-transform: uppercase; display: flex; flex-wrap: wrap; gap: 0.5rem 0.9rem; align-items: center; margin-bottom: 1.1rem; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8); }
+.kick b { color: var(--ink); background: var(--sub); padding: 0.15rem 0.55rem; letter-spacing: 0.1em; font-weight: 700; }
+.h { font-family: var(--f-title); text-transform: uppercase; font-size: clamp(3rem, 9.4vw, 8rem); line-height: 0.9; letter-spacing: 0.005em; text-shadow: 0 2px 30px rgba(0, 0, 0, 0.55); }
+.sc.img .lead, .sc.img .muted, .sc.img .cut p { text-shadow: 0 1px 10px rgba(0, 0, 0, 0.85); }
+.sc.img .muted { color: rgba(246, 242, 234, 0.86); }
 .h em { font-style: normal; color: var(--sub); }
-.lead { font-size: clamp(1.12rem, 1.7vw, 1.32rem); line-height: 1.6; max-width: 58ch; }
+.h.md { font-size: clamp(2.6rem, 7vw, 5.8rem); }
+.lead { font-size: clamp(1.14rem, 1.75vw, 1.36rem); line-height: 1.55; max-width: 54ch; }
 .muted { color: var(--dim); }
-.two { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(2rem, 6vw, 5rem); align-items: start; }
+.stack { display: grid; gap: 1.1rem; margin-top: 1.8rem; }
+.say { font-weight: 500; font-size: clamp(1.5rem, 3.6vw, 2.7rem); line-height: 1.22; color: var(--sub); text-shadow: 0 2px 0 #000, 0 0 16px rgba(0, 0, 0, 0.85); max-width: 22ch; }
+.say small { display: block; font-family: var(--f-script); font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--white); margin-top: 1.1rem; text-shadow: none; }
+.two { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(2rem, 6vw, 5rem); align-items: center; }
 .two > * { min-width: 0; }
-.stack { display: grid; gap: 1.1rem; max-width: 58ch; }
-.label { font-family: var(--f-script); font-size: 0.78rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
-.credits { margin: 0; display: grid; gap: 0; }
-.credits div { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; padding: 0.8rem 0; border-top: 1px solid var(--rule); align-items: baseline; }
+.label { font-family: var(--f-script); font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); }
+.credits { margin: 2.2rem 0 0; display: grid; gap: 0; max-width: 34rem; }
+.credits div { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 1.2rem; padding: 0.75rem 0; border-top: 1px solid var(--rule); align-items: baseline; }
 .credits div:last-child { border-bottom: 1px solid var(--rule); }
-.credits dt { font-family: var(--f-script); font-size: 0.74rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); text-align: right; }
-.credits dd { margin: 0; font-family: var(--f-title); text-transform: uppercase; font-size: 1.25rem; letter-spacing: 0.03em; line-height: 1.2; }
+.credits dt { font-family: var(--f-script); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); }
+.credits dd { margin: 0; font-family: var(--f-title); text-transform: uppercase; font-size: 1.3rem; letter-spacing: 0.03em; line-height: 1.15; }
+
+/* Reparto: tres afiches */
+.cast { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: clamp(2.2rem, 5vw, 3.6rem); }
+.poster { position: relative; min-height: clamp(26rem, 46vw, 36rem); display: flex; flex-direction: column; justify-content: flex-end; padding: clamp(1.2rem, 2.4vw, 1.8rem); overflow: hidden; min-width: 0; background: var(--desk); }
+.poster::before { content: ""; position: absolute; inset: 0; background: var(--bg) var(--pos, center) / cover no-repeat; transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.poster::after { content: ""; position: absolute; inset: 0; background: linear-gradient(rgba(12, 10, 8, 0) 0%, rgba(12, 10, 8, 0.12) 36%, rgba(12, 10, 8, 0.95) 80%); }
+.poster:hover::before { transform: scale(1.06); }
+.poster > * { position: relative; z-index: 1; }
+.poster h3 { font-family: var(--f-title); text-transform: uppercase; font-size: clamp(2.4rem, 4.6vw, 3.9rem); line-height: 0.9; margin: 0.5rem 0 0.9rem; }
+.poster.y h3 { color: var(--sub); }
+.poster p { font-size: 1rem; line-height: 1.5; color: rgba(246, 242, 234, 0.88); }
+.poster .label { color: var(--white); }
 
 /* Montaje: tres cortes */
-.cuts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: clamp(2.5rem, 5vw, 4rem); }
-.cut { border: 2px solid var(--white); padding: 1.2rem 1.2rem 1.5rem; min-width: 0; position: relative; }
-.cut::before, .cut::after { content: ""; position: absolute; left: 0; right: 0; height: 12px; background: repeating-linear-gradient(90deg, var(--white) 0 10px, transparent 10px 22px); opacity: 0.85; }
-.cut::before { top: 6px; } .cut::after { bottom: 6px; }
-.cut .n { font-family: var(--f-title); font-size: 3.4rem; line-height: 1; color: var(--sub); display: block; margin-top: 1.2rem; }
-.cut p { font-size: 1.1rem; line-height: 1.5; margin: 0.5rem 0 1.1rem; }
-.cut .label { display: block; margin-bottom: 0.9rem; }
+.cuts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: clamp(2.2rem, 5vw, 3.6rem); border-top: 2px solid var(--white); }
+.cut { padding: 1.4rem clamp(0.9rem, 2vw, 1.8rem) 0 0; min-width: 0; }
+.cut + .cut { padding-left: clamp(0.9rem, 2vw, 1.8rem); border-left: 1px solid var(--rule); }
+.cut .n { font-family: var(--f-title); font-size: clamp(4rem, 8vw, 6.6rem); line-height: 0.9; color: var(--sub); display: block; }
+.cut .label { display: block; margin: 0.5rem 0 0.8rem; color: var(--white); }
+.cut p { font-size: 1.12rem; line-height: 1.5; }
 
 /* Proyección: videos */
 .reel { display: grid; grid-template-columns: 4fr 7fr; gap: 12px; margin-top: clamp(2rem, 4vw, 3rem); }
@@ -140,73 +157,67 @@ a { color: inherit; }
 .clip video { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); }
 .clip.wide video { aspect-ratio: 16 / 9; } .clip.tall video { aspect-ratio: 3 / 4; }
 .clip:hover video { transform: scale(1.04); }
-.clip-cap { position: absolute; inset: auto 0 0 0; padding: 2.6rem 0.9rem 0.75rem; background: linear-gradient(transparent, rgba(12, 10, 8, 0.9)); display: flex; justify-content: space-between; align-items: end; gap: 0.75rem; }
-.clip-cap strong { font-family: var(--f-title); font-weight: 400; text-transform: uppercase; font-size: 1.3rem; line-height: 1; letter-spacing: 0.02em; }
-.clip-cap span { font-family: var(--f-script); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sub); white-space: nowrap; }
+.clip-cap { position: absolute; inset: auto 0 0 0; padding: 2.8rem 1rem 0.8rem; background: linear-gradient(transparent, rgba(12, 10, 8, 0.92)); display: flex; justify-content: space-between; align-items: end; gap: 0.75rem; }
+.clip-cap strong { font-family: var(--f-title); font-weight: 400; text-transform: uppercase; font-size: clamp(1.3rem, 2.4vw, 1.9rem); line-height: 0.95; letter-spacing: 0.02em; }
+.clip-cap span { font-family: var(--f-script); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); background: var(--sub); padding: 0.15rem 0.5rem; white-space: nowrap; }
 dialog.player { border: 2px solid var(--white); background: var(--black); color: var(--white); padding: 0; max-width: min(94vw, 1100px); width: 100%; }
 dialog.player::backdrop { background: rgba(0, 0, 0, 0.9); }
 dialog.player video { display: block; width: 100%; max-height: 78vh; background: #000; }
 .player-bar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.6rem 0.9rem; font-family: var(--f-script); font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; }
 .player-bar button { font: inherit; letter-spacing: inherit; text-transform: inherit; background: var(--sub); color: var(--ink); border: 0; padding: 0.4rem 0.8rem; cursor: pointer; }
 
-/* Flashforward y fuera de cámara */
-.years { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1rem, 3vw, 2.5rem); margin: clamp(2.5rem, 5vw, 4rem) 0 0; border-top: 2px solid var(--white); padding-top: 1.4rem; }
+/* Flashforward */
+.years { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1rem, 3vw, 2.5rem); margin: clamp(2.2rem, 5vw, 3.6rem) 0 0; border-top: 2px solid var(--white); padding-top: 1.3rem; }
 .years div { min-width: 0; }
-.years dt { font-family: var(--f-title); font-size: clamp(3rem, 8vw, 6rem); line-height: 1; }
+.years dt { font-family: var(--f-title); font-size: clamp(3.4rem, 10vw, 8rem); line-height: 0.9; }
 .years div:nth-child(2) dt { color: var(--sub); }
-.years dd { margin: 0.5rem 0 0; color: var(--dim); }
-.trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1.5rem, 4vw, 3rem); margin-top: clamp(2.5rem, 5vw, 4rem); }
-.trio article { min-width: 0; border-top: 2px solid var(--white); padding-top: 1.1rem; }
-.trio h3 { font-family: var(--f-title); text-transform: uppercase; font-size: 2rem; line-height: 1.05; margin: 0.4rem 0 0.8rem; letter-spacing: 0.01em; }
-.trio p { color: var(--dim); }
+.years dd { margin: 0.6rem 0 0; color: rgba(246, 242, 234, 0.85); max-width: 26ch; }
 
-/* ---------- Páginas de guion ---------- */
-.desk { background: var(--desk); padding-block: clamp(3rem, 7vw, 6rem); }
-.page { max-width: 800px; margin: 0 auto; background: var(--paper); color: var(--ink); font-family: var(--f-script); font-size: 1.05rem; line-height: 1.55; padding: clamp(2.6rem, 7vw, 5rem) clamp(1.3rem, 7vw, 5rem) clamp(2.6rem, 7vw, 5rem) clamp(2.6rem, 10vw, 7rem); position: relative; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 6px 6px 0 rgba(241, 235, 221, 0.25); transform: rotate(-0.5deg); }
-.page.r { transform: rotate(0.6deg); }
-.page::before { content: ""; position: absolute; left: clamp(0.7rem, 3vw, 2rem); top: 0; bottom: 0; width: 1rem; background: radial-gradient(circle, var(--desk) 0 0.42rem, transparent 0.46rem) center 12% / 1rem 1rem no-repeat, radial-gradient(circle, var(--desk) 0 0.42rem, transparent 0.46rem) center 50% / 1rem 1rem no-repeat, radial-gradient(circle, var(--desk) 0 0.42rem, transparent 0.46rem) center 88% / 1rem 1rem no-repeat; }
-.pg { position: absolute; top: 1.3rem; right: clamp(1.3rem, 5vw, 3.2rem); }
-.slug { font-weight: 700; text-transform: uppercase; margin-bottom: 1.3rem; }
-.page p + p { margin-top: 1.1rem; }
-.page .big { font-family: var(--f-title); text-transform: uppercase; font-size: clamp(2.2rem, 6.4vw, 4.2rem); line-height: 1; margin: 0.3rem 0 1.4rem; letter-spacing: 0.01em; }
-.page p.cue { text-transform: uppercase; text-align: center; margin-top: 2rem; font-weight: 700; }
-.page p.paren { text-align: center; margin-top: 0; }
-.page p.dialogue { max-width: 30rem; margin: 0.2rem auto 0; }
-.page p.trans { text-align: right; text-transform: uppercase; margin-top: 2.2rem; }
-.page details { border-top: 1px dashed rgba(28, 23, 18, 0.4); padding: 1.3rem 0; }
-.page details:last-of-type { border-bottom: 1px dashed rgba(28, 23, 18, 0.4); }
-.page summary { cursor: pointer; list-style: none; }
-.page summary::-webkit-details-marker { display: none; }
-.page summary strong { display: block; font-family: var(--f-title); font-weight: 400; text-transform: uppercase; font-size: clamp(1.5rem, 4vw, 2.2rem); line-height: 1.05; margin: 0.3rem 0 0.7rem; }
-.page summary u { display: inline-block; margin-top: 0.8rem; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.08em; }
-.page details[open] summary u { display: none; }
-.page details p:first-of-type { margin-top: 1.1rem; }
-.page .hl { background: linear-gradient(transparent 55%, rgba(244, 196, 48, 0.75) 55%); }
+/* Fuera de cámara */
+.trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: clamp(2.2rem, 5vw, 3.6rem); }
+.trio article { min-width: 0; background: rgba(12, 10, 8, 0.72); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border-top: 3px solid var(--sub); padding: 1.3rem 1.3rem 1.5rem; }
+.trio h3 { font-family: var(--f-title); text-transform: uppercase; font-size: clamp(1.8rem, 3vw, 2.4rem); line-height: 0.98; margin: 0.4rem 0 0.8rem; }
+.trio p { color: rgba(246, 242, 234, 0.85); font-size: 1rem; line-height: 1.55; }
 
-/* ---------- Créditos finales ---------- */
+/* Notas del director */
+.notes { margin-top: clamp(2rem, 4vw, 3rem); border-top: 2px solid var(--white); }
+.notes details { border-bottom: 1px solid var(--rule); }
+.notes summary { cursor: pointer; list-style: none; padding: 1.5rem 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.6rem 2rem; align-items: start; }
+.notes summary::-webkit-details-marker { display: none; }
+.notes summary strong { display: block; font-family: var(--f-title); font-weight: 400; text-transform: uppercase; font-size: clamp(1.8rem, 4.4vw, 3.2rem); line-height: 0.96; margin: 0.5rem 0 0.8rem; }
+.notes summary em { display: block; color: var(--sub); font-style: normal; font-weight: 500; max-width: 60ch; }
+.notes summary u { font-family: var(--f-script); font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; border: 1px solid var(--white); padding: 0.35rem 0.8rem; white-space: nowrap; }
+.notes details[open] summary u { background: var(--sub); color: var(--ink); border-color: var(--sub); }
+.notes .body { display: grid; gap: 1rem; max-width: 62ch; padding-bottom: 1.8rem; color: rgba(246, 242, 234, 0.85); }
+.notes .body strong { color: var(--sub); font-weight: 500; }
+
+/* Créditos finales */
 .end { text-align: center; }
-.end .h { font-size: clamp(2.9rem, 9.5vw, 8rem); }
-.roll { margin: clamp(3rem, 7vw, 5rem) auto 0; max-width: 46rem; text-align: left; }
+.end .col { max-width: 58rem; margin: 0 auto; }
+.end .lead { margin-inline: auto; }
+.end .credits { margin-inline: auto; text-align: left; }
 .mail { font-family: var(--f-script); font-size: 0.95rem; user-select: all; border-bottom: 1px dashed var(--rule); }
 .contact { display: flex; flex-wrap: wrap; gap: 1rem 1.6rem; align-items: center; justify-content: center; margin-top: 2.2rem; }
-.fin { font-family: var(--f-title); text-transform: uppercase; font-size: clamp(2rem, 5vw, 3.2rem); margin-top: clamp(3rem, 7vw, 5rem); color: var(--sub); }
+.fin { font-family: var(--f-title); text-transform: uppercase; font-size: clamp(2.6rem, 7vw, 5rem); line-height: 1; margin-top: clamp(2.5rem, 6vw, 4rem); color: var(--sub); }
 .foot { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0.8rem 2rem; margin-top: 2rem; }
 .foot .skip { position: static; }
 
 .js .rv { opacity: 0.15; translate: 0 26px; transition: opacity 0.9s ease, translate 1s cubic-bezier(0.2, 0.8, 0.2, 1); }
 .js .rv.on { opacity: 1; translate: 0 0; }
 
-@media (max-width: 780px) {
-  .two, .cuts, .reel, .trio, .years { grid-template-columns: 1fr; }
+@media (max-width: 820px) {
+  .two, .cast, .cuts, .reel, .trio, .years { grid-template-columns: 1fr; }
   .hero video { object-position: 40% 50%; }
-  .slate dl { grid-template-columns: auto 1fr; } .slate dl div:nth-child(3) { grid-column: 1 / -1; border-left: 0; border-top: 2px solid var(--white); }
-  .credits div { grid-template-columns: 1fr; gap: 0.1rem; } .credits dt { text-align: left; }
-  .page, .page.r { transform: none; font-size: 0.98rem; }
-  .page p.dialogue { max-width: none; padding: 0 0.6rem; }
+  .sc.img::after, .sc.img.rt::after { background: linear-gradient(var(--black), rgba(12, 10, 8, 0.7) 20%, rgba(12, 10, 8, 0.8) 75%, var(--black)); }
+  .sc.rt .col { margin-left: 0; }
+  .poster { min-height: 24rem; }
+  .cut, .cut + .cut { padding: 1.3rem 0 1rem; border-left: 0; } .cut + .cut { border-top: 1px solid var(--rule); }
+  .credits div { grid-template-columns: 1fr; gap: 0.1rem; }
+  .notes summary { grid-template-columns: 1fr; } .notes summary u { justify-self: start; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .js .rv { opacity: 1; translate: 0 0; transition: none; } .tc i { animation: none; } .clip video { transition: none; }
+  .js .rv { opacity: 1; translate: 0 0; transition: none; } .tc i { animation: none; } .clip video, .poster::before { transition: none; }
 }
 </style>
 </head>
@@ -238,116 +249,97 @@ dialog.player video { display: block; width: 100%; max-height: 78vh; background:
   </div></div>
 </header>
 
-<!-- ESCENA 1: QUIÉN SOY (guion) -->
-<section class="desk gut" id="escena-1">
-  <article class="page rv">
-    <span class="pg">1.</span>
-    <p class="slug">Esc. 1 — Int. Esta página — Hoy</p>
-    <h2 class="big">Hola, soy Tomás.</h2>
-    <p>Me formé como <span class="hl">Entrenador Nacional de tenis en 2018</span> y hoy <span class="hl">creo videos, piezas y páginas con inteligencia artificial</span>. Esta página es el recorrido entre esas dos cosas: de dónde vengo, cómo pienso, cómo creo y lo que me sostiene.</p>
-    <p>Mi trabajo audiovisual investiga la fricción fértil entre la sensibilidad analógica y los modelos de difusión generativa. En un entorno saturado de imágenes hiperrealistas sin propósito, busco restituirle al fotograma su misterio.</p>
-    <p class="cue">Tomás (V.O.)</p>
-    <p class="dialogue">No se trata de sustituir el alma, sino de amplificar la pregunta.</p>
-    <p class="trans">Corte a:</p>
-  </article>
+<!-- ESCENA 1: QUIÉN SOY -->
+<section class="sc glow" id="escena-1">
+  <div class="gut"><div class="in two">
+    <div class="rv">
+      <p class="kick"><b>Escena 01</b> Quién soy</p>
+      <h2 class="h">Hola, soy <em>Tomás.</em></h2>
+      <div class="stack">
+        <p class="lead">Me formé como <strong>Entrenador Nacional de tenis en 2018</strong> y hoy <strong>creo videos, piezas y páginas con inteligencia artificial</strong>. Esta página es el recorrido entre esas dos cosas: de dónde vengo, cómo pienso, cómo creo y lo que me sostiene.</p>
+        <p class="muted">Mi trabajo audiovisual investiga la fricción fértil entre la sensibilidad analógica y los modelos de difusión generativa. En un entorno saturado de imágenes hiperrealistas sin propósito, busco restituirle al fotograma su misterio.</p>
+      </div>
+    </div>
+    <p class="say rv">— No se trata de sustituir el alma, sino de amplificar la pregunta.<small>Tomás, voz en off</small></p>
+  </div></div>
 </section>
 
 <!-- ESCENA 2: DE DÓNDE VENGO -->
-<section class="scene gut" id="escena-2">
-  <div class="in">
-    <div class="slate rv"><div class="slate-stripes"></div><dl><div><dt>Esc.</dt><dd>02</dd></div><div><dt>Año</dt><dd>2018</dd></div><div><dt>Ext. Cancha de polvo de ladrillo — Día</dt><dd>De dónde vengo</dd></div></dl></div>
-    <div class="two">
-      <div class="rv">
-        <h2 class="h">La cancha me enseñó a leer el alma <em>bajo presión.</em></h2>
-        <div class="stack" style="margin-top:1.8rem">
-          <p class="lead">El tenis nunca fue solo técnica o potencia física: es una radiografía del carácter humano. En un punto de quiebre nadie puede fingir quién es.</p>
-          <p class="muted">Mi certificación en 2018 y los años en cancha me dejaron la templanza, la lectura gestual y la convicción de que la serenidad interna siempre le gana al caos exterior.</p>
-        </div>
-      </div>
-      <dl class="credits rv">
-        <div><dt>Certificación</dt><dd>Entrenador Nacional · 2018</dd></div>
-        <div><dt>Presencia</dt><dd>En el presente</dd></div>
-        <div><dt>Temple</dt><dd>Estratégico</dd></div>
-        <div><dt>Enfoque</dt><dd>Punto a punto</dd></div>
-      </dl>
+<section class="sc img" id="escena-2" style="--bg:url('videos/v4-s1.jpg');--pos:60% 50%">
+  <div class="gut"><div class="in"><div class="col rv">
+    <p class="kick"><b>Escena 02</b> De dónde vengo · 2018</p>
+    <h2 class="h md">La cancha me enseñó a leer el alma <em>bajo presión.</em></h2>
+    <div class="stack">
+      <p class="lead">El tenis nunca fue solo técnica o potencia física: es una radiografía del carácter humano. En un punto de quiebre nadie puede fingir quién es.</p>
+      <p class="muted">Mi certificación en 2018 y los años en cancha me dejaron la templanza, la lectura gestual y la convicción de que la serenidad interna siempre le gana al caos exterior.</p>
     </div>
-  </div>
+    <dl class="credits">
+      <div><dt>Certificación</dt><dd>Entrenador Nacional · 2018</dd></div>
+      <div><dt>Presencia</dt><dd>En el presente</dd></div>
+      <div><dt>Temple</dt><dd>Estratégico</dd></div>
+      <div><dt>Enfoque</dt><dd>Punto a punto</dd></div>
+    </dl>
+  </div></div></div>
 </section>
 
-<!-- ESCENA 3: CÓMO SOY (guion) -->
-<section class="desk gut" id="escena-3">
-  <article class="page r rv">
-    <span class="pg">3.</span>
-    <p class="slug">Esc. 3 — Int. Cabeza de Tomás — Noche</p>
-    <h2 class="big">No soy una persona completa, sino complementaria.</h2>
-    <p>Aceptar mis contradicciones me quitó el peso de fingir autosuficiencia. Las mejores cosas ocurren cuando mis fortalezas se cruzan con la mirada de otro.</p>
-    <p>Tres personajes comparten la escena. Hablan de a uno.</p>
-    <p class="cue">La luz</p>
-    <p class="paren">(chispa creativa)</p>
-    <p class="dialogue">La intuición rápida, la pasión por ver conexiones donde otros ven puntos aislados, y el impulso imparable de materializar proyectos.</p>
-    <p class="cue">La sombra</p>
-    <p class="paren">(el silencio incierto)</p>
-    <p class="dialogue">Los momentos de duda, el cansancio mental de sobrepensar y la necesidad de pausar para no quemarme en mi propio fuego.</p>
-    <p class="cue">El encuentro</p>
-    <p class="paren">(ser complementario)</p>
-    <p class="dialogue">El alivio de no tener que saberlo todo. Buscar personas que aporten lo que a mí me falta y brindar con generosidad lo que yo traigo a la mesa.</p>
-    <p class="trans">Fundido a:</p>
-  </article>
+<!-- ESCENA 3: CÓMO SOY -->
+<section class="sc" id="escena-3">
+  <div class="gut"><div class="in">
+    <div class="rv">
+      <p class="kick"><b>Escena 03</b> Cómo soy · el reparto</p>
+      <h2 class="h md">No soy una persona completa, sino <em>complementaria.</em></h2>
+      <div class="stack"><p class="lead muted">Aceptar mis contradicciones me quitó el peso de fingir autosuficiencia. Las mejores cosas ocurren cuando mis fortalezas se cruzan con la mirada de otro.</p></div>
+    </div>
+    <div class="cast">
+      <article class="poster y rv" style="--bg:url('videos/v4-s6.jpg');--pos:42% 30%"><span class="label">La luz</span><h3>Chispa creativa</h3><p>La intuición rápida, la pasión por ver conexiones donde otros ven puntos aislados, y el impulso imparable de materializar proyectos.</p></article>
+      <article class="poster rv" style="--bg:url('videos/video-1-poster.jpg');--pos:50% 20%"><span class="label">La sombra</span><h3>El silencio incierto</h3><p>Los momentos de duda, el cansancio mental de sobrepensar y la necesidad de pausar para no quemarme en mi propio fuego.</p></article>
+      <article class="poster y rv" style="--bg:url('videos/v4-s5.jpg');--pos:50% 60%"><span class="label">El encuentro</span><h3>Ser complementario</h3><p>El alivio de no tener que saberlo todo. Buscar personas que aporten lo que a mí me falta y brindar con generosidad lo que yo traigo a la mesa.</p></article>
+    </div>
+  </div></div>
 </section>
 
 <!-- ESCENA 4: CÓMO CREO -->
-<section class="scene gut" id="escena-4">
-  <div class="in">
-    <div class="slate rv"><div class="slate-stripes"></div><dl><div><dt>Esc.</dt><dd>04</dd></div><div><dt>Cortes</dt><dd>3</dd></div><div><dt>Montaje — La IA como lente</dt><dd>Cómo creo</dd></div></dl></div>
-    <h2 class="h rv">Hacer visible lo que antes solo vivía en la <em>imaginación.</em></h2>
-    <div class="cuts">
-      <article class="cut rv"><span class="n">01</span><p>Siempre sentí que la mente alberga conceptos, atmósferas y narrativas que desbordan las palabras cotidianas.</p><span class="label">Lo que hay adentro</span></article>
-      <article class="cut rv"><span class="n">02</span><p>La inteligencia artificial no sustituye el sentir humano; funciona como el lente que por fin enfoca el destello interno.</p><span class="label">El lente</span></article>
-      <article class="cut rv"><span class="n">03</span><p>Cada pieza, video o línea de código es un intento genuino de traducir ese mundo interior a algo tangible.</p><span class="label">La pieza</span></article>
+<section class="sc img full" id="escena-4" style="--bg:url('videos/v4-s2.jpg');--pos:50% 40%">
+  <div class="gut"><div class="in">
+    <div class="rv">
+      <p class="kick"><b>Escena 04</b> Cómo creo · la IA como lente</p>
+      <h2 class="h md" style="max-width:15ch">Hacer visible lo que antes solo vivía en la <em>imaginación.</em></h2>
     </div>
-  </div>
+    <div class="cuts">
+      <article class="cut rv"><span class="n">01</span><span class="label">Lo que hay adentro</span><p>Siempre sentí que la mente alberga conceptos, atmósferas y narrativas que desbordan las palabras cotidianas.</p></article>
+      <article class="cut rv"><span class="n">02</span><span class="label">El lente</span><p>La inteligencia artificial no sustituye el sentir humano; funciona como el lente que por fin enfoca el destello interno.</p></article>
+      <article class="cut rv"><span class="n">03</span><span class="label">La pieza</span><p>Cada pieza, video o línea de código es un intento genuino de traducir ese mundo interior a algo tangible.</p></article>
+    </div>
+  </div></div>
 </section>
 
 <!-- ESCENA 5: LO QUE HAGO -->
-<section class="scene alt gut" id="escena-5">
-  <div class="in">
-    <div class="slate rv"><div class="slate-stripes"></div><dl><div><dt>Esc.</dt><dd>05</dd></div><div><dt>Rollos</dt><dd>4</dd></div><div><dt>Int. Sala de proyección</dt><dd>Lo que hago</dd></div></dl></div>
+<section class="sc glow" id="escena-5">
+  <div class="gut"><div class="in">
     <div class="two">
-      <h2 class="h rv">Mural de <em>exploración.</em></h2>
-      <p class="lead rv">Videos que hago con inteligencia artificial. Sueltos, sin orden y sin un fin específico. Tocá uno para verlo completo y con sonido.</p>
+      <div class="rv"><p class="kick"><b>Escena 05</b> Lo que hago</p><h2 class="h md">Mural de <em>exploración.</em></h2></div>
+      <p class="lead muted rv">Videos que hago con inteligencia artificial. Sueltos, sin orden y sin un fin específico. Tocá uno para verlo completo y con sonido.</p>
     </div>
     <div class="reel rv">
-      <button class="clip tall" type="button" data-src="videos/video-1.mp4" data-title="El Reflejo Virtual">
-        <video src="videos/video-1.mp4" poster="videos/video-1-poster.jpg" muted loop playsinline preload="none"></video>
-        <span class="clip-cap"><strong>El Reflejo Virtual</strong><span>▶ Ver</span></span>
-      </button>
+      <button class="clip tall" type="button" data-src="videos/video-1.mp4" data-title="El Reflejo Virtual"><video src="videos/video-1.mp4" poster="videos/video-1-poster.jpg" muted loop playsinline preload="none"></video><span class="clip-cap"><strong>El Reflejo Virtual</strong><span>▶ Ver</span></span></button>
       <div class="reel-side">
-        <button class="clip wide" type="button" data-src="videos/video-2.mp4" data-title="Ruptura del Ruido">
-          <video src="videos/video-2.mp4" poster="videos/video-2-poster.jpg" muted loop playsinline preload="none"></video>
-          <span class="clip-cap"><strong>Ruptura del Ruido</strong><span>▶ Ver</span></span>
-        </button>
+        <button class="clip wide" type="button" data-src="videos/video-2.mp4" data-title="Ruptura del Ruido"><video src="videos/video-2.mp4" poster="videos/video-2-poster.jpg" muted loop playsinline preload="none"></video><span class="clip-cap"><strong>Ruptura del Ruido</strong><span>▶ Ver</span></span></button>
         <div class="reel-pair">
-          <button class="clip wide" type="button" data-src="videos/video-3.mp4" data-title="Geometría Mental">
-            <video src="videos/video-3.mp4" poster="videos/video-3-poster.jpg" muted loop playsinline preload="none"></video>
-            <span class="clip-cap"><strong>Geometría Mental</strong><span>▶ Ver</span></span>
-          </button>
-          <button class="clip wide" type="button" data-src="videos/video-4.mp4" data-title="Destello Creativo">
-            <video src="videos/video-4.mp4" poster="videos/video-4-poster.jpg" muted loop playsinline preload="none"></video>
-            <span class="clip-cap"><strong>Destello Creativo</strong><span>▶ Ver</span></span>
-          </button>
+          <button class="clip wide" type="button" data-src="videos/video-3.mp4" data-title="Geometría Mental"><video src="videos/video-3.mp4" poster="videos/video-3-poster.jpg" muted loop playsinline preload="none"></video><span class="clip-cap"><strong>Geometría Mental</strong><span>▶ Ver</span></span></button>
+          <button class="clip wide" type="button" data-src="videos/video-4.mp4" data-title="Destello Creativo"><video src="videos/video-4.mp4" poster="videos/video-4-poster.jpg" muted loop playsinline preload="none"></video><span class="clip-cap"><strong>Destello Creativo</strong><span>▶ Ver</span></span></button>
         </div>
       </div>
     </div>
-  </div>
+  </div></div>
 </section>
 
 <!-- ESCENA 6: MI CANAL -->
-<section class="scene gut" id="escena-6">
-  <div class="in">
-    <div class="slate rv"><div class="slate-stripes"></div><dl><div><dt>Esc.</dt><dd>06</dd></div><div><dt>Salto</dt><dd>+10 años</dd></div><div><dt>Flashforward — La memoria viva</dt><dd>Mi canal</dd></div></dl></div>
-    <div class="two">
-      <h2 class="h rv">La huella incrustada en el <em>tiempo.</em></h2>
-      <div class="stack rv">
+<section class="sc img rt" id="escena-6" style="--bg:url('videos/v4-s6.jpg');--pos:30% 50%">
+  <div class="gut"><div class="in">
+    <div class="col rv">
+      <p class="kick"><b>Escena 06</b> Mi canal · salto de diez años</p>
+      <h2 class="h md">La huella incrustada en el <em>tiempo.</em></h2>
+      <div class="stack">
         <p class="lead">Más que acumular vistas o perseguir algoritmos, entiendo cada video y cada línea de este sitio como una botella lanzada al mar digital.</p>
         <p class="muted">Me conmueve pensar en volver a estos registros dentro de diez años y encontrarme con las preguntas que me desvelaban, las batallas que libraba y los mensajes que necesitaba gritarle al mundo. No busco registrar la perfección, sino el testimonio honesto de quién me estaba convirtiendo mientras construía mi camino.</p>
       </div>
@@ -357,73 +349,79 @@ dialog.player video { display: block; width: 100%; max-height: 78vh; background:
       <div><dt>Hoy</dt><dd>Traducir el mundo interior en piezas, código y atmósferas.</dd></div>
       <div><dt>+10</dt><dd>Volver a estos registros y reencontrarme con quién fui.</dd></div>
     </dl>
-  </div>
+  </div></div>
 </section>
 
 <!-- ESCENA 7: LO QUE ME SOSTIENE -->
-<section class="scene alt gut" id="escena-7">
-  <div class="in">
-    <div class="slate rv"><div class="slate-stripes"></div><dl><div><dt>Esc.</dt><dd>07</dd></div><div><dt>Cámara</dt><dd>Apagada</dd></div><div><dt>Fuera de cámara — Mi cable a tierra</dt><dd>Lo que me sostiene</dd></div></dl></div>
-    <div class="two">
-      <h2 class="h rv">Detrás del <em>ruido.</em></h2>
-      <p class="lead muted rv">Lo que queda cuando se apagan las pantallas y el murmullo de la ciudad. El espacio íntimo donde recupero mi centro.</p>
+<section class="sc img full" id="escena-7" style="--bg:url('videos/v4-s3.jpg');--pos:50% 55%">
+  <div class="gut"><div class="in">
+    <div class="rv">
+      <p class="kick"><b>Escena 07</b> Lo que me sostiene · fuera de cámara</p>
+      <h2 class="h">Detrás del <em>ruido.</em></h2>
+      <div class="stack"><p class="lead">Lo que queda cuando se apagan las pantallas y el murmullo de la ciudad. El espacio íntimo donde recupero mi centro.</p></div>
     </div>
     <div class="trio">
       <article class="rv"><span class="label">Auriculares puestos</span><h3>La frecuencia</h3><p>Donde las voces del autoengaño se callan y el alma íntegra habla. Con los auriculares puestos, el caos se ordena, bajan las ideas más puras y me encuentro conmigo sin poses.</p></article>
       <article class="rv"><span class="label">Cuatro patas</span><h3>Compañeros de calma</h3><p>En un mundo acelerado, mis compañeros de cuatro patas son mi cable a tierra. No saben de algoritmos ni pantallas: su afecto es simple, transparente y un recordatorio de volver a lo esencial.</p></article>
       <article class="rv"><span class="label">Sin producir</span><h3>Cuerpo &amp; juego</h3><p>Mover el cuerpo para vaciar tensiones mentales y sumergirme en una buena historia o videojuego para desconectar. Jugar sin la obligación de producir, solo por el placer de explorar.</p></article>
     </div>
-  </div>
+  </div></div>
 </section>
 
-<!-- ESCENA 8: NOTAS (guion) -->
-<section class="desk gut" id="escena-8">
-  <article class="page rv">
-    <span class="pg">8.</span>
-    <p class="slug">Esc. 8 — Notas del director — Al margen del guion</p>
-    <h2 class="big">Apuntes sueltos en el camino.</h2>
-    <p>Ideas cortas que voy anotando entre proyectos: sobre crear con IA, contar historias y sostener la cabeza cuando todo aprieta.</p>
-    <div style="margin-top:2rem">
+<!-- ESCENA 8: NOTAS -->
+<section class="sc glow" id="escena-8">
+  <div class="gut"><div class="in">
+    <div class="two">
+      <div class="rv"><p class="kick"><b>Escena 08</b> Notas del director</p><h2 class="h md">Apuntes sueltos en el <em>camino.</em></h2></div>
+      <p class="lead muted rv">Ideas cortas que voy anotando entre proyectos: sobre crear con IA, contar historias y sostener la cabeza cuando todo aprieta.</p>
+    </div>
+    <div class="notes rv">
       <details>
-        <summary>Nota 01 · Filosofía creativa · 4 min<strong>La ilusión del control en la era generativa</strong><em>«El prompt no es un comando de ingeniería; es una conversación con un inconsciente colectivo comprimido en matrices numéricas.»</em><br><u>Leer la nota</u></summary>
-        <p>Durante más de un siglo, el cine ha sido un arte de la voluntad impositiva: directores que exigían que el sol se pusiera a una hora específica, que la lágrima cayera exactamente sobre el pómulo izquierdo o que la luz rebotara con precisión milimétrica en una plancha de poliestireno.</p>
-        <p>Con la llegada de los modelos generativos de video (Kling, Hailuo, Runway), esa relación jerárquica se rompe. El prompt no es un comando de ingeniería; es una conversación con un inconsciente colectivo comprimido en matrices numéricas.</p>
-        <p>Crear arte hoy con IA no consiste en forzar una visión rígida, sino en cultivar una mirada atenta: saber reconocer el accidente prodigioso cuando el modelo ofrece un giro imprevisto de cámara, una mirada melancólica que no estaba escrita o una sombra que transforma la escena en poesía pura.</p>
-        <p><span class="hl">«El creador moderno no es un arquitecto omnipotente; es un curador de misterios emergentes.»</span></p>
+        <summary><span><span class="label">Nota 01 · Filosofía creativa · 4 min</span><strong>La ilusión del control en la era generativa</strong><em>— El prompt no es un comando de ingeniería; es una conversación con un inconsciente colectivo comprimido en matrices numéricas.</em></span><u>Leer</u></summary>
+        <div class="body">
+          <p>Durante más de un siglo, el cine ha sido un arte de la voluntad impositiva: directores que exigían que el sol se pusiera a una hora específica, que la lágrima cayera exactamente sobre el pómulo izquierdo o que la luz rebotara con precisión milimétrica en una plancha de poliestireno.</p>
+          <p>Con la llegada de los modelos generativos de video (Kling, Hailuo, Runway), esa relación jerárquica se rompe. El prompt no es un comando de ingeniería; es una conversación con un inconsciente colectivo comprimido en matrices numéricas.</p>
+          <p>Crear arte hoy con IA no consiste en forzar una visión rígida, sino en cultivar una mirada atenta: saber reconocer el accidente prodigioso cuando el modelo ofrece un giro imprevisto de cámara, una mirada melancólica que no estaba escrita o una sombra que transforma la escena en poesía pura.</p>
+          <p><strong>«El creador moderno no es un arquitecto omnipotente; es un curador de misterios emergentes.»</strong></p>
+        </div>
       </details>
       <details>
-        <summary>Nota 02 · Narrativa auditiva · 3 min<strong>El algoritmo no tiene nostalgia (y por qué eso importa)</strong><em>«Las máquinas no saben lo que duele un domingo por la tarde de lluvia. Es esa grieta sentimental, incomputable, donde el director humano debe sostener la cámara.»</em><br><u>Leer la nota</u></summary>
-        <p>Las redes neuronales pueden predecir qué fotograma tiene mayor verosimilitud estadística luego del anterior. Pueden simular el grano de una película Kodak 5219 con una exactitud que engañaría a directores de fotografía veteranos.</p>
-        <p>Sin embargo, un modelo de lenguaje o de difusión carece de infancia. Nunca sintió la soledad de una estación de tren vacía al anochecer, ni la tristeza de despedir a un amigo de toda la vida.</p>
-        <p>Por eso, el cine hecho con IA que prescinde del corazón humano se vuelve frío, estéril y olvidable en cuestión de minutos. <span class="hl">La técnica asombra diez segundos; la emoción humana resuena por décadas.</span> Nuestra labor es inyectarle esa herida incurable a cada plano sintético.</p>
+        <summary><span><span class="label">Nota 02 · Narrativa auditiva · 3 min</span><strong>El algoritmo no tiene nostalgia (y por qué eso importa)</strong><em>— Las máquinas no saben lo que duele un domingo por la tarde de lluvia. Es esa grieta sentimental, incomputable, donde el director humano debe sostener la cámara.</em></span><u>Leer</u></summary>
+        <div class="body">
+          <p>Las redes neuronales pueden predecir qué fotograma tiene mayor verosimilitud estadística luego del anterior. Pueden simular el grano de una película Kodak 5219 con una exactitud que engañaría a directores de fotografía veteranos.</p>
+          <p>Sin embargo, un modelo de lenguaje o de difusión carece de infancia. Nunca sintió la soledad de una estación de tren vacía al anochecer, ni la tristeza de despedir a un amigo de toda la vida.</p>
+          <p>Por eso, el cine hecho con IA que prescinde del corazón humano se vuelve frío, estéril y olvidable en cuestión de minutos. <strong>La técnica asombra diez segundos; la emoción humana resuena por décadas.</strong> Nuestra labor es inyectarle esa herida incurable a cada plano sintético.</p>
+        </div>
       </details>
       <details>
-        <summary>Nota 03 · Mentalidad de entrenador · 3 min<strong>Lo que la cancha me enseñó sobre iterar</strong><em>«Un equipo no mejora por analizar el partido perfecto; mejora por revisar el que salió mal sin ponerse a la defensiva. Crear funciona exactamente igual.»</em><br><u>Leer la nota</u></summary>
-        <p>Entrenando aprendí a separar la persona del resultado: un video que no funciona no dice nada de mi valor, dice algo sobre una decisión puntual que puedo corregir la próxima vez. Esa distancia es la que me permite seguir intentando sin quemarme.</p>
+        <summary><span><span class="label">Nota 03 · Mentalidad de entrenador · 3 min</span><strong>Lo que la cancha me enseñó sobre iterar</strong><em>— Un equipo no mejora por analizar el partido perfecto; mejora por revisar el que salió mal sin ponerse a la defensiva. Crear funciona exactamente igual.</em></span><u>Leer</u></summary>
+        <div class="body">
+          <p>Entrenando aprendí a separar la persona del resultado: un video que no funciona no dice nada de mi valor, dice algo sobre una decisión puntual que puedo corregir la próxima vez. Esa distancia es la que me permite seguir intentando sin quemarme.</p>
+        </div>
       </details>
     </div>
-  </article>
+  </div></div>
 </section>
 
 <!-- CRÉDITOS -->
-<section class="scene gut end" id="creditos">
-  <div class="in">
-    <p class="label rv">Créditos finales</p>
-    <h2 class="h rv" style="margin-top:1rem">Si algo de esto resuena contigo, <em>conversemos.</em></h2>
-    <p class="lead muted rv" style="margin:1.8rem auto 0">Creo en las coincidencias de miradas, en conspirar proyectos creativos y en construir cosas donde cada uno aporte lo mejor de su mundo.</p>
+<section class="sc img full end" id="creditos" style="--bg:url('videos/v4-s4.jpg');--pos:50% 45%">
+  <div class="gut"><div class="in"><div class="col">
+    <p class="kick rv" style="justify-content:center"><b>Créditos finales</b></p>
+    <h2 class="h rv">Si algo de esto resuena contigo, <em>conversemos.</em></h2>
+    <p class="lead rv" style="margin-top:1.8rem">Creo en las coincidencias de miradas, en conspirar proyectos creativos y en construir cosas donde cada uno aporte lo mejor de su mundo.</p>
     <div class="contact rv">
       <a class="play" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=tomashonor%40gmail.com&amp;su=Contacto%20desde%20tu%20web" target="_blank" rel="noopener">Escribime un mensaje →</a>
       <span class="mail">tomashonor@gmail.com</span>
     </div>
-    <dl class="credits roll rv">
+    <dl class="credits rv">
       <div><dt>Escrita y vivida por</dt><dd>Tomás David Honor</dd></div>
       <div><dt>Formación</dt><dd>Entrenador Nacional de tenis · 2018</dd></div>
       <div><dt>Reparto</dt><dd>La luz · La sombra · El encuentro</dd></div>
       <div><dt>Fuera de cámara</dt><dd>Auriculares · Cuatro patas · Juego</dd></div>
     </dl>
     <p class="fin rv">Continuará.</p>
-    <p class="foot label"><a href="#inicio">Volver al inicio ↑</a><button class="skip" id="replay" type="button">Ver la intro de nuevo</button><span>Otras versiones: <a href="index.html">v2</a> · <a href="v3.html">v3</a></span></p>
-  </div>
+    <p class="foot label"><a href="#inicio">Volver al inicio ↑</a><button class="skip" id="replay" type="button">Ver la intro de nuevo</button><span>Otras versiones: <a href="index.html">v2</a> · <a href="v3.html">v3</a> · <a href="v5.html">v5</a> · <a href="v6.html">v6</a></span></p>
+  </div></div></div>
 </section>
 </main>
 
