@@ -1784,6 +1784,22 @@
             margin-top: 0.4rem;
         }
 
+        .pets-visual {
+            height: auto;
+            align-items: stretch;
+            margin-top: 0.8rem;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .pets-video {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            filter: saturate(0.92) brightness(0.96);
+        }
+
         .freq-bars {
             display: flex;
             align-items: flex-end;
@@ -2690,13 +2706,8 @@
                         <p class="text-sm text-slate-300 font-normal leading-relaxed">
                             En un mundo acelerado, mis compañeros de cuatro patas son mi cable a tierra. No saben de algoritmos ni pantallas: su afecto es simple, transparente y un recordatorio de volver a lo esencial.
                         </p>
-                        <div class="anchor-visual" aria-hidden="true">
-                            <div class="paw-trail">
-                                <svg class="paw-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="16.5" rx="5.5" ry="4.5"/><circle cx="5.8" cy="9.2" r="2.1"/><circle cx="10.6" cy="5.8" r="2.3"/><circle cx="15.4" cy="6" r="2.3"/><circle cx="18.6" cy="9.6" r="2.1"/></svg>
-                                <svg class="paw-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="16.5" rx="5.5" ry="4.5"/><circle cx="5.8" cy="9.2" r="2.1"/><circle cx="10.6" cy="5.8" r="2.3"/><circle cx="15.4" cy="6" r="2.3"/><circle cx="18.6" cy="9.6" r="2.1"/></svg>
-                                <svg class="paw-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="16.5" rx="5.5" ry="4.5"/><circle cx="5.8" cy="9.2" r="2.1"/><circle cx="10.6" cy="5.8" r="2.3"/><circle cx="15.4" cy="6" r="2.3"/><circle cx="18.6" cy="9.6" r="2.1"/></svg>
-                                <svg class="paw-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="16.5" rx="5.5" ry="4.5"/><circle cx="5.8" cy="9.2" r="2.1"/><circle cx="10.6" cy="5.8" r="2.3"/><circle cx="15.4" cy="6" r="2.3"/><circle cx="18.6" cy="9.6" r="2.1"/></svg>
-                            </div>
+                        <div class="anchor-visual pets-visual" aria-hidden="true">
+                            <video class="pets-video" src="videos/video-pets.mp4" poster="videos/video-pets-poster.jpg" autoplay loop muted playsinline preload="metadata"></video>
                         </div>
                         <span class="panel-foot">Lealtad // Hogar &amp; Presencia</span>
                     </article>
